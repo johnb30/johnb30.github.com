@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2012-11-24T00:51:32-05:00</updated>
+  <updated>2012-11-24T00:53:25-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -12,6 +12,17 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Test2]]></title>
+    <link href="http://johnb30.github.com/blog/2012/11/24/test2/"/>
+    <updated>2012-11-24T00:52:00-05:00</updated>
+    <id>http://johnb30.github.com/blog/2012/11/24/test2</id>
+    <content type="html"><![CDATA[<p>A second test.</p>
+
+<h2>H2</h2>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Test]]></title>
