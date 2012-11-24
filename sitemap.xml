@@ -2,11 +2,15 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://johnb30.github.com/about/</loc>
-        <lastmod>2012-11-24T00:43:15-05:00</lastmod>
+        <lastmod>2012-11-24T01:01:01-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/archives/</loc>
         <lastmod>2012-11-24T00:15:07-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://johnb30.github.com/code/</loc>
+        <lastmod>2012-11-24T01:09:12-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/cv/</loc>
@@ -17,7 +21,7 @@
         <lastmod>2012-11-24T00:15:07-05:00</lastmod>
     </url>
     <url>
-        <loc>http://johnb30.github.com/projects/</loc>
-        <lastmod>2012-11-24T00:55:19-05:00</lastmod>
+        <loc>http://johnb30.github.com/papers/</loc>
+        <lastmod>2012-11-24T01:07:31-05:00</lastmod>
     </url>
 </urlset>
