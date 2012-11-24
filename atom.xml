@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[John Beieler]]></title>
+  <link href="http://johnb30.github.com/atom.xml" rel="self"/>
+  <link href="http://johnb30.github.com/"/>
+  <updated>2012-11-24T00:18:33-05:00</updated>
+  <id>http://johnb30.github.com/</id>
+  <author>
+    <name><![CDATA[John Beieler]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
