@@ -115,7 +115,7 @@ own risk.</p>
 <p>This how-to is mainly geared towards OS X, but many of the suggestions should
 also work on Linux (and are probably easier). I don&#8217;t have any experience
 setting up Windows and would probably suggest looking into dual booting Linux
-(see here for more: http://www.ubuntu.com/). Downloading Ubuntu to a CD and
+(see <a href="http://www.ubuntu.com/">here</a> for more). Downloading Ubuntu to a CD and
 setting up a dual boot is extremely easy.</p>
 
 <p>I&#8217;ll be adding to this as I have time and think of different things that have
@@ -178,7 +178,8 @@ install different applications and, well, packages by typing something like
 &#8220;sudo apt-get package&#8221; into the Terminal and things are automagically downloaded
 and installed. Macs lack this functionality. But! Some enterprising individuals
 have come up with a way to help. By heading to
-(http://mxcl.github.com/homebrew/) you can download a package manager that makes
+<a href="http://mxcl.github.com/homebrew/">http://mxcl.github.com/homebrew/</a> you can
+download a package manager that makes
 life much easier. Feel free to look around for utilities that can be installed
 using homebrew that might be of use to you. As a word of advice, if you are on
 the verge of installing something, first check and see if it is available using
@@ -198,11 +199,12 @@ structure of the Python installation on OS X can create some difficulties with
 certain libraries. This leaves two options:
 First, you can go with the default Python implementation.
 This will necessitate (sort of) the use of the Scipy Superpack
+[http://fonnesbeck.github.com/ScipySuperpack/]
 (http://fonnesbeck.github.com/ScipySuperpack/). The Superpack installs nearly
 every awesome Python library that your scientific researcher heart could desire.
 As a brief rundown of what each package does:</p>
 
-<h3>Numpy and Scipy</h3>
+<h4>Numpy and Scipy</h4>
 
 <p>The heart of numerical computing in Python. These two libraries give array and
 matrix functions along with many other cool things. Numpy is short for Numeric
@@ -211,40 +213,40 @@ are dependent on these. Much (digital) ink has been spilled on using these two
 so feel free to search around for more on how an array is different than a
 matrix in Numpy (hint: You should probably use an array).</p>
 
-<h3>Matplotlib</h3>
+<h4>Matplotlib</h4>
 
 <p>Plotting functions in Python. Allows you to make pretty graphs.</p>
 
-<h3>IPython</h3>
+<h4>IPython</h4>
 
 <p>Stands for Interactive Python. When running python from the Terminal you should
 type <code>ipython</code> instead of <code>python</code> (sans quotes). IPython gives many different
 magic functions and has all kinds of need goodies in it that generally make life
 easier.</p>
 
-<h3>Pandas</h3>
+<h4>Pandas</h4>
 
 <p>The best thing since sliced bread and pockets on jeans. Allows the R dataframe
 functionality in Python. Supports complex indexing for panel data, creation of
 various statistics such as moving averages, includes various read and write
 functionalities. It has some awesome documentation so go check it out.</p>
 
-<h3>Statsmodels</h3>
+<h4>Statsmodels</h4>
 
 <p>Statistical models in Python. This one is pretty self explanatory but is
 tremendously useful and is more intuitive than R in many ways.</p>
 
-<h3>Scikit-learn</h3>
+<h4>Scikit-learn</h4>
 
 <p>Machine learning in Python. Has some of the most comprehensive documentation
 around, including a series of tutorials on how to get started with machine
 learning in general.</p>
 
-<h3>PyMC</h3>
+<h4>PyMC</h4>
 
 <p>Bayesian inference in Python. MCMC and more.</p>
 
-<h3>Other Utilities</h3>
+<h4>Other Utilities</h4>
 
 <p>nose, readline and DateUtils. Things that are useful for other packages.
 You can read up on these more if you would like. Of importance, however, is
@@ -258,8 +260,10 @@ to download another Python distrubution that has all of these things included
 plus a &#8220;vanilla&#8221; (non-Apple) build of Python. Some examples of these are:</p>
 
 <ul>
-<li>Enthought Python (https://enthought.com/products/edudownload.php)</li>
-<li>Python(x,y) (https://code.google.com/p/pythonxy/)</li>
+<li>Enthought Python [https://enthought.com/products/edudownload.php]
+(https://enthought.com/products/edudownload.php)</li>
+<li>Python(x,y) [https://code.google.com/p/pythonxy/]
+(https://code.google.com/p/pythonxy/)</li>
 </ul>
 
 
@@ -274,16 +278,19 @@ any meaningful way. One of the most important is setuptools.</p>
 
 <p>1) Go to http://pypi.python.org/pypi/setuptools. Download the .egg file located
 towards the bottom of the page. Since your version is 2.7 you would download
-(as of 08/29/2012) setuptools-0.6c11-py2.7.egg.
-2) Place it on your desktop. Do NOT change the name.
-3) Cd to your desktop in the Terminal:</p>
+(as of 08/29/2012) setuptools-0.6c11-py2.7.egg.</p>
+
+<p>2) Place it on your desktop. Do NOT change the name.</p>
+
+<p>3) Cd to your desktop in the Terminal:</p>
 
 <pre><code>$ cd Desktop
 $ sh setuptools-0.6c11-py2.7.egg 
 </code></pre>
 
-<p>4) That should be it.
-What setuptools allows you to do is type <code>easy_install package</code> and it will
+<p>4) That should be it.</p>
+
+<p>What setuptools allows you to do is type <code>easy_install package</code> and it will
 install that package for your use in Python. Some people suggest that a program
 called pip is better because it has additional features such as the ability to
 easily uninstall programs. To install pip you just type:</p>
@@ -315,7 +322,7 @@ a wide range of purposes, from data mining to monitoring and automated testing.<
 programming/coding/scripting type work that aren&#8217;t related directly to working
 with Python.</p>
 
-<h3>Version Control</h3>
+<h4>Version Control</h4>
 
 <p>First is git and github. Git is what&#8217;s called a &#8220;version control system.&#8221; Have
 you ever been working on a paper and saved your work only to realize that you
@@ -328,9 +335,10 @@ want.</p>
 <p>Github is a &#8220;social coding platform.&#8221; It&#8217;s basically git on the internet. You&#8217;re
 reading this on github right now. Normally git and github involve some (semi)
 complicated Terminal commands. Github has, however, provided a nice, functional
-program to use git and github. The Mac version is here (http://mac.github.com/).</p>
+program to use git and github. The Mac version is here [http://mac.github.com/]
+(http://mac.github.com/).</p>
 
-<h2>Text Editors</h2>
+<h4>Text Editors</h4>
 
 <p>Text editors can cause a surprising amount of consternation on the internet. A
 decent editor can make your life easier with features such as syntax
@@ -351,7 +359,7 @@ normal. Takes some getting used to. Has a ton of different add-ons.</p>
 powerful than gedit. More modern than either Emacs or Vim. Free to try for a
 bit.</p>
 
-<h2>Other</h2>
+<h4>Other</h4>
 
 <p>I&#8217;ll add a shameless plug here for some code that I wrote, py_apsrtable. This
 is designed to provide easy functions to take output from Python statistical
@@ -362,7 +370,10 @@ packages and turn it into pretty LaTeX tables. To install</p>
 
 <p>Documentation is on <a href="http://johnb30.github.com/py_apsrtable">github</a>.</p>
 
-<p>I know this was slightly rambling, and there are <em>numerous</em> points that I have</p>
+<p>I know this was slightly rambling, and there are <em>numerous</em> points that I have
+missed, but I hope this provides some information that will be useful to those
+trying to get setup with Python for research. If you have any questions or
+suggestions, please feel free to contact me.</p>
 </div>
   
   
