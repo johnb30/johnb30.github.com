@@ -9,7 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Blog Archives Recent Posts GitHub Repos Status updating&#8230; @johnb30 on GitHub $.domReady(function(){ if (!window.jXHR){ var jxhr = document. &hellip;">
+  <meta name="description" content="Overview What is this? In short, setting up Python (and other things) for scientific computing and
+research can be entirely more complicated than &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +70,306 @@
       <div class="blog-index">
   
   
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/24/starting-with-python/">Starting With Python</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-24T19:10:00-05:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Overview</h2>
+
+<h3>What is this?</h3>
+
+<p>In short, setting up Python (and other things) for scientific computing and
+research can be entirely more complicated than necessary. With that said, this
+aims to be a short how-to guide pointing to some resources that can make life
+much easier. This post is geared towards Political Scientists coming from either
+1) using R as a programming language or 2) having no programming and minimal
+computing experience. Most of the things listed here have been attempted by me,
+but I make no guarantees that anything will work properly or won&#8217;t mess
+something up when attempted. As with anything proceed with caution and at your
+own risk.</p>
+
+<p>This how-to is mainly geared towards OS X, but many of the suggestions should
+also work on Linux (and are probably easier). I don&#8217;t have any experience
+setting up Windows and would probably suggest looking into dual booting Linux
+(see here for more: http://www.ubuntu.com/). Downloading Ubuntu to a CD and
+setting up a dual boot is extremely easy.</p>
+
+<p>I&#8217;ll be adding to this as I have time and think of different things that have
+helped me. I know this post is long, but there is a large amount of information
+to share, and I think it is easier to get a lot of it in one place, rather than
+spread out.</p>
+
+<h3>Basics</h3>
+
+<p>I&#8217;m going to start from the assumption that if you&#8217;re reading this you&#8217;ve never
+dealt with a command-line interface, or if you have that you&#8217;ve only been
+briefly exposed (maybe through things like R or Stata). So, before working with
+these sorts of things it&#8217;s helpful to get acquainted with the Terminal
+(Command Prompt in Windows). You should be able to find this in your
+Applications folder in the Utilities folder. Go ahead and drag the app to your
+dock. It will make life easier for you to have it here.</p>
+
+<p>If you open it up you will see something like</p>
+
+<pre><code>John-B-MacBook-Pro:~ john$ 
+</code></pre>
+
+<p>The word (john here) right before the $ is your username. There are some basic
+commands for working with the Terminal:</p>
+
+<ul>
+<li><code>ls</code> shows you all of the files and folders in your current working directory</li>
+<li><code>ls -a</code> shows all files and folders including those that are hidden</li>
+<li><code>cd</code> allows you to move from one location to another</li>
+<li><code>mv</code> lets you move files</li>
+<li><code>cp</code> is copying</li>
+</ul>
+
+
+<p>and many, many more. A basic workflow is as below:</p>
+
+<pre><code>$ ls
+Applications    Desktop     Documents
+
+$ cd Documents
+$ ls -a
+test.txt    .hidden.txt
+
+$ mv test.txt /Users/johnbeieler/Desktop
+</code></pre>
+
+<p>When in doubt Google what you want to do followed by &#8220;Terminal.&#8221; So, something
+like &#8220;remove file terminal&#8221; or &#8220;copy file terminal.&#8221; A word of warning, you&#8217;re
+&#8220;closer to the metal&#8221; when using a command-line interface. This means that you
+have a lot of power and flexibility when working with things, but it also means
+you have the ability to completely wipe your hard drive if you type the wrong
+command. Be careful.</p>
+
+<p>You should probably go ahead and install XCode. This is included on the install
+CD that came with your Mac, or it can be downloaded from the Mac App Store.
+Make sure that you&#8217;re using the correct version for your version of OS X.
+This will install some things that will be necessary to work with later.
+Linux has an awesome concept called package managers, which allow you to easily
+install different applications and, well, packages by typing something like
+&#8220;sudo apt-get package&#8221; into the Terminal and things are automagically downloaded
+and installed. Macs lack this functionality. But! Some enterprising individuals
+have come up with a way to help. By heading to
+(http://mxcl.github.com/homebrew/) you can download a package manager that makes
+life much easier. Feel free to look around for utilities that can be installed
+using homebrew that might be of use to you. As a word of advice, if you are on
+the verge of installing something, first check and see if it is available using
+homebrew since brew keeps things nice and organized in your usr/local folder
+instead of spread all over your computer.</p>
+
+<h2>Python</h2>
+
+<p>OS X comes with Python preloaded and is required by the operating system for
+many functions. This is good and bad. Good since you can type</p>
+
+<pre><code>$ python 
+</code></pre>
+
+<p>and get up and running in an interactive session. It&#8217;s also bad because the
+structure of the Python installation on OS X can create some difficulties with
+certain libraries. This leaves two options:
+First, you can go with the default Python implementation.
+This will necessitate (sort of) the use of the Scipy Superpack
+(http://fonnesbeck.github.com/ScipySuperpack/). The Superpack installs nearly
+every awesome Python library that your scientific researcher heart could desire.
+As a brief rundown of what each package does:</p>
+
+<h3>Numpy and Scipy</h3>
+
+<p>The heart of numerical computing in Python. These two libraries give array and
+matrix functions along with many other cool things. Numpy is short for Numeric
+Python and Scipy is short for Scientific Python. Many other libraries in Python
+are dependent on these. Much (digital) ink has been spilled on using these two
+so feel free to search around for more on how an array is different than a
+matrix in Numpy (hint: You should probably use an array).</p>
+
+<h3>Matplotlib</h3>
+
+<p>Plotting functions in Python. Allows you to make pretty graphs.</p>
+
+<h3>IPython</h3>
+
+<p>Stands for Interactive Python. When running python from the Terminal you should
+type <code>ipython</code> instead of <code>python</code> (sans quotes). IPython gives many different
+magic functions and has all kinds of need goodies in it that generally make life
+easier.</p>
+
+<h3>Pandas</h3>
+
+<p>The best thing since sliced bread and pockets on jeans. Allows the R dataframe
+functionality in Python. Supports complex indexing for panel data, creation of
+various statistics such as moving averages, includes various read and write
+functionalities. It has some awesome documentation so go check it out.</p>
+
+<h3>Statsmodels</h3>
+
+<p>Statistical models in Python. This one is pretty self explanatory but is
+tremendously useful and is more intuitive than R in many ways.</p>
+
+<h3>Scikit-learn</h3>
+
+<p>Machine learning in Python. Has some of the most comprehensive documentation
+around, including a series of tutorials on how to get started with machine
+learning in general.</p>
+
+<h3>PyMC</h3>
+
+<p>Bayesian inference in Python. MCMC and more.</p>
+
+<h3>Other Utilities</h3>
+
+<p>nose, readline and DateUtils. Things that are useful for other packages.
+You can read up on these more if you would like. Of importance, however, is
+nose. Nose is a testing suite for Python that allows you to see if anything is
+wonky in your installation. You can (maybe) get away with skipping these, but
+it never hurts. Look up the different tests for each of the utilities if you
+want to run them.</p>
+
+<p>In all honesty it is probably easiest to use the Superpack. The other option is
+to download another Python distrubution that has all of these things included
+plus a &#8220;vanilla&#8221; (non-Apple) build of Python. Some examples of these are:</p>
+
+<ul>
+<li>Enthought Python (https://enthought.com/products/edudownload.php)</li>
+<li>Python(x,y) (https://code.google.com/p/pythonxy/)</li>
+</ul>
+
+
+<p>But really, just use the Superpack.</p>
+
+<h2>Other things</h2>
+
+<p>There are some other things that are useful (read: necessary) to use Python in
+any meaningful way. One of the most important is setuptools.</p>
+
+<p>To install setuptools:</p>
+
+<p>1) Go to http://pypi.python.org/pypi/setuptools. Download the .egg file located
+towards the bottom of the page. Since your version is 2.7 you would download
+(as of 08/29/2012) setuptools-0.6c11-py2.7.egg.
+2) Place it on your desktop. Do NOT change the name.
+3) Cd to your desktop in the Terminal:</p>
+
+<pre><code>$ cd Desktop
+$ sh setuptools-0.6c11-py2.7.egg 
+</code></pre>
+
+<p>4) That should be it.
+What setuptools allows you to do is type <code>easy_install package</code> and it will
+install that package for your use in Python. Some people suggest that a program
+called pip is better because it has additional features such as the ability to
+easily uninstall programs. To install pip you just type:</p>
+
+<pre><code>$ easy_install pip 
+</code></pre>
+
+<p>That&#8217;s right. Pip is installed using easy_install.</p>
+
+<p>Let&#8217;s try it out for a library called Scrapy. Scrapy is described as</p>
+
+<blockquote><p>Scrapy is a fast high-level screen scraping and web crawling framework, used to
+crawl websites and extract structured data from their pages. It can be used for
+a wide range of purposes, from data mining to monitoring and automated testing.</p></blockquote>
+
+<p>Sounds pretty cool. All you do is open up Terminal and type:</p>
+
+<pre><code>$ easy_install Scrapy 
+</code></pre>
+
+<p>Alternatively if you&#8217;re using pip:</p>
+
+<pre><code>$ pip install Scrapy 
+</code></pre>
+
+<h2>Miscellany</h2>
+
+<p>There are some other things that are useful to have when doing this kind of
+programming/coding/scripting type work that aren&#8217;t related directly to working
+with Python.</p>
+
+<h3>Version Control</h3>
+
+<p>First is git and github. Git is what&#8217;s called a &#8220;version control system.&#8221; Have
+you ever been working on a paper and saved your work only to realize that you
+wrote over some changes that you didn&#8217;t mean to? Me too. Git keeps a detailed
+list of the versions of a file, including any changes or additions made to a
+specific version, and allows you to roll back to a previous version. So, if you
+wrote over a file and want to revert back you just have to find the version you
+want.</p>
+
+<p>Github is a &#8220;social coding platform.&#8221; It&#8217;s basically git on the internet. You&#8217;re
+reading this on github right now. Normally git and github involve some (semi)
+complicated Terminal commands. Github has, however, provided a nice, functional
+program to use git and github. The Mac version is here (http://mac.github.com/).</p>
+
+<h2>Text Editors</h2>
+
+<p>Text editors can cause a surprising amount of consternation on the internet. A
+decent editor can make your life easier with features such as syntax
+highlighting, autoindentation, tab completion, and other features. I won&#8217;t say
+which editor to use, but will give you a list of some of the big ones.
+(This was written using vim, MacVim to be specific).</p>
+
+<p><strong>Gedit:</strong> Standard on Linux distros. Simple. Includes some syntax highlighting.</p>
+
+<p><strong>Emacs:</strong> One of the big two editors. Built on LISP. Can basically be whatever
+you want it to be. Uses extensive, and sometimes complicated, key combinations
+to get things done.</p>
+
+<p><strong>Vim:</strong> The second of the big two. Has different modes such as insert and
+normal. Takes some getting used to. Has a ton of different add-ons.</p>
+
+<p><strong>Sublime Text 2:</strong> Probably more straightforward than Emacs or Vim, but more
+powerful than gedit. More modern than either Emacs or Vim. Free to try for a
+bit.</p>
+
+<h2>Other</h2>
+
+<p>I&#8217;ll add a shameless plug here for some code that I wrote, py_apsrtable. This
+is designed to provide easy functions to take output from Python statistical
+packages and turn it into pretty LaTeX tables. To install</p>
+
+<pre><code>$ pip install py_apsrtable
+</code></pre>
+
+<p>Documentation is on <a href="http://johnb30.github.com/py_apsrtable">github</a>.</p>
+
+<p>I know this was slightly rambling, and there are <em>numerous</em> points that I have</p>
+</div>
+  
+  
+
+
+    </article>
+  
   <div class="pagination">
     
     <a href="/blog/archives">Blog Archives</a>
@@ -80,6 +381,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/11/24/starting-with-python/">Starting With Python</a>
+      </li>
     
   </ul>
 </section>

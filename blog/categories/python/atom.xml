@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[John Beieler]]></title>
-  <link href="http://johnb30.github.com/atom.xml" rel="self"/>
+  <title><![CDATA[Category: Python | John Beieler]]></title>
+  <link href="http://johnb30.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
   <updated>2012-11-24T19:14:05-05:00</updated>
   <id>http://johnb30.github.com/</id>
@@ -28,27 +28,27 @@ aims to be a short how-to guide pointing to some resources that can make life
 much easier. This post is geared towards Political Scientists coming from either
 1) using R as a programming language or 2) having no programming and minimal
 computing experience. Most of the things listed here have been attempted by me,
-but I make no guarantees that anything will work properly or won&#8217;t mess
+but I make no guarantees that anything will work properly or won't mess
 something up when attempted. As with anything proceed with caution and at your
 own risk.</p>
 
 <p>This how-to is mainly geared towards OS X, but many of the suggestions should
-also work on Linux (and are probably easier). I don&#8217;t have any experience
+also work on Linux (and are probably easier). I don't have any experience
 setting up Windows and would probably suggest looking into dual booting Linux
 (see here for more: http://www.ubuntu.com/). Downloading Ubuntu to a CD and
 setting up a dual boot is extremely easy.</p>
 
-<p>I&#8217;ll be adding to this as I have time and think of different things that have
+<p>I'll be adding to this as I have time and think of different things that have
 helped me. I know this post is long, but there is a large amount of information
 to share, and I think it is easier to get a lot of it in one place, rather than
 spread out.</p>
 
 <h3>Basics</h3>
 
-<p>I&#8217;m going to start from the assumption that if you&#8217;re reading this you&#8217;ve never
-dealt with a command-line interface, or if you have that you&#8217;ve only been
+<p>I'm going to start from the assumption that if you're reading this you've never
+dealt with a command-line interface, or if you have that you've only been
 briefly exposed (maybe through things like R or Stata). So, before working with
-these sorts of things it&#8217;s helpful to get acquainted with the Terminal
+these sorts of things it's helpful to get acquainted with the Terminal
 (Command Prompt in Windows). You should be able to find this in your
 Applications folder in the Utilities folder. Go ahead and drag the app to your
 dock. It will make life easier for you to have it here.</p>
@@ -82,20 +82,20 @@ test.txt    .hidden.txt
 $ mv test.txt /Users/johnbeieler/Desktop
 </code></pre>
 
-<p>When in doubt Google what you want to do followed by &#8220;Terminal.&#8221; So, something
-like &#8220;remove file terminal&#8221; or &#8220;copy file terminal.&#8221; A word of warning, you&#8217;re
-&#8220;closer to the metal&#8221; when using a command-line interface. This means that you
+<p>When in doubt Google what you want to do followed by "Terminal." So, something
+like "remove file terminal" or "copy file terminal." A word of warning, you're
+"closer to the metal" when using a command-line interface. This means that you
 have a lot of power and flexibility when working with things, but it also means
 you have the ability to completely wipe your hard drive if you type the wrong
 command. Be careful.</p>
 
 <p>You should probably go ahead and install XCode. This is included on the install
 CD that came with your Mac, or it can be downloaded from the Mac App Store.
-Make sure that you&#8217;re using the correct version for your version of OS X.
+Make sure that you're using the correct version for your version of OS X.
 This will install some things that will be necessary to work with later.
 Linux has an awesome concept called package managers, which allow you to easily
 install different applications and, well, packages by typing something like
-&#8220;sudo apt-get package&#8221; into the Terminal and things are automagically downloaded
+"sudo apt-get package" into the Terminal and things are automagically downloaded
 and installed. Macs lack this functionality. But! Some enterprising individuals
 have come up with a way to help. By heading to
 (http://mxcl.github.com/homebrew/) you can download a package manager that makes
@@ -113,7 +113,7 @@ many functions. This is good and bad. Good since you can type</p>
 <pre><code>$ python 
 </code></pre>
 
-<p>and get up and running in an interactive session. It&#8217;s also bad because the
+<p>and get up and running in an interactive session. It's also bad because the
 structure of the Python installation on OS X can create some difficulties with
 certain libraries. This leaves two options:
 First, you can go with the default Python implementation.
@@ -175,7 +175,7 @@ want to run them.</p>
 
 <p>In all honesty it is probably easiest to use the Superpack. The other option is
 to download another Python distrubution that has all of these things included
-plus a &#8220;vanilla&#8221; (non-Apple) build of Python. Some examples of these are:</p>
+plus a "vanilla" (non-Apple) build of Python. Some examples of these are:</p>
 
 <ul>
 <li>Enthought Python (https://enthought.com/products/edudownload.php)</li>
@@ -211,9 +211,9 @@ easily uninstall programs. To install pip you just type:</p>
 <pre><code>$ easy_install pip 
 </code></pre>
 
-<p>That&#8217;s right. Pip is installed using easy_install.</p>
+<p>That's right. Pip is installed using easy_install.</p>
 
-<p>Let&#8217;s try it out for a library called Scrapy. Scrapy is described as</p>
+<p>Let's try it out for a library called Scrapy. Scrapy is described as</p>
 
 <blockquote><p>Scrapy is a fast high-level screen scraping and web crawling framework, used to
 crawl websites and extract structured data from their pages. It can be used for
@@ -224,7 +224,7 @@ a wide range of purposes, from data mining to monitoring and automated testing.<
 <pre><code>$ easy_install Scrapy 
 </code></pre>
 
-<p>Alternatively if you&#8217;re using pip:</p>
+<p>Alternatively if you're using pip:</p>
 
 <pre><code>$ pip install Scrapy 
 </code></pre>
@@ -232,20 +232,20 @@ a wide range of purposes, from data mining to monitoring and automated testing.<
 <h2>Miscellany</h2>
 
 <p>There are some other things that are useful to have when doing this kind of
-programming/coding/scripting type work that aren&#8217;t related directly to working
+programming/coding/scripting type work that aren't related directly to working
 with Python.</p>
 
 <h3>Version Control</h3>
 
-<p>First is git and github. Git is what&#8217;s called a &#8220;version control system.&#8221; Have
+<p>First is git and github. Git is what's called a "version control system." Have
 you ever been working on a paper and saved your work only to realize that you
-wrote over some changes that you didn&#8217;t mean to? Me too. Git keeps a detailed
+wrote over some changes that you didn't mean to? Me too. Git keeps a detailed
 list of the versions of a file, including any changes or additions made to a
 specific version, and allows you to roll back to a previous version. So, if you
 wrote over a file and want to revert back you just have to find the version you
 want.</p>
 
-<p>Github is a &#8220;social coding platform.&#8221; It&#8217;s basically git on the internet. You&#8217;re
+<p>Github is a "social coding platform." It's basically git on the internet. You're
 reading this on github right now. Normally git and github involve some (semi)
 complicated Terminal commands. Github has, however, provided a nice, functional
 program to use git and github. The Mac version is here (http://mac.github.com/).</p>
@@ -254,7 +254,7 @@ program to use git and github. The Mac version is here (http://mac.github.com/).
 
 <p>Text editors can cause a surprising amount of consternation on the internet. A
 decent editor can make your life easier with features such as syntax
-highlighting, autoindentation, tab completion, and other features. I won&#8217;t say
+highlighting, autoindentation, tab completion, and other features. I won't say
 which editor to use, but will give you a list of some of the big ones.
 (This was written using vim, MacVim to be specific).</p>
 
@@ -273,7 +273,7 @@ bit.</p>
 
 <h2>Other</h2>
 
-<p>I&#8217;ll add a shameless plug here for some code that I wrote, py_apsrtable. This
+<p>I'll add a shameless plug here for some code that I wrote, py_apsrtable. This
 is designed to provide easy functions to take output from Python statistical
 packages and turn it into pretty LaTeX tables. To install</p>
 
