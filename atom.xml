@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2012-11-24T19:24:24-05:00</updated>
+  <updated>2012-11-24T19:31:19-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -285,6 +285,16 @@ packages and turn it into pretty LaTeX tables. To install</p>
 </code></pre>
 
 <p>Documentation is on <a href="http://johnb30.github.com/py_apsrtable">github</a>.</p>
+
+<p>I will also add as a final point that it is probably nice to take a look at
+&#8220;The Zen of Python&#8221; by opening up a python shell, <code>ipython</code>, and typing</p>
+
+<pre><code>import this
+</code></pre>
+
+<p>Next, take a look at the Python style guide contained in <a href="http://www.python.org/dev/peps/pep-0008/#code-lay-out">PEP8</a>
+(PythonEnhancement Proposal 8). Following these guidelines will allow your code
+to be consistent with the prevailing style for Python code.</p>
 
 <p>I know this was slightly rambling, and there are <em>numerous</em> points that I have
 missed, but I hope this provides some information that will be useful to those
