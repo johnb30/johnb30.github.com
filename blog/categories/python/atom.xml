@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2012-11-24T19:20:55-05:00</updated>
+  <updated>2012-11-24T19:24:24-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -119,10 +119,9 @@ structure of the Python installation on OS X can create some difficulties with
 certain libraries. This leaves two options:
 First, you can go with the default Python implementation.
 This will necessitate (sort of) the use of the Scipy Superpack
-[http://fonnesbeck.github.com/ScipySuperpack/]
-(http://fonnesbeck.github.com/ScipySuperpack/). The Superpack installs nearly
-every awesome Python library that your scientific researcher heart could desire.
-As a brief rundown of what each package does:</p>
+<a href="http://fonnesbeck.github.com/ScipySuperpack/">http://fonnesbeck.github.com/ScipySuperpack/</a>.
+The Superpack installs nearly every awesome Python library that your scientific
+researcher heart could desire. As a brief rundown of what each package does:</p>
 
 <h4>Numpy and Scipy</h4>
 
@@ -140,7 +139,7 @@ matrix in Numpy (hint: You should probably use an array).</p>
 <h4>IPython</h4>
 
 <p>Stands for Interactive Python. When running python from the Terminal you should
-type <code>ipython</code> instead of <code>python</code> (sans quotes). IPython gives many different
+type <code>ipython</code> instead of <code>python</code>.  IPython gives many different
 magic functions and has all kinds of need goodies in it that generally make life
 easier.</p>
 
@@ -180,10 +179,8 @@ to download another Python distrubution that has all of these things included
 plus a "vanilla" (non-Apple) build of Python. Some examples of these are:</p>
 
 <ul>
-<li>Enthought Python [https://enthought.com/products/edudownload.php]
-(https://enthought.com/products/edudownload.php)</li>
-<li>Python(x,y) [https://code.google.com/p/pythonxy/]
-(https://code.google.com/p/pythonxy/)</li>
+<li>Enthought Python <a href="https://enthought.com/products/edudownload.php">https://enthought.com/products/edudownload.php</a></li>
+<li>Python(x,y) <a href="https://code.google.com/p/pythonxy/">https://code.google.com/p/pythonxy/</a></li>
 </ul>
 
 
@@ -196,9 +193,9 @@ any meaningful way. One of the most important is setuptools.</p>
 
 <p>To install setuptools:</p>
 
-<p>1) Go to http://pypi.python.org/pypi/setuptools. Download the .egg file located
-towards the bottom of the page. Since your version is 2.7 you would download
-(as of 08/29/2012) setuptools-0.6c11-py2.7.egg.</p>
+<p>1) Go to <a href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a>.
+Download the .egg file located towards the bottom of the page. Since your
+version is 2.7 you would download (as of 08/29/2012) setuptools-0.6c11-py2.7.egg.</p>
 
 <p>2) Place it on your desktop. Do NOT change the name.</p>
 
@@ -255,8 +252,7 @@ want.</p>
 <p>Github is a "social coding platform." It's basically git on the internet. You're
 reading this on github right now. Normally git and github involve some (semi)
 complicated Terminal commands. Github has, however, provided a nice, functional
-program to use git and github. The Mac version is here [http://mac.github.com/]
-(http://mac.github.com/).</p>
+program to use git and github. The Mac version is here <a href="http://mac.github.com/">http://mac.github.com/</a>.</p>
 
 <h4>Text Editors</h4>
 
