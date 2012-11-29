@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2012-11-28T20:14:55-05:00</updated>
+  <updated>2012-11-28T20:16:44-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -57,7 +57,7 @@ def bootstrap_t_test(treatment, control, nboot = 1000, direction = &quot;less&qu
 
 <ul>
 <li><p>1-4: Just some imports. We need the floating point division from the
-<strong>future</strong> module, numpy, pandas, and the random module.</p></li>
+future module, numpy, pandas, and the random module.</p></li>
 <li><p>6-8: Defining a function <code>sample</code> that samples with replacement from the
 dataset, creating a new dataset of the same length as the original data.
 This makes use of the <code>random.choice</code> function, which samples one item
