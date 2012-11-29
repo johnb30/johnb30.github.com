@@ -144,14 +144,14 @@ dataset, creating a new dataset of the same length as the original data.
 This makes use of the <code>random.choice</code> function, which samples one item
 randomly from the data. This function is called the same number of times as
 there are observations in the data.</p></li>
-<li><p>10-17: Defining a function with to perform the t-test, with two data inputs,
+<li><p>10-17: Defining a function to perform the t-test, with two data inputs,
 the number of repititions to be performed, and the direction of the
-alternative hypothesis. First a 2x<strong>n</strong> matrix is defined, with row 1 being
-all ones and row 2 being the data. This is then flipped to create a <strong>n</strong>x2
+alternative hypothesis. First a 2 x <em>n</em> matrix is defined, with row 1 being
+all ones and row 2 being the data. This is then flipped to create an <em>n</em> x 2
 matrix. The same procedure is then repeated for the control data, except with
 0s instead of 1s. These two matrices are then stacked on top of each other.
 <code>tstat</code> is the difference between the two groups, and tboot is a vector of
-zeros with length of the number of repititions for the bootstrap.</p></li>
+zeros with length equal to the number of repititions for the bootstrap.</p></li>
 <li><p>18-21: This for-loop actually performs the bootstrap for the number of times
 indicated by <code>nboot</code>. First, a sample of the data (<code>Z</code>) is taken using the
 <code>sample</code> function defined above. This is then transformed into a pandas
