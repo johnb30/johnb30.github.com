@@ -100,15 +100,37 @@ line-by- &hellip;">
 bootstrapping. First I present the code, and will then follow up with a
 line-by-line description of whats going on.</p>
 
-<div><script src='https://gist.github.com/996818.js?file='></script>
-<noscript><pre><code>@@ -590,7 +590,7 @@ class SpritesTest &lt; Test::Unit::TestCase
-  it &quot;should generate a sprite from nested folders&quot; do
-    css = render &lt;&lt;-SCSS
--     @import &quot;nested/*.png&quot;;
-+     @import &quot;nested/**/*.png&quot;;
-      @include all-nested-sprites;
-    SCSS
-    assert_correct css, &lt;&lt;-CSS</code></pre></noscript></div>
+<div><script src='https://gist.github.com/4166016.js?file='></script>
+<noscript><pre><code>from __future__ import division
+import numpy as np
+import pandas as pd
+import random
+
+def sample(data):
+    sample = [random.choice(data) for _ in xrange(len(data))]
+    return sample
+
+def bootstrap_t_test(treatment, control, nboot = 1000, direction = &quot;less&quot;):
+    ones = np.vstack((np.ones(len(treatment)),treatment))
+    treatment = ones.conj().transpose()
+    zeros = np.vstack((np.zeros(len(control)), control))
+    control = zeros.conj().transpose()
+    Z = np.vstack((treatment, control))
+    tstat = np.mean(treatment[:,1])-np.mean(control[:,1])
+    tboot = np.zeros(nboot)
+    for i in xrange(nboot):
+        sboot = sample(Z)
+        sboot = pd.DataFrame(np.array(sboot), columns=['treat', 'vals'])
+        tboot[i] = np.mean(sboot['vals'][sboot['treat'] == 1]) - np.mean(sboot['vals'][sboot['treat'] == 0]) - tstat
+    if direction == &quot;greater&quot;:
+        pvalue = np.sum(tboot&gt;=tstat-0)/nboot
+    elif direction == &quot;less&quot;:
+        pvalue = np.sum(tboot&lt;=tstat-0)/nboot
+    else:
+        print 'Enter a valid arg for direction'
+
+    print 'The p-value is %f' % (pvalue)
+</code></pre></noscript></div>
 
 
 <ul>
