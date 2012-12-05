@@ -9,7 +9,7 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Following up my last post, I wanted a way to test my bootstrapped t-test
+  <meta name="description" content="Following up on my last post, I wanted a way to test my bootstrapped t-test
 function against the regular t-test function in R. While I was able to do &hellip;">
   
 
@@ -98,7 +98,7 @@ function against the regular t-test function in R. While I was able to do &helli
   </header>
 
 
-  <div class="entry-content"><p>Following up my last post, I wanted a way to test my bootstrapped t-test
+  <div class="entry-content"><p>Following up on my last post, I wanted a way to test my bootstrapped t-test
 function against the regular t-test function in R. While I was able to do this
 by copy-pasting between R and a Python shell, this was less than ideal. I then
 saw, however, a <a href="http://nbviewer.ipython.org/4166681/">post</a> by Christopher
@@ -135,7 +135,7 @@ you should be good to go.</p>
 rmagic extension using the <code>%load_ext</code> magic function. Using the <code>%R</code> magic
 function I then defined two vectors of data, treatment and control, in the R
 space. I then used <code>%Rpull</code> to pull the two vectors from the R space into the
-Python shell. The two variables become structured numpy arrays CHECK ON THIS.
+Python shell. The two variables become structured numpy arrays.
 I then perform the bootstrapped t-test as described in the earlier post.
 Finally, using the <code>%R</code> magic function again, I print out the results of the
 <code>t.test</code> function in R using the same data. The p-values aren&#8217;t exactly the
