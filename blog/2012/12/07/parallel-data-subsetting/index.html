@@ -1,0 +1,324 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Parallel Data Subsetting - John Beieler</title>
+  <meta name="author" content="John Beieler">
+
+  
+  <meta name="description" content="The Challenge I&#8217;ve been working with some data that is spread over multiple
+tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="John Beieler" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">John Beieler</a></h1>
+  
+    <h2>PhD Student in Political Science</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:johnb30.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/cv">CV</a></li>
+  <li><a href="/papers">Papers</a></li>
+  <li><a href="/code">Code</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Parallel Data Subsetting</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-07T18:26:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>The Challenge</h3>
+
+<p>I&#8217;ve been working with some data that is spread over multiple
+tab-delimited files, and is rather large (on the order of 20-30gb). The task has
+been to comb through the data, and extract observations (rows) if they match
+certain characteristics. Specifically, each file is iterated over and if a field
+within a line matches a given value then the line should be extracted and
+appended to the final output. This task is relatively straightforward in Python,
+but to iterate over all of the files takes around 45 minutes. While this isn&#8217;t
+an exorbiant amount of time, fast is always better. This problem is also
+embarassingly parallel; the different files do not need to communicate their
+results to each other, the results simply need to be stacked into a final array
+in order to be saved to a file. Thus began my saga to implement a parallel
+version of a script I wrote to iterate over the files and select the lines.</p>
+
+<h3>The Code</h3>
+
+<div><script src='https://gist.github.com/4237347.js?file='></script>
+<noscript><pre><code>import numpy as np
+from joblib import Parallel, delayed
+
+def subset(file):
+    dataOut = []
+    data = open(file, 'r')
+    data.readline()
+    for line in data:
+        splitLine = line.split('\t')
+        if splitLine[3] == '57':
+            dataOut.append(splitLine)
+    return dataOut
+
+def stack(list_of_data, hold_data):
+    for i in xrange(len(list_of_data)):
+        current = np.array(data[i])
+        hold = np.vstack((hold_data, current))
+    return hold
+
+if __name__ == &quot;__main__&quot;:
+    filepath = ['testData1.txt', 'testData2.txt']
+
+    hold  = []
+    temp = open(filepath[0], 'r')
+    hold.append(temp.readline().split('\t'))
+    data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in filepath)
+    finalData = stack(data, hold)
+</code></pre></noscript></div>
+
+
+<p>As with my other posts I&#8217;ll walk through the code line by line.</p>
+
+<ul>
+<li><p>1-2 Just imports. I&#8217;ll be using the <code>Parallel</code> and
+<code>delayed</code> functions from the joblib module.</p></li>
+<li><p>4-13 Defining the function to subset out the data. The code is fairly easy to
+understand here. The file is opened, the first line is read since this
+contains the column names and should not be appended to the result. Then each
+line is iterated over, split on the basis of the tabs, and appended if it
+meets a certain criteria.</p></li>
+<li><p>15-19 Function to stack the data. The joblib <code>Parallel</code> function will return a
+list of lists, with each list within the list being the results from the
+individual files. The <code>stack</code> function iterates over the list, converts the
+inner lists to numpy arrays, and stacks the current data with the previous
+data.</p></li>
+<li><p>22-28 Running the script. The main focus here is on line 27. The first
+argument that <code>Parallel</code> takes is the number of jobs to be used. Setting
+<code>n_jobs</code> to -1 says to use all possible cores. The second argument is the
+function to be run in parallel. The joblib docs indicate that &#8220;The delayed
+function is a simple trick to be able to create a tuple
+(function, args, kwargs) with a function-call syntax.&#8221; So delayed is passed
+the <code>subset</code> function with the arg <code>x</code>, which represents the file to be opened
+as held in <code>filepath</code>. This data is then stored as a list of lists, and
+stacked using the <code>stack</code> function.</p></li>
+</ul>
+
+
+<p>Some quick prelimenary examinations shows that this parallel implementation is
+much, much faster than running in serial. Running on two files is almost
+instananeous, which is a drastic improvement.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-07T18:26:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/python/'>Python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/" data-via="" data-counturl="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/" title="Previous Post: R Magic and Bootstrapped t-test">&laquo; R Magic and Bootstrapped t-test</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/12/07/parallel-data-subsetting/">Parallel Data Subsetting</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">R Magic and Bootstrapped t-test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/28/bootstrapping-t-test/">Bootstrapped t-test</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/24/starting-with-python/">Starting With Python</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/johnb30">@johnb30</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'johnb30',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2012 - John Beieler -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

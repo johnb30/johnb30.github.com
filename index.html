@@ -9,8 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Following up on my last post, I wanted a way to test my bootstrapped t-test
-function against the regular t-test function in R. While I was able to do &hellip;">
+  <meta name="description" content="The Challenge I&#8217;ve been working with some data that is spread over multiple
+tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -69,6 +69,119 @@ function against the regular t-test function in R. While I was able to do &helli
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/07/parallel-data-subsetting/">Parallel Data Subsetting</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-07T18:26:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>The Challenge</h3>
+
+<p>I&#8217;ve been working with some data that is spread over multiple
+tab-delimited files, and is rather large (on the order of 20-30gb). The task has
+been to comb through the data, and extract observations (rows) if they match
+certain characteristics. Specifically, each file is iterated over and if a field
+within a line matches a given value then the line should be extracted and
+appended to the final output. This task is relatively straightforward in Python,
+but to iterate over all of the files takes around 45 minutes. While this isn&#8217;t
+an exorbiant amount of time, fast is always better. This problem is also
+embarassingly parallel; the different files do not need to communicate their
+results to each other, the results simply need to be stacked into a final array
+in order to be saved to a file. Thus began my saga to implement a parallel
+version of a script I wrote to iterate over the files and select the lines.</p>
+
+<h3>The Code</h3>
+
+<div><script src='https://gist.github.com/4237347.js?file='></script>
+<noscript><pre><code>import numpy as np
+from joblib import Parallel, delayed
+
+def subset(file):
+    dataOut = []
+    data = open(file, 'r')
+    data.readline()
+    for line in data:
+        splitLine = line.split('\t')
+        if splitLine[3] == '57':
+            dataOut.append(splitLine)
+    return dataOut
+
+def stack(list_of_data, hold_data):
+    for i in xrange(len(list_of_data)):
+        current = np.array(data[i])
+        hold = np.vstack((hold_data, current))
+    return hold
+
+if __name__ == &quot;__main__&quot;:
+    filepath = ['testData1.txt', 'testData2.txt']
+
+    hold  = []
+    temp = open(filepath[0], 'r')
+    hold.append(temp.readline().split('\t'))
+    data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in filepath)
+    finalData = stack(data, hold)
+</code></pre></noscript></div>
+
+
+<p>As with my other posts I&#8217;ll walk through the code line by line.</p>
+
+<ul>
+<li><p>1-2 Just imports. I&#8217;ll be using the <code>Parallel</code> and
+<code>delayed</code> functions from the joblib module.</p></li>
+<li><p>4-13 Defining the function to subset out the data. The code is fairly easy to
+understand here. The file is opened, the first line is read since this
+contains the column names and should not be appended to the result. Then each
+line is iterated over, split on the basis of the tabs, and appended if it
+meets a certain criteria.</p></li>
+<li><p>15-19 Function to stack the data. The joblib <code>Parallel</code> function will return a
+list of lists, with each list within the list being the results from the
+individual files. The <code>stack</code> function iterates over the list, converts the
+inner lists to numpy arrays, and stacks the current data with the previous
+data.</p></li>
+<li><p>22-28 Running the script. The main focus here is on line 27. The first
+argument that <code>Parallel</code> takes is the number of jobs to be used. Setting
+<code>n_jobs</code> to -1 says to use all possible cores. The second argument is the
+function to be run in parallel. The joblib docs indicate that &#8220;The delayed
+function is a simple trick to be able to create a tuple
+(function, args, kwargs) with a function-call syntax.&#8221; So delayed is passed
+the <code>subset</code> function with the arg <code>x</code>, which represents the file to be opened
+as held in <code>filepath</code>. This data is then stored as a list of lists, and
+stacked using the <code>stack</code> function.</p></li>
+</ul>
+
+
+<p>Some quick prelimenary examinations shows that this parallel implementation is
+much, much faster than running in serial. Running on two files is almost
+instananeous, which is a drastic improvement.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -576,6 +689,10 @@ suggestions, please feel free to contact me.</p>
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2012/12/07/parallel-data-subsetting/">Parallel Data Subsetting</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">R Magic and Bootstrapped t-test</a>
