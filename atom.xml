@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-02-23T18:25:56-05:00</updated>
+  <updated>2013-02-28T21:27:57-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -21,7 +21,7 @@
     <content type="html"><![CDATA[<p>I had the opportunity to give a short tutorial on web scraping for the Event
 Data class here at Penn State. I used an IPython notebook to give the
 presentation and I&#8217;ve put the code in a gist. The link to the IPython notebook
-is <a href="http://nbviewer.ipython.org/4743272/">http://nbviewer.ipython.org/4743272/</a>.</p>
+is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/4743272/</a>.</p>
 
 <p>The PITF project I make reference to is hosted on
 <a href="https://github.com/johnb30/atrocitiesProject">github</a>.</p>
