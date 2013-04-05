@@ -138,41 +138,73 @@ will prove crucial when it comes time to split and subset the data.</p>
 
 <h3>Code</h3>
 
-<pre><code>from path import path
-import pandas as pd
+<p>from path import path
+import pandas as pd</p>
 
-allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG', 
-            'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 
-            'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 
-            'BWA', 'BRA', 'VGB', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR',
-            'CAN', 'CPV', 'CYM', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 
-            'COD', 'COG', 'COK', 'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 
-            'DNK', 'DJI', 'DMA', 'DOM', 'TMP', 'ECU', 'EGY', 'SLV', 'GNQ', 
-            'ERI', 'EST', 'ETH', 'FRO', 'FLK', 'FJI', 'FIN', 'FRA', 'GUF',
-            'PYF', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GIB', 'GRC', 'GRL',
-            'GRD', 'GLP', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'VAT', 
-            'HND', 'HKG', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 
-            'IMY', 'ISR', 'ITA', 'JAM', 'JPN', 'JOR', 'KAZ', 'KEN', 'KIR',
-            'PRK', 'KOR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 
-            'LBY', 'LIE', 'LTU', 'LUX', 'MAC', 'MKD', 'MDG', 'MWI', 'MYS',
-            'MDV', 'MLI', 'MLT', 'MHL', 'MTQ', 'MRT', 'MUS', 'MYT', 'MEX',
-            'FSM', 'MDA', 'MCO', 'MNG', 'MTN', 'MSR', 'MAR', 'MOZ', 'MMR',
-            'NAM', 'NRU', 'NPL', 'NLD', 'ANT', 'NCL', 'NZL', 'NIC', 'NER',
-            'NGA', 'NIU', 'NFK', 'MNP', 'NOR', 'PSE', 'OMN', 'PAK', 'PLW', 
-            'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'PCN', 'POL', 'PRT', 'PRI', 
-            'QAT', 'REU', 'ROM', 'RUS', 'RWA', 'SHN', 'KNA', 'LCA', 'SPM', 
-            'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'SEN', 'SRB', 'SYC', 'SLE', 
-            'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'ESP', 'LKA', 'SDN',
-            'SUR', 'SJM', 'SWZ', 'SWE', 'CHE', 'SYR', 'TJK', 'TZA', 'THA', 
-            'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',
-            'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'VIR', 'URY', 'UZB', 'VUT', 
-            'VEN', 'VNM', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE']
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">allActors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;AFG&#39;</span><span class="p">,</span> <span class="s">&#39;ALA&#39;</span><span class="p">,</span> <span class="s">&#39;ALB&#39;</span><span class="p">,</span> <span class="s">&#39;DZA&#39;</span><span class="p">,</span> <span class="s">&#39;ASM&#39;</span><span class="p">,</span> <span class="s">&#39;AND&#39;</span><span class="p">,</span> <span class="s">&#39;AGO&#39;</span><span class="p">,</span> <span class="s">&#39;AIA&#39;</span><span class="p">,</span> <span class="s">&#39;ATG&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;ARG&#39;</span><span class="p">,</span> <span class="s">&#39;ARM&#39;</span><span class="p">,</span> <span class="s">&#39;ABW&#39;</span><span class="p">,</span> <span class="s">&#39;AUS&#39;</span><span class="p">,</span> <span class="s">&#39;AUT&#39;</span><span class="p">,</span> <span class="s">&#39;AZE&#39;</span><span class="p">,</span> <span class="s">&#39;BHS&#39;</span><span class="p">,</span> <span class="s">&#39;BHR&#39;</span><span class="p">,</span> <span class="s">&#39;BGD&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;BRB&#39;</span><span class="p">,</span> <span class="s">&#39;BLR&#39;</span><span class="p">,</span> <span class="s">&#39;BEL&#39;</span><span class="p">,</span> <span class="s">&#39;BLZ&#39;</span><span class="p">,</span> <span class="s">&#39;BEN&#39;</span><span class="p">,</span> <span class="s">&#39;BMU&#39;</span><span class="p">,</span> <span class="s">&#39;BTN&#39;</span><span class="p">,</span> <span class="s">&#39;BOL&#39;</span><span class="p">,</span> <span class="s">&#39;BIH&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;BWA&#39;</span><span class="p">,</span> <span class="s">&#39;BRA&#39;</span><span class="p">,</span> <span class="s">&#39;VGB&#39;</span><span class="p">,</span> <span class="s">&#39;BRN&#39;</span><span class="p">,</span> <span class="s">&#39;BGR&#39;</span><span class="p">,</span> <span class="s">&#39;BFA&#39;</span><span class="p">,</span> <span class="s">&#39;BDI&#39;</span><span class="p">,</span> <span class="s">&#39;KHM&#39;</span><span class="p">,</span> <span class="s">&#39;CMR&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;CAN&#39;</span><span class="p">,</span> <span class="s">&#39;CPV&#39;</span><span class="p">,</span> <span class="s">&#39;CYM&#39;</span><span class="p">,</span> <span class="s">&#39;CAF&#39;</span><span class="p">,</span> <span class="s">&#39;TCD&#39;</span><span class="p">,</span> <span class="s">&#39;CHL&#39;</span><span class="p">,</span> <span class="s">&#39;CHN&#39;</span><span class="p">,</span> <span class="s">&#39;COL&#39;</span><span class="p">,</span> <span class="s">&#39;COM&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;COD&#39;</span><span class="p">,</span> <span class="s">&#39;COG&#39;</span><span class="p">,</span> <span class="s">&#39;COK&#39;</span><span class="p">,</span> <span class="s">&#39;CRI&#39;</span><span class="p">,</span> <span class="s">&#39;CIV&#39;</span><span class="p">,</span> <span class="s">&#39;HRV&#39;</span><span class="p">,</span> <span class="s">&#39;CUB&#39;</span><span class="p">,</span> <span class="s">&#39;CYP&#39;</span><span class="p">,</span> <span class="s">&#39;CZE&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;DNK&#39;</span><span class="p">,</span> <span class="s">&#39;DJI&#39;</span><span class="p">,</span> <span class="s">&#39;DMA&#39;</span><span class="p">,</span> <span class="s">&#39;DOM&#39;</span><span class="p">,</span> <span class="s">&#39;TMP&#39;</span><span class="p">,</span> <span class="s">&#39;ECU&#39;</span><span class="p">,</span> <span class="s">&#39;EGY&#39;</span><span class="p">,</span> <span class="s">&#39;SLV&#39;</span><span class="p">,</span> <span class="s">&#39;GNQ&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;ERI&#39;</span><span class="p">,</span> <span class="s">&#39;EST&#39;</span><span class="p">,</span> <span class="s">&#39;ETH&#39;</span><span class="p">,</span> <span class="s">&#39;FRO&#39;</span><span class="p">,</span> <span class="s">&#39;FLK&#39;</span><span class="p">,</span> <span class="s">&#39;FJI&#39;</span><span class="p">,</span> <span class="s">&#39;FIN&#39;</span><span class="p">,</span> <span class="s">&#39;FRA&#39;</span><span class="p">,</span> <span class="s">&#39;GUF&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;PYF&#39;</span><span class="p">,</span> <span class="s">&#39;GAB&#39;</span><span class="p">,</span> <span class="s">&#39;GMB&#39;</span><span class="p">,</span> <span class="s">&#39;GEO&#39;</span><span class="p">,</span> <span class="s">&#39;DEU&#39;</span><span class="p">,</span> <span class="s">&#39;GHA&#39;</span><span class="p">,</span> <span class="s">&#39;GIB&#39;</span><span class="p">,</span> <span class="s">&#39;GRC&#39;</span><span class="p">,</span> <span class="s">&#39;GRL&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;GRD&#39;</span><span class="p">,</span> <span class="s">&#39;GLP&#39;</span><span class="p">,</span> <span class="s">&#39;GUM&#39;</span><span class="p">,</span> <span class="s">&#39;GTM&#39;</span><span class="p">,</span> <span class="s">&#39;GIN&#39;</span><span class="p">,</span> <span class="s">&#39;GNB&#39;</span><span class="p">,</span> <span class="s">&#39;GUY&#39;</span><span class="p">,</span> <span class="s">&#39;HTI&#39;</span><span class="p">,</span> <span class="s">&#39;VAT&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;HND&#39;</span><span class="p">,</span> <span class="s">&#39;HKG&#39;</span><span class="p">,</span> <span class="s">&#39;HUN&#39;</span><span class="p">,</span> <span class="s">&#39;ISL&#39;</span><span class="p">,</span> <span class="s">&#39;IND&#39;</span><span class="p">,</span> <span class="s">&#39;IDN&#39;</span><span class="p">,</span> <span class="s">&#39;IRN&#39;</span><span class="p">,</span> <span class="s">&#39;IRQ&#39;</span><span class="p">,</span> <span class="s">&#39;IRL&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;IMY&#39;</span><span class="p">,</span> <span class="s">&#39;ISR&#39;</span><span class="p">,</span> <span class="s">&#39;ITA&#39;</span><span class="p">,</span> <span class="s">&#39;JAM&#39;</span><span class="p">,</span> <span class="s">&#39;JPN&#39;</span><span class="p">,</span> <span class="s">&#39;JOR&#39;</span><span class="p">,</span> <span class="s">&#39;KAZ&#39;</span><span class="p">,</span> <span class="s">&#39;KEN&#39;</span><span class="p">,</span> <span class="s">&#39;KIR&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;PRK&#39;</span><span class="p">,</span> <span class="s">&#39;KOR&#39;</span><span class="p">,</span> <span class="s">&#39;KWT&#39;</span><span class="p">,</span> <span class="s">&#39;KGZ&#39;</span><span class="p">,</span> <span class="s">&#39;LAO&#39;</span><span class="p">,</span> <span class="s">&#39;LVA&#39;</span><span class="p">,</span> <span class="s">&#39;LBN&#39;</span><span class="p">,</span> <span class="s">&#39;LSO&#39;</span><span class="p">,</span> <span class="s">&#39;LBR&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;LBY&#39;</span><span class="p">,</span> <span class="s">&#39;LIE&#39;</span><span class="p">,</span> <span class="s">&#39;LTU&#39;</span><span class="p">,</span> <span class="s">&#39;LUX&#39;</span><span class="p">,</span> <span class="s">&#39;MAC&#39;</span><span class="p">,</span> <span class="s">&#39;MKD&#39;</span><span class="p">,</span> <span class="s">&#39;MDG&#39;</span><span class="p">,</span> <span class="s">&#39;MWI&#39;</span><span class="p">,</span> <span class="s">&#39;MYS&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;MDV&#39;</span><span class="p">,</span> <span class="s">&#39;MLI&#39;</span><span class="p">,</span> <span class="s">&#39;MLT&#39;</span><span class="p">,</span> <span class="s">&#39;MHL&#39;</span><span class="p">,</span> <span class="s">&#39;MTQ&#39;</span><span class="p">,</span> <span class="s">&#39;MRT&#39;</span><span class="p">,</span> <span class="s">&#39;MUS&#39;</span><span class="p">,</span> <span class="s">&#39;MYT&#39;</span><span class="p">,</span> <span class="s">&#39;MEX&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;FSM&#39;</span><span class="p">,</span> <span class="s">&#39;MDA&#39;</span><span class="p">,</span> <span class="s">&#39;MCO&#39;</span><span class="p">,</span> <span class="s">&#39;MNG&#39;</span><span class="p">,</span> <span class="s">&#39;MTN&#39;</span><span class="p">,</span> <span class="s">&#39;MSR&#39;</span><span class="p">,</span> <span class="s">&#39;MAR&#39;</span><span class="p">,</span> <span class="s">&#39;MOZ&#39;</span><span class="p">,</span> <span class="s">&#39;MMR&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;NAM&#39;</span><span class="p">,</span> <span class="s">&#39;NRU&#39;</span><span class="p">,</span> <span class="s">&#39;NPL&#39;</span><span class="p">,</span> <span class="s">&#39;NLD&#39;</span><span class="p">,</span> <span class="s">&#39;ANT&#39;</span><span class="p">,</span> <span class="s">&#39;NCL&#39;</span><span class="p">,</span> <span class="s">&#39;NZL&#39;</span><span class="p">,</span> <span class="s">&#39;NIC&#39;</span><span class="p">,</span> <span class="s">&#39;NER&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;NGA&#39;</span><span class="p">,</span> <span class="s">&#39;NIU&#39;</span><span class="p">,</span> <span class="s">&#39;NFK&#39;</span><span class="p">,</span> <span class="s">&#39;MNP&#39;</span><span class="p">,</span> <span class="s">&#39;NOR&#39;</span><span class="p">,</span> <span class="s">&#39;PSE&#39;</span><span class="p">,</span> <span class="s">&#39;OMN&#39;</span><span class="p">,</span> <span class="s">&#39;PAK&#39;</span><span class="p">,</span> <span class="s">&#39;PLW&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;PAN&#39;</span><span class="p">,</span> <span class="s">&#39;PNG&#39;</span><span class="p">,</span> <span class="s">&#39;PRY&#39;</span><span class="p">,</span> <span class="s">&#39;PER&#39;</span><span class="p">,</span> <span class="s">&#39;PHL&#39;</span><span class="p">,</span> <span class="s">&#39;PCN&#39;</span><span class="p">,</span> <span class="s">&#39;POL&#39;</span><span class="p">,</span> <span class="s">&#39;PRT&#39;</span><span class="p">,</span> <span class="s">&#39;PRI&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;QAT&#39;</span><span class="p">,</span> <span class="s">&#39;REU&#39;</span><span class="p">,</span> <span class="s">&#39;ROM&#39;</span><span class="p">,</span> <span class="s">&#39;RUS&#39;</span><span class="p">,</span> <span class="s">&#39;RWA&#39;</span><span class="p">,</span> <span class="s">&#39;SHN&#39;</span><span class="p">,</span> <span class="s">&#39;KNA&#39;</span><span class="p">,</span> <span class="s">&#39;LCA&#39;</span><span class="p">,</span> <span class="s">&#39;SPM&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;VCT&#39;</span><span class="p">,</span> <span class="s">&#39;WSM&#39;</span><span class="p">,</span> <span class="s">&#39;SMR&#39;</span><span class="p">,</span> <span class="s">&#39;STP&#39;</span><span class="p">,</span> <span class="s">&#39;SAU&#39;</span><span class="p">,</span> <span class="s">&#39;SEN&#39;</span><span class="p">,</span> <span class="s">&#39;SRB&#39;</span><span class="p">,</span> <span class="s">&#39;SYC&#39;</span><span class="p">,</span> <span class="s">&#39;SLE&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;SGP&#39;</span><span class="p">,</span> <span class="s">&#39;SVK&#39;</span><span class="p">,</span> <span class="s">&#39;SVN&#39;</span><span class="p">,</span> <span class="s">&#39;SLB&#39;</span><span class="p">,</span> <span class="s">&#39;SOM&#39;</span><span class="p">,</span> <span class="s">&#39;ZAF&#39;</span><span class="p">,</span> <span class="s">&#39;ESP&#39;</span><span class="p">,</span> <span class="s">&#39;LKA&#39;</span><span class="p">,</span> <span class="s">&#39;SDN&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;SUR&#39;</span><span class="p">,</span> <span class="s">&#39;SJM&#39;</span><span class="p">,</span> <span class="s">&#39;SWZ&#39;</span><span class="p">,</span> <span class="s">&#39;SWE&#39;</span><span class="p">,</span> <span class="s">&#39;CHE&#39;</span><span class="p">,</span> <span class="s">&#39;SYR&#39;</span><span class="p">,</span> <span class="s">&#39;TJK&#39;</span><span class="p">,</span> <span class="s">&#39;TZA&#39;</span><span class="p">,</span> <span class="s">&#39;THA&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;TGO&#39;</span><span class="p">,</span> <span class="s">&#39;TKL&#39;</span><span class="p">,</span> <span class="s">&#39;TON&#39;</span><span class="p">,</span> <span class="s">&#39;TTO&#39;</span><span class="p">,</span> <span class="s">&#39;TUN&#39;</span><span class="p">,</span> <span class="s">&#39;TUR&#39;</span><span class="p">,</span> <span class="s">&#39;TKM&#39;</span><span class="p">,</span> <span class="s">&#39;TCA&#39;</span><span class="p">,</span> <span class="s">&#39;TUV&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;UGA&#39;</span><span class="p">,</span> <span class="s">&#39;UKR&#39;</span><span class="p">,</span> <span class="s">&#39;ARE&#39;</span><span class="p">,</span> <span class="s">&#39;GBR&#39;</span><span class="p">,</span> <span class="s">&#39;USA&#39;</span><span class="p">,</span> <span class="s">&#39;VIR&#39;</span><span class="p">,</span> <span class="s">&#39;URY&#39;</span><span class="p">,</span> <span class="s">&#39;UZB&#39;</span><span class="p">,</span> <span class="s">&#39;VUT&#39;</span><span class="p">,</span>
+</span><span class='line'>            <span class="s">&#39;VEN&#39;</span><span class="p">,</span> <span class="s">&#39;VNM&#39;</span><span class="p">,</span> <span class="s">&#39;WLF&#39;</span><span class="p">,</span> <span class="s">&#39;ESH&#39;</span><span class="p">,</span> <span class="s">&#39;YEM&#39;</span><span class="p">,</span> <span class="s">&#39;ZMB&#39;</span><span class="p">,</span> <span class="s">&#39;ZWE&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">quad_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">filepaths</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s">&#39;*.reduced.txt&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+</span></code></pre></td></tr></table></div></figure>
 
-quad_codes = ['2', '3']
-
-filepaths = path.getcwd().files('*.reduced.txt')
-output = list()
-</code></pre>
 
 <p>This first portion is simply importing the necessary modules, defining the list
 of state actors, obtaining the relevant filepaths, and defining an empty list,
@@ -180,17 +212,28 @@ which will serve as the container for the subset of the data.
 As a brief note, the <code>path</code> module is really fantastic and makes working with
 filepaths and directories extremely simple.</p>
 
-<pre><code>for path in filepaths:
-    data = open(path, 'r')
-    print 'Just read in the %s data...' % path
-    for line in data:
-        line = line.replace('\n', '')
-        split_line = line.split('\t')
-        condition1 = split_line[1][0:3] == 'USA'
-        condition2 = split_line[2][0:3] != 'USA'
-        condition3 = split_line[2][0:3] in allActors
-        condition4 = split_line[4] in quad_codes
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">filepaths</span><span class="p">:</span>
+</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
+</span><span class='line'>    <span class="k">print</span> <span class="s">&#39;Just read in the </span><span class="si">%s</span><span class="s"> data...&#39;</span> <span class="o">%</span> <span class="n">path</span>
+</span><span class='line'>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+</span><span class='line'>        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">split_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+</span><span class='line'>        <span class="n">condition1</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;USA&#39;</span>
+</span><span class='line'>        <span class="n">condition2</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;USA&#39;</span>
+</span><span class='line'>        <span class="n">condition3</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="n">allActors</span>
+</span><span class='line'>        <span class="n">condition4</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="n">quad_codes</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The next portion of code iterates over the filepaths obtained using <code>path</code>.
 Each file is then opened and iterated over line by line. Each line
@@ -203,12 +246,18 @@ indicates that the first three characters of <code>Actor1Code</code> should be
 characters of <code>Actor2Code</code> are in the <code>allActors</code> list defined earlier, while
 <code>condition4</code> checks if the <code>QuadCategory</code> is one of the desired values.</p>
 
-<pre><code>    try:
-        if all([condition1, condition2, condition3, condition4]):
-            output.append(split_line)
-    except IndexError:
-        pass
-</code></pre>
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">condition1</span><span class="p">,</span> <span class="n">condition2</span><span class="p">,</span> <span class="n">condition3</span><span class="p">,</span> <span class="n">condition4</span><span class="p">]):</span>
+</span><span class='line'>        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_line</span><span class="p">)</span>
+</span><span class='line'><span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+</span><span class='line'>    <span class="k">pass</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <p>The above code simply checks if all of the various conditions were met, and
 if so appends the <code>split_line</code> to <code>output</code>. This code is wrapped in a try-except
@@ -217,15 +266,24 @@ should not affect the actual event data. The try-except statements allow for
 an attempt at a certain block of code, and if an error is raised, in this case
 an <code>IndexError</code>, for some other actions to occur.</p>
 
-<pre><code>header = open(filepaths[0], 'r').readline().split('\t')
-subset = pd.DataFrame(output, columns = header)
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">header</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="n">subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">header</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="s">&#39;Day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span>
+</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="s">&#39;Day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">keep_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor2Code&#39;</span><span class="p">,</span> <span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span>
+</span><span class='line'><span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="n">keep_columns</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
 
-subset['year'] = subset['Day'].str[0:4]
-subset['month'] = subset['Day'].str[4:6]
-
-keep_columns = ['year', 'month', 'Actor1Code', 'Actor2Code', 'QuadCategory']
-subset = subset[keep_columns]
-</code></pre>
 
 <p>Once the code from the previous sections is finished, the subset of the data is
 contained in <code>output</code>, which is a list-of-lists with the internal lists representing
@@ -236,18 +294,30 @@ it is useful to break out the <code>Day</code> variable into months and years us
 functionality of a Series object in <code>pandas</code>. Finally, the last two lines of the above
 code reduce the data down to only the columns relevant for this subset.</p>
 
-<pre><code>subset['verbal_coop'] = 0
-subset['verbal_conf'] = 0   
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_coop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_conf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_coop&#39;</span><span class="p">][</span><span class="n">subset</span><span class="p">[</span><span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_conf&#39;</span><span class="p">][</span><span class="n">subset</span><span class="p">[</span><span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">subset_grouped</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">&#39;year&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor2Code&#39;</span><span class="p">],</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</span><span class='line'><span class="n">subset_aggregated</span> <span class="o">=</span> <span class="n">subset_grouped</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">subset_aggregated</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">&#39;gdelt_subset.csv&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
 
-subset['verbal_coop'][subset['QuadCategory'] == '2'] = 1
-subset['verbal_conf'][subset['QuadCategory'] == '3'] = 1
-
-subset_grouped = subset.groupby(['year', 'month', 'Actor1Code',
-'Actor2Code'], as_index = False)
-subset_aggregated = subset_grouped.sum()
-
-subset_aggregated.to_csv('gdelt_subset.csv', index = False)
-</code></pre>
 
 <p>Now that the data is in a properly formatted DataFrame, the next step is to create
 variables from which to draw counts of the various event types. Two variables,

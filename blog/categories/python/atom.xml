@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-05T10:15:59-07:00</updated>
+  <updated>2013-04-05T10:24:14-07:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -58,41 +58,44 @@ will prove crucial when it comes time to split and subset the data.</p>
 
 <h3>Code</h3>
 
-<pre><code>from path import path
-import pandas as pd
+<p>from path import path
+import pandas as pd</p>
 
-allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG', 
-            'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 
-            'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 
-            'BWA', 'BRA', 'VGB', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR',
-            'CAN', 'CPV', 'CYM', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 
-            'COD', 'COG', 'COK', 'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 
-            'DNK', 'DJI', 'DMA', 'DOM', 'TMP', 'ECU', 'EGY', 'SLV', 'GNQ', 
-            'ERI', 'EST', 'ETH', 'FRO', 'FLK', 'FJI', 'FIN', 'FRA', 'GUF',
-            'PYF', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GIB', 'GRC', 'GRL',
-            'GRD', 'GLP', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'VAT', 
-            'HND', 'HKG', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 
-            'IMY', 'ISR', 'ITA', 'JAM', 'JPN', 'JOR', 'KAZ', 'KEN', 'KIR',
-            'PRK', 'KOR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 
-            'LBY', 'LIE', 'LTU', 'LUX', 'MAC', 'MKD', 'MDG', 'MWI', 'MYS',
-            'MDV', 'MLI', 'MLT', 'MHL', 'MTQ', 'MRT', 'MUS', 'MYT', 'MEX',
-            'FSM', 'MDA', 'MCO', 'MNG', 'MTN', 'MSR', 'MAR', 'MOZ', 'MMR',
-            'NAM', 'NRU', 'NPL', 'NLD', 'ANT', 'NCL', 'NZL', 'NIC', 'NER',
-            'NGA', 'NIU', 'NFK', 'MNP', 'NOR', 'PSE', 'OMN', 'PAK', 'PLW', 
-            'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'PCN', 'POL', 'PRT', 'PRI', 
-            'QAT', 'REU', 'ROM', 'RUS', 'RWA', 'SHN', 'KNA', 'LCA', 'SPM', 
-            'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'SEN', 'SRB', 'SYC', 'SLE', 
-            'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'ESP', 'LKA', 'SDN',
-            'SUR', 'SJM', 'SWZ', 'SWE', 'CHE', 'SYR', 'TJK', 'TZA', 'THA', 
-            'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',
-            'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'VIR', 'URY', 'UZB', 'VUT', 
-            'VEN', 'VNM', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE']
+<p>``` python
+allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG',</p>
 
-quad_codes = ['2', '3']
-
-filepaths = path.getcwd().files('*.reduced.txt')
-output = list()
+<pre><code>        'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 
+        'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 
+        'BWA', 'BRA', 'VGB', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR',
+        'CAN', 'CPV', 'CYM', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 
+        'COD', 'COG', 'COK', 'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 
+        'DNK', 'DJI', 'DMA', 'DOM', 'TMP', 'ECU', 'EGY', 'SLV', 'GNQ', 
+        'ERI', 'EST', 'ETH', 'FRO', 'FLK', 'FJI', 'FIN', 'FRA', 'GUF',
+        'PYF', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GIB', 'GRC', 'GRL',
+        'GRD', 'GLP', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'VAT', 
+        'HND', 'HKG', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 
+        'IMY', 'ISR', 'ITA', 'JAM', 'JPN', 'JOR', 'KAZ', 'KEN', 'KIR',
+        'PRK', 'KOR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 
+        'LBY', 'LIE', 'LTU', 'LUX', 'MAC', 'MKD', 'MDG', 'MWI', 'MYS',
+        'MDV', 'MLI', 'MLT', 'MHL', 'MTQ', 'MRT', 'MUS', 'MYT', 'MEX',
+        'FSM', 'MDA', 'MCO', 'MNG', 'MTN', 'MSR', 'MAR', 'MOZ', 'MMR',
+        'NAM', 'NRU', 'NPL', 'NLD', 'ANT', 'NCL', 'NZL', 'NIC', 'NER',
+        'NGA', 'NIU', 'NFK', 'MNP', 'NOR', 'PSE', 'OMN', 'PAK', 'PLW', 
+        'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'PCN', 'POL', 'PRT', 'PRI', 
+        'QAT', 'REU', 'ROM', 'RUS', 'RWA', 'SHN', 'KNA', 'LCA', 'SPM', 
+        'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'SEN', 'SRB', 'SYC', 'SLE', 
+        'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'ESP', 'LKA', 'SDN',
+        'SUR', 'SJM', 'SWZ', 'SWE', 'CHE', 'SYR', 'TJK', 'TZA', 'THA', 
+        'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',
+        'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'VIR', 'URY', 'UZB', 'VUT', 
+        'VEN', 'VNM', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE']
 </code></pre>
+
+<p>quad_codes = ['2', '3']</p>
+
+<p>filepaths = path.getcwd().files('*.reduced.txt')
+output = list()
+```</p>
 
 <p>This first portion is simply importing the necessary modules, defining the list
 of state actors, obtaining the relevant filepaths, and defining an empty list,
@@ -100,17 +103,21 @@ which will serve as the container for the subset of the data.
 As a brief note, the <code>path</code> module is really fantastic and makes working with
 filepaths and directories extremely simple.</p>
 
-<pre><code>for path in filepaths:
-    data = open(path, 'r')
-    print 'Just read in the %s data...' % path
-    for line in data:
-        line = line.replace('\n', '')
-        split_line = line.split('\t')
-        condition1 = split_line[1][0:3] == 'USA'
-        condition2 = split_line[2][0:3] != 'USA'
-        condition3 = split_line[2][0:3] in allActors
-        condition4 = split_line[4] in quad_codes
+<p>``` python
+for path in filepaths:</p>
+
+<pre><code>data = open(path, 'r')
+print 'Just read in the %s data...' % path
+for line in data:
+    line = line.replace('\n', '')
+    split_line = line.split('\t')
+    condition1 = split_line[1][0:3] == 'USA'
+    condition2 = split_line[2][0:3] != 'USA'
+    condition3 = split_line[2][0:3] in allActors
+    condition4 = split_line[4] in quad_codes
 </code></pre>
+
+<p>```</p>
 
 <p>The next portion of code iterates over the filepaths obtained using <code>path</code>.
 Each file is then opened and iterated over line by line. Each line
@@ -123,12 +130,16 @@ indicates that the first three characters of <code>Actor1Code</code> should be
 characters of <code>Actor2Code</code> are in the <code>allActors</code> list defined earlier, while
 <code>condition4</code> checks if the <code>QuadCategory</code> is one of the desired values.</p>
 
-<pre><code>    try:
-        if all([condition1, condition2, condition3, condition4]):
-            output.append(split_line)
-    except IndexError:
-        pass
+<p>``` python</p>
+
+<pre><code>try:
+    if all([condition1, condition2, condition3, condition4]):
+        output.append(split_line)
+except IndexError:
+    pass
 </code></pre>
+
+<p>```</p>
 
 <p>The above code simply checks if all of the various conditions were met, and
 if so appends the <code>split_line</code> to <code>output</code>. This code is wrapped in a try-except
@@ -137,15 +148,16 @@ should not affect the actual event data. The try-except statements allow for
 an attempt at a certain block of code, and if an error is raised, in this case
 an <code>IndexError</code>, for some other actions to occur.</p>
 
-<pre><code>header = open(filepaths[0], 'r').readline().split('\t')
-subset = pd.DataFrame(output, columns = header)
+<p>``` python
+header = open(filepaths[0], 'r').readline().split('\t')
+subset = pd.DataFrame(output, columns = header)</p>
 
-subset['year'] = subset['Day'].str[0:4]
-subset['month'] = subset['Day'].str[4:6]
+<p>subset['year'] = subset['Day'].str[0:4]
+subset['month'] = subset['Day'].str[4:6]</p>
 
-keep_columns = ['year', 'month', 'Actor1Code', 'Actor2Code', 'QuadCategory']
+<p>keep_columns = ['year', 'month', 'Actor1Code', 'Actor2Code', 'QuadCategory']
 subset = subset[keep_columns]
-</code></pre>
+```</p>
 
 <p>Once the code from the previous sections is finished, the subset of the data is
 contained in <code>output</code>, which is a list-of-lists with the internal lists representing
@@ -156,18 +168,19 @@ it is useful to break out the <code>Day</code> variable into months and years us
 functionality of a Series object in <code>pandas</code>. Finally, the last two lines of the above
 code reduce the data down to only the columns relevant for this subset.</p>
 
-<pre><code>subset['verbal_coop'] = 0
-subset['verbal_conf'] = 0   
+<p>``` python
+subset['verbal_coop'] = 0
+subset['verbal_conf'] = 0</p>
 
-subset['verbal_coop'][subset['QuadCategory'] == '2'] = 1
-subset['verbal_conf'][subset['QuadCategory'] == '3'] = 1
+<p>subset['verbal_coop'][subset['QuadCategory'] == '2'] = 1
+subset['verbal_conf'][subset['QuadCategory'] == '3'] = 1</p>
 
-subset_grouped = subset.groupby(['year', 'month', 'Actor1Code',
+<p>subset_grouped = subset.groupby(['year', 'month', 'Actor1Code',
 'Actor2Code'], as_index = False)
-subset_aggregated = subset_grouped.sum()
+subset_aggregated = subset_grouped.sum()</p>
 
-subset_aggregated.to_csv('gdelt_subset.csv', index = False)
-</code></pre>
+<p>subset_aggregated.to_csv('gdelt_subset.csv', index = False)
+```</p>
 
 <p>Now that the data is in a properly formatted DataFrame, the next step is to create
 variables from which to draw counts of the various event types. Two variables,
