@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-03-11T11:36:20-04:00</updated>
+  <updated>2013-04-05T10:15:59-07:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -14,9 +14,198 @@
 
   
   <entry>
+    <title type="html"><![CDATA[How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset]]></title>
+    <link href="http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/"/>
+    <updated>2013-04-04T19:15:00-07:00</updated>
+    <id>http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset</id>
+    <content type="html"><![CDATA[<h3>GDELT</h3>
+
+<p>Over the past week, the Global Data on Events, Location and Tone (GDELT)
+dataset was finally released to the general public. The data is available
+at the Penn State event data <a href="http://eventdata.psu.edu/data.dir/GDELT.html">website</a>.
+We at Penn State had the
+good fortune to have access to this dataset for many months before its public
+release. This allowed us to gain some experience working with this massive
+collection of data. As a brief background, GDELT is comprised of event
+data records spanning 1979 - mid 2012. The events are coded according to the
+<a href="http://eventdata.psu.edu/data.dir/cameo.html">CAMEO</a> coding scheme, with the
+addition of a &#8220;QuadCategory,&#8221; which separates the events into the material conflict,
+material cooperation, verbal conflict, and verbal conflict categories. The data is
+spread across 33 different files, each of which is substantially large on its own.
+This makes it fairly difficult to work with, and almost guarantees that some
+subset of the data is necessary in order to perform analysis. Phil Schrodt has
+included some programs with the data to aid in this subsetting, but I thought there
+might be some who would prefer to get their hands dirty and write some of their
+own code. Given this, I thought I would share some of the knowledge I gained
+while working with the GDELT dataset.</p>
+
+<p>For the purposes of this brief introduction, I will work under the assumption
+that the desired events are those that originate from the United States, are
+directed at some type of state actor, and are either verbal cooperation or
+conflict. The following code, written in Python, demonstrates how this subset
+might be selected from the GDELT data. The code also assumes the reader
+has the <code>pandas</code> and <code>path</code> Python modules installed. Both can be installed using
+the normal <code>pip install</code> method. Finally, the complete code is available as
+a gist on <a href="https://gist.github.com/johnb30/5316196">github</a>.</p>
+
+<p>Before starting, it is always useful to take a peek at the data. This is as
+simple as opening up the terminal and using <code>head 1979.reduced.txt</code>. Doing this
+shows the various columns in the reduced data and how they are arranged. We
+can see that the date is in the 0 index, with <code>Actor1Code</code> and <code>Actor2Code</code>
+in spots 1 and 2, respectively. Additionally, <code>EventCode</code> is located in spot 3,
+while the <code>QuadCategory</code> variable is, fittingly, in position 4. These indices
+will prove crucial when it comes time to split and subset the data.</p>
+
+<h3>Code</h3>
+
+<pre><code>from path import path
+import pandas as pd
+
+allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG', 
+            'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 
+            'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 
+            'BWA', 'BRA', 'VGB', 'BRN', 'BGR', 'BFA', 'BDI', 'KHM', 'CMR',
+            'CAN', 'CPV', 'CYM', 'CAF', 'TCD', 'CHL', 'CHN', 'COL', 'COM', 
+            'COD', 'COG', 'COK', 'CRI', 'CIV', 'HRV', 'CUB', 'CYP', 'CZE', 
+            'DNK', 'DJI', 'DMA', 'DOM', 'TMP', 'ECU', 'EGY', 'SLV', 'GNQ', 
+            'ERI', 'EST', 'ETH', 'FRO', 'FLK', 'FJI', 'FIN', 'FRA', 'GUF',
+            'PYF', 'GAB', 'GMB', 'GEO', 'DEU', 'GHA', 'GIB', 'GRC', 'GRL',
+            'GRD', 'GLP', 'GUM', 'GTM', 'GIN', 'GNB', 'GUY', 'HTI', 'VAT', 
+            'HND', 'HKG', 'HUN', 'ISL', 'IND', 'IDN', 'IRN', 'IRQ', 'IRL', 
+            'IMY', 'ISR', 'ITA', 'JAM', 'JPN', 'JOR', 'KAZ', 'KEN', 'KIR',
+            'PRK', 'KOR', 'KWT', 'KGZ', 'LAO', 'LVA', 'LBN', 'LSO', 'LBR', 
+            'LBY', 'LIE', 'LTU', 'LUX', 'MAC', 'MKD', 'MDG', 'MWI', 'MYS',
+            'MDV', 'MLI', 'MLT', 'MHL', 'MTQ', 'MRT', 'MUS', 'MYT', 'MEX',
+            'FSM', 'MDA', 'MCO', 'MNG', 'MTN', 'MSR', 'MAR', 'MOZ', 'MMR',
+            'NAM', 'NRU', 'NPL', 'NLD', 'ANT', 'NCL', 'NZL', 'NIC', 'NER',
+            'NGA', 'NIU', 'NFK', 'MNP', 'NOR', 'PSE', 'OMN', 'PAK', 'PLW', 
+            'PAN', 'PNG', 'PRY', 'PER', 'PHL', 'PCN', 'POL', 'PRT', 'PRI', 
+            'QAT', 'REU', 'ROM', 'RUS', 'RWA', 'SHN', 'KNA', 'LCA', 'SPM', 
+            'VCT', 'WSM', 'SMR', 'STP', 'SAU', 'SEN', 'SRB', 'SYC', 'SLE', 
+            'SGP', 'SVK', 'SVN', 'SLB', 'SOM', 'ZAF', 'ESP', 'LKA', 'SDN',
+            'SUR', 'SJM', 'SWZ', 'SWE', 'CHE', 'SYR', 'TJK', 'TZA', 'THA', 
+            'TGO', 'TKL', 'TON', 'TTO', 'TUN', 'TUR', 'TKM', 'TCA', 'TUV',
+            'UGA', 'UKR', 'ARE', 'GBR', 'USA', 'VIR', 'URY', 'UZB', 'VUT', 
+            'VEN', 'VNM', 'WLF', 'ESH', 'YEM', 'ZMB', 'ZWE']
+
+quad_codes = ['2', '3']
+
+filepaths = path.getcwd().files('*.reduced.txt')
+output = list()
+</code></pre>
+
+<p>This first portion is simply importing the necessary modules, defining the list
+of state actors, obtaining the relevant filepaths, and defining an empty list,
+which will serve as the container for the subset of the data.
+As a brief note, the <code>path</code> module is really fantastic and makes working with
+filepaths and directories extremely simple.</p>
+
+<pre><code>for path in filepaths:
+    data = open(path, 'r')
+    print 'Just read in the %s data...' % path
+    for line in data:
+        line = line.replace('\n', '')
+        split_line = line.split('\t')
+        condition1 = split_line[1][0:3] == 'USA'
+        condition2 = split_line[2][0:3] != 'USA'
+        condition3 = split_line[2][0:3] in allActors
+        condition4 = split_line[4] in quad_codes
+</code></pre>
+
+<p>The next portion of code iterates over the filepaths obtained using <code>path</code>.
+Each file is then opened and iterated over line by line. Each line
+has any new-line characters replaced, which makes the data easier to work with,
+and is then split on the basis of tab characters (&#8216;\t&#8217;). The following four lines
+define the logical conditions for subsetting the data. The first condition
+indicates that the first three characters of <code>Actor1Code</code> should be
+&#8216;USA&#8217;, while <code>condition2</code> states that the first three characters of
+<code>Actor2Code</code> should <em>not</em> equal &#8216;USA&#8217;. <code>condition3</code> checks if the first three
+characters of <code>Actor2Code</code> are in the <code>allActors</code> list defined earlier, while
+<code>condition4</code> checks if the <code>QuadCategory</code> is one of the desired values.</p>
+
+<pre><code>    try:
+        if all([condition1, condition2, condition3, condition4]):
+            output.append(split_line)
+    except IndexError:
+        pass
+</code></pre>
+
+<p>The above code simply checks if all of the various conditions were met, and
+if so appends the <code>split_line</code> to <code>output</code>. This code is wrapped in a try-except
+statement since there can be some malformed lines floating in the data, but this
+should not affect the actual event data. The try-except statements allow for
+an attempt at a certain block of code, and if an error is raised, in this case
+an <code>IndexError</code>, for some other actions to occur.</p>
+
+<pre><code>header = open(filepaths[0], 'r').readline().split('\t')
+subset = pd.DataFrame(output, columns = header)
+
+subset['year'] = subset['Day'].str[0:4]
+subset['month'] = subset['Day'].str[4:6]
+
+keep_columns = ['year', 'month', 'Actor1Code', 'Actor2Code', 'QuadCategory']
+subset = subset[keep_columns]
+</code></pre>
+
+<p>Once the code from the previous sections is finished, the subset of the data is
+contained in <code>output</code>, which is a list-of-lists with the internal lists representing
+the individual events. It is possible, using the <code>pandas</code> library, to convert this
+list-of-lists to a pandas DataFrame object, with the header drawn from the first line
+of the first file in <code>filepaths</code>. In order to aggregate the data to a specific time period,
+it is useful to break out the <code>Day</code> variable into months and years using the <code>.str</code>
+functionality of a Series object in <code>pandas</code>. Finally, the last two lines of the above
+code reduce the data down to only the columns relevant for this subset.</p>
+
+<pre><code>subset['verbal_coop'] = 0
+subset['verbal_conf'] = 0   
+
+subset['verbal_coop'][subset['QuadCategory'] == '2'] = 1
+subset['verbal_conf'][subset['QuadCategory'] == '3'] = 1
+
+subset_grouped = subset.groupby(['year', 'month', 'Actor1Code',
+'Actor2Code'], as_index = False)
+subset_aggregated = subset_grouped.sum()
+
+subset_aggregated.to_csv('gdelt_subset.csv', index = False)
+</code></pre>
+
+<p>Now that the data is in a properly formatted DataFrame, the next step is to create
+variables from which to draw counts of the various event types. Two variables,
+<code>verbal_coop</code> and <code>verbal_conf</code> are created and assigned values of zero. Then,
+these variables are assigned values of one if the <code>QuadCategory</code> matches the
+value for that event type. This functionality in <code>pandas</code> is similar that of
+<code>R</code>, and I plan on doing a more in-depth tutorial on <code>pandas</code> at a later date.
+With the event variables created, the data can be grouped and aggregated. <code>pandas</code>
+has the <code>.groupby</code> functionality for DataFrames, which allows you to group the data
+by specific variables. For the purposes of this dataset, a multi-level grouping is
+desired, with groups created by the year, the month, and the dyad. Once this grouping
+is created, the values are summed within each grouping leading to the final, aggregated
+dataset. This final data can be saved using the <code>.to_csv</code> method.</p>
+
+<p>And there you have it, you now have a subset of the GDELT dataset.
+This is a relatively simple task thanks to Python&#8217;s built in tools. It is
+possible to make this task run more quickly using parallel processing, as
+outlined in my previous <a href="http://johnbeieler.org/blog/2012/12/07/parallel-data-subsetting/">post</a>
+on parallel subsetting. As a brief recap, it is simply
+a matter of using the <code>jobilb</code> module, wrapping the above subsetting code in
+a function, and adding something along the lines of</p>
+
+<pre><code>data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in list_of_paths)
+</code></pre>
+
+<p>to the script. I hope this brief intro will prove helpful to those who wish
+to use GDELT in their own research. This tutorial only scratched the surface
+of working with event data, and there is much more to consider beyond just
+what subset you will select. A good resource on working with event data
+was written by <a href="http://jayyonamine.com/wp-content/uploads/2012/06/Working-with-Event-Data-A-Guide-to-Aggregation-Choices.pdf">Jay Yonamine</a>
+and will likely prove useful to those engaging in event-data research.</p>
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[Web Scraping Tutorial]]></title>
     <link href="http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial/"/>
-    <updated>2013-02-08T20:39:00-05:00</updated>
+    <updated>2013-02-08T20:39:00-08:00</updated>
     <id>http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial</id>
     <content type="html"><![CDATA[<p>I had the opportunity to give a short tutorial on web scraping for the Event
 Data class here at Penn State. I used an IPython notebook to give the
@@ -31,7 +220,7 @@ is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/474
   <entry>
     <title type="html"><![CDATA[Parallel Data Subsetting]]></title>
     <link href="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/"/>
-    <updated>2012-12-07T18:26:00-05:00</updated>
+    <updated>2012-12-07T18:26:00-08:00</updated>
     <id>http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting</id>
     <content type="html"><![CDATA[<h3>The Challenge</h3>
 
@@ -117,7 +306,7 @@ instananeous, which is a drastic improvement.</p>
   <entry>
     <title type="html"><![CDATA[R Magic and Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/"/>
-    <updated>2012-11-29T21:53:00-05:00</updated>
+    <updated>2012-11-29T21:53:00-08:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test</id>
     <content type="html"><![CDATA[<p>Following up on my last post, I wanted a way to test my bootstrapped t-test
 function against the regular t-test function in R. While I was able to do this
@@ -169,7 +358,7 @@ and .03).</p>
   <entry>
     <title type="html"><![CDATA[Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test/"/>
-    <updated>2012-11-28T19:47:00-05:00</updated>
+    <updated>2012-11-28T19:47:00-08:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test</id>
     <content type="html"><![CDATA[<p>The below code is to perform a nonparametric two-sample t-test using
 bootstrapping. First I present the code, and will then follow up with a
@@ -241,7 +430,7 @@ hypothesis. The final line (29) then prints the p-value as a float.</p></li>
   <entry>
     <title type="html"><![CDATA[Starting With Python]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/24/starting-with-python/"/>
-    <updated>2012-11-24T19:10:00-05:00</updated>
+    <updated>2012-11-24T19:10:00-08:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/24/starting-with-python</id>
     <content type="html"><![CDATA[<h2>Overview</h2>
 
