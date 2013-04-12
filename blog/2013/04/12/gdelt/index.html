@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>GDELT, Big Data, and Theory - John Beieler</title>
+  <meta name="author" content="John Beieler">
+
+  
+  <meta name="description" content="I made the remark on Twitter that it seemed like GDELT week due to a
+Foreign Policy
+piece about the dataset, Phil and Kalev&#8217;s paper
+for the ISA &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/04/12/gdelt/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="John Beieler" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">John Beieler</a></h1>
+  
+    <h2>PhD Student in Political Science</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:johnb30.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/cv">CV</a></li>
+  <li><a href="/papers">Papers</a></li>
+  <li><a href="/code">Code</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">GDELT, Big Data, and Theory</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T14:56:00-04:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>I made the remark on Twitter that it seemed like GDELT week due to a
+<a href="http://ideas.foreignpolicy.com/posts/2013/04/10%20what_can_we_learn_from_the_last_200_million_things_that_happened_in_the_world">Foreign Policy</a>
+piece about the dataset, Phil and Kalev&#8217;s <a href="http://eventdata.psu.edu/papers.dir/ISA.2013.GDELT.pdf">paper</a>
+for the ISA 2013 meeting, and a <a href="https://dartthrowingchimp.wordpress.com/2013/04/10/the-future-of-political-science-just-showed-up/">host</a>
+of <a href="http://badhessian.org/gdelt-and-social-movements/">blog</a>
+<a href="https://willopines.wordpress.com/2013/04/11/excitement-about-gdelt-and-some-personal-intellectual-history/">posts</a>
+about the data. So, in the spirit of GDELT week, I thought I would throw my hat into
+the ring. But instead of taking the approach of lauding the new age that is approaching
+for political and social research due to the monstrous scale of the data now available, I thought
+I would write a little about the issues that come along with dealing with such massive data.</p>
+
+<h3>Dealing with GDELT</h3>
+
+<p>As someone who has spent the better part of the past 8 months dealing with the GDELT dataset,
+including <a href="http://johnbeieler.org/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">writing</a> a little about
+working with the data, I feel that I have a somewhat unique perspective. The long and the
+short of my experience is: working with data on this scale is hard. This may strike some
+as obvious, especially given the cottage industry that has sprung up around Hadoop and
+and other services for processing data. GDELT is 200+ million events spread across several
+years. Each year of the <a href="http://eventdata.psu.edu/data.dir/GDELT.html">reduced data</a> is in
+a separate file and contains information about many, many different actors. This is part of
+what makes the data so intriguing and useful, but the data is also unlike data such as the
+ever-popular <a href="http://www.correlatesofwar.org/COW2%20Data/MIDs/MID310.html">MID data</a> in
+political science that is easily managed in a program like Stata or <code>R</code>. The data requires
+subsetting, massaging, and aggregating; having so much data can, at some points, become
+overwhelming. What states do I want to look at? What type of actors? What type of actions?
+What about substate actors? Oh, what about the dyadic interactions? These questions and
+more quickly come to the fore when dealing with data on this scale. So while the GDELT
+data offers an avenue to answer some existing questions, it also brings with it many
+potential problems.</p>
+
+<h3>Careful Research</h3>
+
+<p>So, that all sounds kind of depressing. We have this new, cool dataset that could
+be tremendously useful, but it also presents many hurdles. What, then, should we
+as social science researchers do about it? My answer is careful theorizing and
+thinking about the processes under examination. This might be a &#8220;well, duh&#8221;
+moment to those in the social sciences, but I think it is worth saying when
+there are some heralding <a href="http://www.wired.com/science/discoveries/magazine/16-07/pb_theory">&#8220;The End of Theory&#8221;</a>.
+This type of large-scale data does not reduce theory and the scientific
+method to irrelevance. Instead, theory is elevated to a position of
+higher importance. What states do I want to look at? What type of
+actions? Well, what does the theory say? As Hilary Mason noted in
+a <a href="https://twitter.com/hmason/status/294930646122504192">tweet</a>:</p>
+
+<blockquote><p>Data tells you whether to use A or B. Science tells you what A and B should be in the first place.</p></blockquote>
+
+<p>Put into more social-scientific language, data tells us the relationship
+between A and B, while science tells us what A and B should be and what type
+of observations should be used. The data under examination in a given study
+should be driven by careful consideration of the processes of interest.
+This idea should not, however, be construed as a rejection of &#8220;big data&#8221; in the
+social sciences. I personally believe the exact opposite; give me as many features,
+measures, and observations as possible and let algorithms sort out what is important.
+Instead, I think the social sciences, and science in general, is about asking
+interesting questions of the data that will often require more finesse than taking an
+&#8220;ANALYZE ALL THE DATA&#8221; approach. Thus, while datasets like GDELT provide new opportunities,
+they are not opportunities to relax and let the data do the talking. If anything, big data
+generating processes will require more work on the part of the researcher than previous
+data sources.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T14:56:00-04:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gdelt/'>GDELT</a>, <a class='category' href='/blog/categories/data/'>data</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/04/12/gdelt/" data-via="" data-counturl="http://johnb30.github.com/blog/2013/04/12/gdelt/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/" title="Previous Post: How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset">&laquo; How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/08/web-scraping-tutorial/">Web Scraping Tutorial</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/12/07/parallel-data-subsetting/">Parallel Data Subsetting</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">R Magic and Bootstrapped t-test</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/johnb30">@johnb30</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'johnb30',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - John Beieler -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

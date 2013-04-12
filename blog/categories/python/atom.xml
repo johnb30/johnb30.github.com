@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-05T10:24:14-07:00</updated>
+  <updated>2013-04-12T14:58:04-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset]]></title>
     <link href="http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/"/>
-    <updated>2013-04-04T19:15:00-07:00</updated>
+    <updated>2013-04-04T19:15:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset</id>
     <content type="html"><![CDATA[<h3>GDELT</h3>
 
@@ -218,7 +218,7 @@ and will likely prove useful to those engaging in event-data research.</p>
   <entry>
     <title type="html"><![CDATA[Web Scraping Tutorial]]></title>
     <link href="http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial/"/>
-    <updated>2013-02-08T20:39:00-08:00</updated>
+    <updated>2013-02-08T20:39:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial</id>
     <content type="html"><![CDATA[<p>I had the opportunity to give a short tutorial on web scraping for the Event
 Data class here at Penn State. I used an IPython notebook to give the
@@ -233,7 +233,7 @@ is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/474
   <entry>
     <title type="html"><![CDATA[Parallel Data Subsetting]]></title>
     <link href="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/"/>
-    <updated>2012-12-07T18:26:00-08:00</updated>
+    <updated>2012-12-07T18:26:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting</id>
     <content type="html"><![CDATA[<h3>The Challenge</h3>
 
@@ -319,7 +319,7 @@ instananeous, which is a drastic improvement.</p>
   <entry>
     <title type="html"><![CDATA[R Magic and Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/"/>
-    <updated>2012-11-29T21:53:00-08:00</updated>
+    <updated>2012-11-29T21:53:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test</id>
     <content type="html"><![CDATA[<p>Following up on my last post, I wanted a way to test my bootstrapped t-test
 function against the regular t-test function in R. While I was able to do this
@@ -362,7 +362,7 @@ and .03).</p>
   <entry>
     <title type="html"><![CDATA[Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test/"/>
-    <updated>2012-11-28T19:47:00-08:00</updated>
+    <updated>2012-11-28T19:47:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test</id>
     <content type="html"><![CDATA[<p>The below code is to perform a nonparametric two-sample t-test using
 bootstrapping. First I present the code, and will then follow up with a

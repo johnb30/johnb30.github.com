@@ -9,8 +9,10 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="GDELT Over the past week, the Global Data on Events, Location and Tone (GDELT)
-dataset was finally released to the general public. The data is &hellip;">
+  <meta name="description" content="I made the remark on Twitter that it seemed like GDELT week due to a
+Foreign Policy
+piece about the dataset, Phil and Kalev&#8217;s paper
+for the ISA &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +77,101 @@ dataset was finally released to the general public. The data is &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-12T14:56:00-04:00" pubdate data-updated="true">Apr 12<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>I made the remark on Twitter that it seemed like GDELT week due to a
+<a href="http://ideas.foreignpolicy.com/posts/2013/04/10%20what_can_we_learn_from_the_last_200_million_things_that_happened_in_the_world">Foreign Policy</a>
+piece about the dataset, Phil and Kalev&#8217;s <a href="http://eventdata.psu.edu/papers.dir/ISA.2013.GDELT.pdf">paper</a>
+for the ISA 2013 meeting, and a <a href="https://dartthrowingchimp.wordpress.com/2013/04/10/the-future-of-political-science-just-showed-up/">host</a>
+of <a href="http://badhessian.org/gdelt-and-social-movements/">blog</a>
+<a href="https://willopines.wordpress.com/2013/04/11/excitement-about-gdelt-and-some-personal-intellectual-history/">posts</a>
+about the data. So, in the spirit of GDELT week, I thought I would throw my hat into
+the ring. But instead of taking the approach of lauding the new age that is approaching
+for political and social research due to the monstrous scale of the data now available, I thought
+I would write a little about the issues that come along with dealing with such massive data.</p>
+
+<h3>Dealing with GDELT</h3>
+
+<p>As someone who has spent the better part of the past 8 months dealing with the GDELT dataset,
+including <a href="http://johnbeieler.org/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">writing</a> a little about
+working with the data, I feel that I have a somewhat unique perspective. The long and the
+short of my experience is: working with data on this scale is hard. This may strike some
+as obvious, especially given the cottage industry that has sprung up around Hadoop and
+and other services for processing data. GDELT is 200+ million events spread across several
+years. Each year of the <a href="http://eventdata.psu.edu/data.dir/GDELT.html">reduced data</a> is in
+a separate file and contains information about many, many different actors. This is part of
+what makes the data so intriguing and useful, but the data is also unlike data such as the
+ever-popular <a href="http://www.correlatesofwar.org/COW2%20Data/MIDs/MID310.html">MID data</a> in
+political science that is easily managed in a program like Stata or <code>R</code>. The data requires
+subsetting, massaging, and aggregating; having so much data can, at some points, become
+overwhelming. What states do I want to look at? What type of actors? What type of actions?
+What about substate actors? Oh, what about the dyadic interactions? These questions and
+more quickly come to the fore when dealing with data on this scale. So while the GDELT
+data offers an avenue to answer some existing questions, it also brings with it many
+potential problems.</p>
+
+<h3>Careful Research</h3>
+
+<p>So, that all sounds kind of depressing. We have this new, cool dataset that could
+be tremendously useful, but it also presents many hurdles. What, then, should we
+as social science researchers do about it? My answer is careful theorizing and
+thinking about the processes under examination. This might be a &#8220;well, duh&#8221;
+moment to those in the social sciences, but I think it is worth saying when
+there are some heralding <a href="http://www.wired.com/science/discoveries/magazine/16-07/pb_theory">&#8220;The End of Theory&#8221;</a>.
+This type of large-scale data does not reduce theory and the scientific
+method to irrelevance. Instead, theory is elevated to a position of
+higher importance. What states do I want to look at? What type of
+actions? Well, what does the theory say? As Hilary Mason noted in
+a <a href="https://twitter.com/hmason/status/294930646122504192">tweet</a>:</p>
+
+<blockquote><p>Data tells you whether to use A or B. Science tells you what A and B should be in the first place.</p></blockquote>
+
+<p>Put into more social-scientific language, data tells us the relationship
+between A and B, while science tells us what A and B should be and what type
+of observations should be used. The data under examination in a given study
+should be driven by careful consideration of the processes of interest.
+This idea should not, however, be construed as a rejection of &#8220;big data&#8221; in the
+social sciences. I personally believe the exact opposite; give me as many features,
+measures, and observations as possible and let algorithms sort out what is important.
+Instead, I think the social sciences, and science in general, is about asking
+interesting questions of the data that will often require more finesse than taking an
+&#8220;ANALYZE ALL THE DATA&#8221; approach. Thus, while datasets like GDELT provide new opportunities,
+they are not opportunities to relax and let the data do the talking. If anything, big data
+generating processes will require more work on the part of the researcher than previous
+data sources.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a></h1>
     
     
@@ -91,7 +188,7 @@ dataset was finally released to the general public. The data is &hellip;">
   
 
 
-<time datetime="2013-04-04T19:15:00-07:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
+<time datetime="2013-04-04T19:15:00-04:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
         
       </p>
     
@@ -377,7 +474,7 @@ and will likely prove useful to those engaging in event-data research.</p>
   
 
 
-<time datetime="2013-02-08T20:39:00-08:00" pubdate data-updated="true">Feb 8<span>th</span>, 2013</time>
+<time datetime="2013-02-08T20:39:00-05:00" pubdate data-updated="true">Feb 8<span>th</span>, 2013</time>
         
       </p>
     
@@ -419,7 +516,7 @@ is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/474
   
 
 
-<time datetime="2012-12-07T18:26:00-08:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+<time datetime="2012-12-07T18:26:00-05:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
         
       </p>
     
@@ -532,7 +629,7 @@ instananeous, which is a drastic improvement.</p>
   
 
 
-<time datetime="2012-11-29T21:53:00-08:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
+<time datetime="2012-11-29T21:53:00-05:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
         
       </p>
     
@@ -611,7 +708,7 @@ and .03).</p>
   
 
 
-<time datetime="2012-11-28T19:47:00-08:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+<time datetime="2012-11-28T19:47:00-05:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
         
       </p>
     
@@ -710,7 +807,7 @@ hypothesis. The final line (29) then prints the p-value as a float.</p></li>
   
 
 
-<time datetime="2012-11-24T19:10:00-08:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
+<time datetime="2012-11-24T19:10:00-05:00" pubdate data-updated="true">Nov 24<span>th</span>, 2012</time>
         
       </p>
     
@@ -1019,6 +1116,10 @@ suggestions, please feel free to contact me.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a>
       </li>
     
@@ -1032,10 +1133,6 @@ suggestions, please feel free to contact me.</p>
     
       <li class="post">
         <a href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">R Magic and Bootstrapped t-test</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2012/11/28/bootstrapping-t-test/">Bootstrapped t-test</a>
       </li>
     
   </ul>
