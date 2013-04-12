@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-12T14:58:04-04:00</updated>
+  <updated>2013-04-12T15:01:43-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -126,9 +126,6 @@ will prove crucial when it comes time to split and subset the data.</p>
 
 <h3>Code</h3>
 
-<p>from path import path
-import pandas as pd</p>
-
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
@@ -160,7 +157,13 @@ import pandas as pd</p>
 <span class='line-number'>29</span>
 <span class='line-number'>30</span>
 <span class='line-number'>31</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">allActors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;AFG&#39;</span><span class="p">,</span> <span class="s">&#39;ALA&#39;</span><span class="p">,</span> <span class="s">&#39;ALB&#39;</span><span class="p">,</span> <span class="s">&#39;DZA&#39;</span><span class="p">,</span> <span class="s">&#39;ASM&#39;</span><span class="p">,</span> <span class="s">&#39;AND&#39;</span><span class="p">,</span> <span class="s">&#39;AGO&#39;</span><span class="p">,</span> <span class="s">&#39;AIA&#39;</span><span class="p">,</span> <span class="s">&#39;ATG&#39;</span><span class="p">,</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">allActors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;AFG&#39;</span><span class="p">,</span> <span class="s">&#39;ALA&#39;</span><span class="p">,</span> <span class="s">&#39;ALB&#39;</span><span class="p">,</span> <span class="s">&#39;DZA&#39;</span><span class="p">,</span> <span class="s">&#39;ASM&#39;</span><span class="p">,</span> <span class="s">&#39;AND&#39;</span><span class="p">,</span> <span class="s">&#39;AGO&#39;</span><span class="p">,</span> <span class="s">&#39;AIA&#39;</span><span class="p">,</span> <span class="s">&#39;ATG&#39;</span><span class="p">,</span>
 </span><span class='line'>            <span class="s">&#39;ARG&#39;</span><span class="p">,</span> <span class="s">&#39;ARM&#39;</span><span class="p">,</span> <span class="s">&#39;ABW&#39;</span><span class="p">,</span> <span class="s">&#39;AUS&#39;</span><span class="p">,</span> <span class="s">&#39;AUT&#39;</span><span class="p">,</span> <span class="s">&#39;AZE&#39;</span><span class="p">,</span> <span class="s">&#39;BHS&#39;</span><span class="p">,</span> <span class="s">&#39;BHR&#39;</span><span class="p">,</span> <span class="s">&#39;BGD&#39;</span><span class="p">,</span>
 </span><span class='line'>            <span class="s">&#39;BRB&#39;</span><span class="p">,</span> <span class="s">&#39;BLR&#39;</span><span class="p">,</span> <span class="s">&#39;BEL&#39;</span><span class="p">,</span> <span class="s">&#39;BLZ&#39;</span><span class="p">,</span> <span class="s">&#39;BEN&#39;</span><span class="p">,</span> <span class="s">&#39;BMU&#39;</span><span class="p">,</span> <span class="s">&#39;BTN&#39;</span><span class="p">,</span> <span class="s">&#39;BOL&#39;</span><span class="p">,</span> <span class="s">&#39;BIH&#39;</span><span class="p">,</span>
 </span><span class='line'>            <span class="s">&#39;BWA&#39;</span><span class="p">,</span> <span class="s">&#39;BRA&#39;</span><span class="p">,</span> <span class="s">&#39;VGB&#39;</span><span class="p">,</span> <span class="s">&#39;BRN&#39;</span><span class="p">,</span> <span class="s">&#39;BGR&#39;</span><span class="p">,</span> <span class="s">&#39;BFA&#39;</span><span class="p">,</span> <span class="s">&#39;BDI&#39;</span><span class="p">,</span> <span class="s">&#39;KHM&#39;</span><span class="p">,</span> <span class="s">&#39;CMR&#39;</span><span class="p">,</span>

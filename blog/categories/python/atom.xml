@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-12T14:58:04-04:00</updated>
+  <updated>2013-04-12T15:01:43-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -58,11 +58,11 @@ will prove crucial when it comes time to split and subset the data.</p>
 
 <h3>Code</h3>
 
-<p>from path import path
+<p>``` python
+from path import path
 import pandas as pd</p>
 
-<p>``` python
-allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG',</p>
+<p>allActors = ['AFG', 'ALA', 'ALB', 'DZA', 'ASM', 'AND', 'AGO', 'AIA', 'ATG',</p>
 
 <pre><code>        'ARG', 'ARM', 'ABW', 'AUS', 'AUT', 'AZE', 'BHS', 'BHR', 'BGD', 
         'BRB', 'BLR', 'BEL', 'BLZ', 'BEN', 'BMU', 'BTN', 'BOL', 'BIH', 
