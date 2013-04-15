@@ -4,7 +4,7 @@
   <title><![CDATA[Category: event data | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/event-data/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-13T17:52:47-04:00</updated>
+  <updated>2013-04-15T11:29:02-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -152,8 +152,8 @@ an <code>IndexError</code>, for some other actions to occur.</p>
 header = open(filepaths[0], 'r').readline().split('\t')
 subset = pd.DataFrame(output, columns = header)</p>
 
-<p>subset['year'] = subset['Day'].str[0:4]
-subset['month'] = subset['Day'].str[4:6]</p>
+<p>subset['year'] = subset['Day'].map(lambda x: int(str(x)[0:4]))
+subset['month'] = subset['Day'].map(lambda x: int(str(x)[4:6]))</p>
 
 <p>keep_columns = ['year', 'month', 'Actor1Code', 'Actor2Code', 'QuadCategory']
 subset = subset[keep_columns]
@@ -164,8 +164,10 @@ contained in <code>output</code>, which is a list-of-lists with the internal lis
 the individual events. It is possible, using the <code>pandas</code> library, to convert this
 list-of-lists to a pandas DataFrame object, with the header drawn from the first line
 of the first file in <code>filepaths</code>. In order to aggregate the data to a specific time period,
-it is useful to break out the <code>Day</code> variable into months and years using the <code>.str</code>
-functionality of a Series object in <code>pandas</code>. Finally, the last two lines of the above
+it is useful to break out the <code>Day</code> variable into months and years using the <code>.map</code>
+functionality of a Series object in <code>pandas</code>. The <code>.map</code> functionality is combined
+with a lambda function to select eaach observation in the series and slice it
+in order to obtain the year and month. Finally, the last two lines of the above
 code reduce the data down to only the columns relevant for this subset.</p>
 
 <p>``` python
