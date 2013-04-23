@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-23T19:23:53-04:00</updated>
+  <updated>2013-04-23T19:26:50-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -24,7 +24,7 @@ project for a colleague, I began to wonder exactly how many unique actor
 codes exist in the dataset, and what the maximum level of actor code complexity
 is within the dataset. For those who don&#8217;t know, the actor codes are created
 by chaining together three character CAMEO actor codes, which results in actor
-codes that look like <code>USAMIL</code> for the United States military. The complexity
+codes that look like <code>USAMIL</code>, which indicates the United States military. The complexity
 of the actor code, then, refers to how many of these three character codes are
 chained together.</p>
 
@@ -32,7 +32,7 @@ chained together.</p>
 
 <p>Using the Python code available <a href="https://gist.github.com/johnb30/5448269">here</a>, I iterated over the dataset and
 identified each unique actor code in the data, along with how many times the
-unique code appeared in the data. The resulting data is available
+unique code appeared. The resulting data is available
 <a href="http://johnb30.github.com/blog/downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
 unique actors in the dataset, with a maximum of <strong>6</strong> three character codes chained
 together. The following two plots show the top twenty actor codes overall,
