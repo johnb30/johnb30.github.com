@@ -5,11 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Category: GDELT - John Beieler</title>
+  <title>Actor Codes in GDELT - John Beieler</title>
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Category: GDELT">
+  <meta name="description" content="As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
+are a large number of unique actors coded in the data. While &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +19,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://johnb30.github.comblog/categories/gdelt/">
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/04/23/actor-codes-in-gdelt/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -79,63 +80,110 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Category: GDELT</h1>
+    
+      <h1 class="entry-title">Actor Codes in GDELT</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T18:40:00-04:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
+are a large number of unique actors coded in the data. While working on a
+project for a colleague, I began to wonder exactly how many unique actor
+codes exist in the dataset, and what the maximum level of actor code complexity
+is within the dataset. For those who don&#8217;t know, the actor codes are created
+by chaining together three character CAMEO actor codes, which results in actor
+codes that look like <code>USAMIL</code> for the United States military. The complexity
+of the actor code, then, refers to how many of these three character codes are
+chained together.</p>
 
-  
-  <h2>2013</h2>
+<h4>Results</h4>
 
-<article>
-  
-<h1><a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a></h1>
-<time datetime="2013-04-23T18:40:00-04:00" pubdate><span class='month'>Apr</span> <span class='day'>23</span> <span class='year'>2013</span></time>
+<p>Using the Python code available <a href="https://gist.github.com/johnb30/5448269">here</a>, I iterated over the dataset and
+identified each unique actor code in the data, along with how many times the
+unique code appeared in the data. The resulting data is available
+<a href="downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
+unique actors in the dataset, with a maximum of <strong>6</strong> three character codes chained
+together. The following two plots show the top twenty actor codes overall,
+along with the top twenty USA actor codes.</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gdelt/'>GDELT</a></span>
-</footer>
+<p><img src="downloads/top20.png"></p>
 
+<p><img src="downloads/usa_top20.png"></p>
 
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a></h1>
-<time datetime="2013-04-12T14:56:00-04:00" pubdate><span class='month'>Apr</span> <span class='day'>12</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gdelt/'>GDELT</a>, <a class='category' href='/blog/categories/data/'>data</a></span>
-</footer>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a></h1>
-<time datetime="2013-04-04T19:15:00-04:00" pubdate><span class='month'>Apr</span> <span class='day'>04</span> <span class='year'>2013</span></time>
-
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/gdelt/'>GDELT</a>, <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/event-data/'>event data</a></span>
-</footer>
-
-
-</article>
-
+<p>This analysis shows the incredible complexity that is present in the actor codes,
+which I would argue is the most important, fascinating, and challenging part
+of working with event data on this scale.</p>
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T18:40:00-04:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gdelt/'>GDELT</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/04/23/actor-codes-in-gdelt/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2013/04/23/actor-codes-in-gdelt/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/12/gdelt/" title="Previous Post: GDELT, Big Data, and Theory">&laquo; GDELT, Big Data, and Theory</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>
