@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-23T19:22:56-04:00</updated>
+  <updated>2013-04-23T19:23:53-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -33,14 +33,14 @@ chained together.</p>
 <p>Using the Python code available <a href="https://gist.github.com/johnb30/5448269">here</a>, I iterated over the dataset and
 identified each unique actor code in the data, along with how many times the
 unique code appeared in the data. The resulting data is available
-<a href="downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
+<a href="http://johnb30.github.com/blog/downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
 unique actors in the dataset, with a maximum of <strong>6</strong> three character codes chained
 together. The following two plots show the top twenty actor codes overall,
 along with the top twenty USA actor codes.</p>
 
-<p><img src="downloads/top20.png"></p>
+<p><img src="http://johnb30.github.com/blog/downloads/top20.png"></p>
 
-<p><img src="downloads/usa_top20.png"></p>
+<p><img src="http://johnb30.github.com/blog/downloads/usa_top20.png"></p>
 
 <p>This analysis shows the incredible complexity that is present in the actor codes,
 which I would argue is the most important, fascinating, and challenging part
