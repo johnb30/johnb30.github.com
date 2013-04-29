@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Terrorism Studies and Prediction - John Beieler</title>
+  <meta name="author" content="John Beieler">
+
+  
+  <meta name="description" content="This semester I&#8217;m taking a class on terrorism. Overall I&#8217;ve found the class
+very enjoyable; the topic of political violence is one that &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="John Beieler" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40125913-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">John Beieler</a></h1>
+  
+    <h2>PhD Student in Political Science</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:johnb30.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/cv">CV</a></li>
+  <li><a href="/papers">Papers</a></li>
+  <li><a href="/code">Code</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Terrorism Studies and Prediction</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-29T13:44:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>This semester I&#8217;m taking a class on terrorism. Overall I&#8217;ve found the class
+very enjoyable; the topic of political violence is one that is always
+fascinating. With that said, I found one issue that would repeatedly pop up
+in the readings for the seminar. Almost every paper would demarcate some type
+of theory, discuss the data used, and run some statistical tests, which is
+pretty standard social science research. The issue arose in the &#8220;Discussion&#8221;
+or &#8220;Conclusion&#8221; sections. Almost invariably the authors would discuss the
+practical implications of their research, which is fine until the dreaded
+<strong>prediction</strong> word appears. Then claims about the predictive accuracy of
+the models used in the paper would rear their ugly heads. These models were
+explicitly <em>not</em> predictive models. This became the soap box that I would
+drag out repeatedly throughout the semester. Finally, I decided to put my own
+assertions to the test and see how some models performed on out-of-sample
+predictive tests.</p>
+
+<h3>The Paper</h3>
+
+<p>The week I chose to perform this analysis we discussed papers that focused on
+counterterrorism policies. One paper was <a href="http://jcr.sagepub.com/content/54/2/237">&#8220;Foreign Aid Versus Military
+Intervention in the War on Terror&#8221;</a>
+(behind a paywall) by Jean-Paul Azam and Veronique Thelen. A full discussion
+of their theory is beyond the scope of this post, but the authors&#8217; basic
+argument is that foreign investment can reduce the number of transnational
+terrorist events for a number of reasons. They test this general assertion
+using a variety of models. Luckily, they provide replication data for their
+paper on the Journal of Conflict Resolution website linked above. I set off
+to exactly replicate the model presented in Table 2, Model 4 for those
+following along in the paper.</p>
+
+<h3>The Replication</h3>
+
+<p>The first step to replicating the paper was to run their Stata <code>do-file</code> on
+the data they provided. This is done to ensure that I have exactly the same
+variables in my models that they do in theirs, specifically the residualized
+variables they present. As a note, I will avoid commenting on the general
+modeling choices made in the paper; this post is only about the predictive
+accuracy of models on out-of-sample data. I work with what the authors worked
+with. After running the <code>do-file</code>, I check to make sure that the results
+generated by Stata are the same as those presented in the paper, which is
+roughly true in the case of the coefficient estimates. I then take the data,
+including the newly generated variables, and read it into Python using
+<code>statsmodels</code>. After the data is read in, I replicate the formula used in
+the paper, generate a train-test split of 75% and 25%, and then fit the
+negative binomial model. The random 75%-25% split is appropriate here since
+the data is cross sectional and not time series in nature.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cross_validation</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="kn">as</span> <span class="nn">sm</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+</span><span class='line'><span class="kn">import</span> <span class="nn">patsy</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">iolib</span><span class="o">.</span><span class="n">genfromdta</span><span class="p">(</span><span class="s">&#39;rep_data.dta&#39;</span><span class="p">,</span> <span class="n">pandas</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
+</span><span class='line'><span class="c">#Make an R-style formula</span>
+</span><span class='line'><span class="n">form</span> <span class="o">=</span> <span class="s">&#39;arqade ~ gdppc + logpop + odapc + secenroll + oecd + cad + ssh + ethnic + law + rodapc + rsecenroll&#39;</span>
+</span><span class='line'><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">patsy</span><span class="o">.</span><span class="n">dmatrices</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">return_type</span> <span class="o">=</span> <span class="s">&#39;dataframe&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#Generate 75%-25% train-test split</span>
+</span><span class='line'><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#Fit the model</span>
+</span><span class='line'><span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">NegativeBinomial</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="n">mod</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">Generalized</span> <span class="n">Linear</span> <span class="n">Model</span> <span class="n">Regression</span> <span class="n">Results</span>
+</span><span class='line'><span class="o">==============================================================================</span>
+</span><span class='line'><span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                   <span class="mi">99</span>
+</span><span class='line'><span class="n">Model</span><span class="p">:</span>                            <span class="n">GLM</span>   <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                       <span class="mi">87</span>
+</span><span class='line'><span class="n">Model</span> <span class="n">Family</span><span class="p">:</span>        <span class="n">NegativeBinomial</span>   <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">11</span>
+</span><span class='line'><span class="n">Link</span> <span class="n">Function</span><span class="p">:</span>                    <span class="n">log</span>   <span class="n">Scale</span><span class="p">:</span>                   <span class="mf">1.54679011354</span>
+</span><span class='line'><span class="n">Method</span><span class="p">:</span>                          <span class="n">IRLS</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">190.88</span>
+</span><span class='line'><span class="n">Date</span><span class="p">:</span>                <span class="n">Sun</span><span class="p">,</span> <span class="mi">21</span> <span class="n">Apr</span> <span class="mi">2013</span>   <span class="n">Deviance</span><span class="p">:</span>                       <span class="mf">132.43</span>
+</span><span class='line'><span class="n">Time</span><span class="p">:</span>                        <span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">:</span><span class="mi">56</span>   <span class="n">Pearson</span> <span class="n">chi2</span><span class="p">:</span>                     <span class="mf">135.</span>
+</span><span class='line'><span class="n">No</span><span class="o">.</span> <span class="n">Iterations</span><span class="p">:</span>                    <span class="mi">17</span>
+</span><span class='line'><span class="o">==============================================================================</span>
+</span><span class='line'><span class="n">coef</span>    <span class="n">std</span> <span class="n">err</span>          <span class="n">t</span>      <span class="n">P</span><span class="o">&gt;|</span><span class="n">t</span><span class="o">|</span>      <span class="p">[</span><span class="mf">95.0</span><span class="o">%</span> <span class="n">Conf</span><span class="o">.</span> <span class="n">Int</span><span class="o">.</span><span class="p">]</span>
+</span><span class='line'><span class="o">------------------------------------------------------------------------------</span>
+</span><span class='line'><span class="n">const</span>          <span class="mf">7.5576</span>      <span class="mf">4.717</span>      <span class="mf">1.602</span>      <span class="mf">0.113</span>        <span class="o">-</span><span class="mf">1.687</span>    <span class="mf">16.802</span>
+</span><span class='line'><span class="n">x1</span>          <span class="mf">5.861e-05</span>    <span class="mf">4.2e-05</span>      <span class="mf">1.397</span>      <span class="mf">0.166</span>     <span class="o">-</span><span class="mf">2.36e-05</span>     <span class="mf">0.000</span>
+</span><span class='line'><span class="n">x2</span>             <span class="mf">0.1561</span>      <span class="mf">0.203</span>      <span class="mf">0.768</span>      <span class="mf">0.444</span>        <span class="o">-</span><span class="mf">0.242</span>     <span class="mf">0.554</span>
+</span><span class='line'><span class="n">x3</span>            <span class="o">-</span><span class="mf">0.0339</span>      <span class="mf">0.014</span>     <span class="o">-</span><span class="mf">2.380</span>      <span class="mf">0.019</span>        <span class="o">-</span><span class="mf">0.062</span>    <span class="o">-</span><span class="mf">0.006</span>
+</span><span class='line'><span class="n">x4</span>            <span class="o">-</span><span class="mf">0.0633</span>      <span class="mf">0.019</span>     <span class="o">-</span><span class="mf">3.315</span>      <span class="mf">0.001</span>        <span class="o">-</span><span class="mf">0.101</span>    <span class="o">-</span><span class="mf">0.026</span>
+</span><span class='line'><span class="n">x5</span>             <span class="mf">0.9221</span>      <span class="mf">0.878</span>      <span class="mf">1.050</span>      <span class="mf">0.297</span>        <span class="o">-</span><span class="mf">0.800</span>     <span class="mf">2.644</span>
+</span><span class='line'><span class="n">x6</span>             <span class="mf">5.5344</span>      <span class="mf">2.225</span>      <span class="mf">2.487</span>      <span class="mf">0.015</span>         <span class="mf">1.173</span>     <span class="mf">9.896</span>
+</span><span class='line'><span class="n">x7</span>            <span class="o">-</span><span class="mf">3.3479</span>      <span class="mf">0.888</span>     <span class="o">-</span><span class="mf">3.771</span>      <span class="mf">0.000</span>        <span class="o">-</span><span class="mf">5.088</span>    <span class="o">-</span><span class="mf">1.608</span>
+</span><span class='line'><span class="n">x8</span>             <span class="mf">0.7016</span>      <span class="mf">0.200</span>      <span class="mf">3.510</span>      <span class="mf">0.001</span>         <span class="mf">0.310</span>     <span class="mf">1.093</span>
+</span><span class='line'><span class="n">x9</span>            <span class="o">-</span><span class="mf">0.2140</span>      <span class="mf">0.261</span>     <span class="o">-</span><span class="mf">0.820</span>      <span class="mf">0.415</span>        <span class="o">-</span><span class="mf">0.726</span>     <span class="mf">0.298</span>
+</span><span class='line'><span class="n">x10</span>            <span class="mf">0.0441</span>      <span class="mf">0.018</span>      <span class="mf">2.477</span>      <span class="mf">0.015</span>         <span class="mf">0.009</span>     <span class="mf">0.079</span>
+</span><span class='line'><span class="n">x11</span>            <span class="mf">0.0724</span>      <span class="mf">0.022</span>      <span class="mf">3.304</span>      <span class="mf">0.001</span>         <span class="mf">0.029</span>     <span class="mf">0.115</span>
+</span><span class='line'><span class="o">==============================================================================</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The results of this analysis roughly match the results presented in the paper.
+Some differences are to be expected, of course, due to the reduced number of
+observations. Since these results seem to match those in the paper, the
+out-of-sample forecasts can be run. This is done using the <code>predict</code> method
+of the <code>mod</code> object. The true and predicted results are then compared using
+the root mean squared error. I&#8217;m not completely confident in the use of the
+RMSE, but it is a quick and easy way to perform a comparison in this case.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">y_pred</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#Calculate RMSE</span>
+</span><span class='line'><span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;The RMSE is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
+</span><span class='line'><span class="n">The</span> <span class="n">RMSE</span> <span class="ow">is</span> <span class="mf">22.7156218086</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>The value of the RMSE error shows that the predicted values tend to be off by
+about 23 events. This indicates that the model does not predict the impact
+of foreign aid on terrorist events well. Admittedly, this analysis may not be
+the most favorable to Azam and Thelen. In order to give them the benefit of
+the doubt, I also used another modeling technique to see if this inaccuracy persists.
+I used a random forest to fit the same model used in the negative binomial
+and then examined the RMSE.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Create the RF regressor object</span>
+</span><span class='line'><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+</span><span class='line'><span class="c">#Fit the model</span>
+</span><span class='line'><span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#Predict using the X_test data</span>
+</span><span class='line'><span class="n">rf_pred</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="c">#Calculate RMSE</span>
+</span><span class='line'><span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">rf_pred</span><span class="p">)))</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">print</span> <span class="s">&#39;The RMSE is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
+</span><span class='line'><span class="n">The</span> <span class="n">RMSE</span> <span class="ow">is</span> <span class="mf">21.7068829972</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Even using a method that is possibly more robust, the prediction still doesn&#8217;t
+seem very satisfactory.</p>
+
+<h3>Models in the Social Sciences</h3>
+
+<p>In case it was not explicitly clear in the beginning of this post, I want to
+make it clear now: this analysis is not a direct critique of Azam and Thelen.
+I think their theory is sound and it makes sense that foreign investment and
+the other variables they analyze can make a difference in terrorism. I also
+do not think that the type of inferential statistics used by Azam and Thelen,
+and commonly used elsewhere in political science, are wrong in all cases.
+I do believe we can gain knowledge from models like those
+presented by Azam and Thelen. What I do take issue with, however, is the call
+to arms that is frequently sounded in the conclusions of papers, which are
+often directed towards policy makers, that the results of the paper predict
+phenomenon <em>X</em> and thus policy <em>Y</em> should be enacted. Especially when policy
+<em>Y</em> is something like military intervention. In order to make these types of
+claims, some type of out-of-sample test should be performed in order to
+determine the effect of the variables under examination.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-29T13:44:00-04:00" pubdate data-updated="true">Apr 29<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/forecasting/'>forecasting</a>, <a class='category' href='/blog/categories/prediction/'>prediction</a>, <a class='category' href='/blog/categories/python/'>python</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/23/actor-codes-in-gdelt/" title="Previous Post: Actor Codes in GDELT">&laquo; Actor Codes in GDELT</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/08/web-scraping-tutorial/">Web Scraping Tutorial</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/johnb30">@johnb30</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'johnb30',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("johnb30", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/johnb30" class="twitter-follow-button" data-show-count="false">Follow @johnb30</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - John Beieler -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
