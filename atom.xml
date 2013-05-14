@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-04-29T13:51:38-04:00</updated>
+  <updated>2013-05-14T17:12:28-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Terrorism Studies and Prediction]]></title>
     <link href="http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction/"/>
-    <updated>2013-04-29T13:44:00-04:00</updated>
+    <updated>2013-04-29T13:44:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction</id>
     <content type="html"><![CDATA[<p>This semester I&#8217;m taking a class on terrorism. Overall I&#8217;ve found the class
 very enjoyable; the topic of political violence is one that is always
@@ -243,7 +243,7 @@ determine the effect of the variables under examination.</p>
   <entry>
     <title type="html"><![CDATA[Actor Codes in GDELT]]></title>
     <link href="http://johnb30.github.com/blog/2013/04/23/actor-codes-in-gdelt/"/>
-    <updated>2013-04-23T18:40:00-04:00</updated>
+    <updated>2013-04-23T18:40:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/04/23/actor-codes-in-gdelt</id>
     <content type="html"><![CDATA[<p>As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
 are a large number of unique actors coded in the data. While working on a
@@ -278,7 +278,7 @@ of working with event data on this scale.</p>
   <entry>
     <title type="html"><![CDATA[GDELT, Big Data, and Theory]]></title>
     <link href="http://johnb30.github.com/blog/2013/04/12/gdelt/"/>
-    <updated>2013-04-12T14:56:00-04:00</updated>
+    <updated>2013-04-12T14:56:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/04/12/gdelt</id>
     <content type="html"><![CDATA[<p>I made the remark on Twitter that it seemed like GDELT week due to a
 <a href="http://ideas.foreignpolicy.com/posts/2013/04/10%20what_can_we_learn_from_the_last_200_million_things_that_happened_in_the_world">Foreign Policy</a>
@@ -346,7 +346,7 @@ data sources.</p>
   <entry>
     <title type="html"><![CDATA[How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset]]></title>
     <link href="http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/"/>
-    <updated>2013-04-04T19:15:00-04:00</updated>
+    <updated>2013-04-04T19:15:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset</id>
     <content type="html"><![CDATA[<h3>GDELT</h3>
 
@@ -610,7 +610,7 @@ and will likely prove useful to those engaging in event-data research.</p>
   <entry>
     <title type="html"><![CDATA[Web Scraping Tutorial]]></title>
     <link href="http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial/"/>
-    <updated>2013-02-08T20:39:00-05:00</updated>
+    <updated>2013-02-08T20:39:00-06:00</updated>
     <id>http://johnb30.github.com/blog/2013/02/08/web-scraping-tutorial</id>
     <content type="html"><![CDATA[<p>I had the opportunity to give a short tutorial on web scraping for the Event
 Data class here at Penn State. I used an IPython notebook to give the
@@ -625,7 +625,7 @@ is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/474
   <entry>
     <title type="html"><![CDATA[Parallel Data Subsetting]]></title>
     <link href="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/"/>
-    <updated>2012-12-07T18:26:00-05:00</updated>
+    <updated>2012-12-07T18:26:00-06:00</updated>
     <id>http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting</id>
     <content type="html"><![CDATA[<h3>The Challenge</h3>
 
@@ -711,7 +711,7 @@ instananeous, which is a drastic improvement.</p>
   <entry>
     <title type="html"><![CDATA[R Magic and Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/"/>
-    <updated>2012-11-29T21:53:00-05:00</updated>
+    <updated>2012-11-29T21:53:00-06:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test</id>
     <content type="html"><![CDATA[<p>Following up on my last post, I wanted a way to test my bootstrapped t-test
 function against the regular t-test function in R. While I was able to do this
@@ -763,7 +763,7 @@ and .03).</p>
   <entry>
     <title type="html"><![CDATA[Bootstrapped t-test]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test/"/>
-    <updated>2012-11-28T19:47:00-05:00</updated>
+    <updated>2012-11-28T19:47:00-06:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test</id>
     <content type="html"><![CDATA[<p>The below code is to perform a nonparametric two-sample t-test using
 bootstrapping. First I present the code, and will then follow up with a
@@ -835,7 +835,7 @@ hypothesis. The final line (29) then prints the p-value as a float.</p></li>
   <entry>
     <title type="html"><![CDATA[Starting With Python]]></title>
     <link href="http://johnb30.github.com/blog/2012/11/24/starting-with-python/"/>
-    <updated>2012-11-24T19:10:00-05:00</updated>
+    <updated>2012-11-24T19:10:00-06:00</updated>
     <id>http://johnb30.github.com/blog/2012/11/24/starting-with-python</id>
     <content type="html"><![CDATA[<h2>Overview</h2>
 
