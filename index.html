@@ -9,8 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="This semester I&#8217;m taking a class on terrorism. Overall I&#8217;ve found the class
-very enjoyable; the topic of political violence is one that &hellip;">
+  <meta name="description" content="Downloading GDELT Yesterday, I started downloading the GDELT data from the website,
+having previously pulled the data from the servers at Penn State &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,156 @@ very enjoyable; the topic of political violence is one that &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/01/making-gdelt-downloads-easy/">Making GDELT Downloads Easy</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-01T00:06:00-05:00" pubdate data-updated="true">Jun 1<span>st</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2>Downloading GDELT</h2>
+
+<p>Yesterday, I started downloading the GDELT data from the <a href="gdelt.utdallas.edu">website</a>,
+having previously pulled the data from the servers at Penn State.
+Having to navigate the website and download each file individually
+caused me far more frustration that it should have, not due to the
+design of the website but due to my own impatience. I&#8217;ll have more
+to say about the general state of data distribution in the social
+sciences in another post, but for now it&#8217;s enough to say that I&#8217;m
+not a fan of downloading data by hand. Because of this, I wrote some
+scripts in Python to help with downloading the data. There are two
+scripts, <code>download_historical.py</code> and <code>download_daily.py</code> to
+download either the historical files or the continuously-updated
+daily files. The code is on <a href="https://github.com/johnb30/gdelt_download">github</a>.
+I&#8217;ve copied the contents of the README file below so you can determine
+if the scripts would be useful for you.</p>
+
+<h3>README</h3>
+
+<h2>GDELT Download</h2>
+
+<p>The GDELT data is spread across multiple files, with a new file added each day.
+Downloading each and every file is not a fun endeavor. These scripts were
+written in order to aid in the download of the GDELT data. The first script
+<code>download_historical.py</code> is aimed at downloading the historical data, and the
+previous daily updated. The second script, <code>download_daily.py</code>, is aimed
+at downloading the new files that are uploaded to the GDELT website each day.
+This script enables the user to either call the script each day to fetch the
+newest upload, or to run the process in the background to download the new
+updates each day at 10:00am.</p>
+
+<p>Each script implements a 30 second delay where appropriate in order to
+avoid swamping the server.</p>
+
+<h2><code>download_historical</code> Usage</h2>
+
+<p>The script has three modes: <code>daily</code>, <code>single</code>, and <code>range</code>.</p>
+
+<p><em>Note</em>: If you wish to use the <code>daily</code> mode, the <code>requests</code> and <code>lxml</code> libaries
+are necessary. You can install both using <code>pip install library_name</code>. The script
+also makes use of <code>argparse</code>, which is included in the standard libary from
+Python 2.7+. If you are using an older version, it is necessary to install
+<code>argparse</code> using <code>pip</code> or <code>easy_install</code>.</p>
+
+<h3>Daily:</h3>
+
+<p>The daily mode downloads the daily updates that are currently uploaded to the
+GDELT website.</p>
+
+<h4>Usage:</h4>
+
+<p><code>python download_historical.py daily -d ~/gdelt/ -U</code></p>
+
+<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
+and <code>-U</code> is the optional flag indicating whether each downloaded file should
+be unzipped.</p>
+
+<h3>Single:</h3>
+
+<p>The single mode downloads the updates for a single year.</p>
+
+<h4>Usage:</h4>
+
+<p><code>python download_historical.py single -y 1979 -d ~/gdelt/ -U</code></p>
+
+<p>Where <code>-y</code> is the flag that indicates which year should be downloaded, <code>-d</code>
+is the flag for the directory to which the files should be written, and <code>-U</code>
+is the optional flag indicating whether each downloaded file should be unzipped.</p>
+
+<h3>Range:</h3>
+
+<p>The range mode downloads the updates for a range of years.</p>
+
+<h4>Usage:</h4>
+
+<p><code>python download_historical.py range -y 1979-2012 -d ~/gdelt/ -U</code></p>
+
+<p>Where <code>-y</code> is the flag that indicates which years should be downloaded, <code>-d</code>
+is the flag for the directory to which the files should be written, and <code>-U</code>
+is the optional flag indicating whether each downloaded file should be unzipped.</p>
+
+<h2><code>download_daily</code> Usage</h2>
+
+<p>The script has two modes: <code>fetch</code>, and <code>schedule</code>.</p>
+
+<p><em>Note</em>: If you wish to use the <code>schedule</code> mode, the <code>schedule</code> library
+is necessary. You can install using <code>pip install schedule</code>.</p>
+
+<h3>Fetch:</h3>
+
+<p>The fetch mode downloads only the current date&#8217;s update.</p>
+
+<h4>Usage:</h4>
+
+<p><code>python download_daily.py fetch -d ~/gdelt/ -U</code></p>
+
+<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
+and <code>-U</code> is the optional flag indicating whether each downloaded file should
+be unzipped.</p>
+
+<h3>Schedule:</h3>
+
+<p>The fetch schedule mode sets the script to run in the background and request
+each day at 10:00am that date&#8217;s upload from the server. In order to work, the
+script must be left running in a terminal tab. The use of a utility such as
+<code>screen</code> or <code>tmux</code> is recommended in order to allow the program to run
+unmonitored in the background.</p>
+
+<h4>Usage:</h4>
+
+<p><code>python download_daily.py schedule -d ~/gdelt/ -U</code></p>
+
+<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
+and <code>-U</code> is the optional flag indicating whether each downloaded file should
+be unzipped.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1447,6 +1597,10 @@ suggestions, please feel free to contact me.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/01/making-gdelt-downloads-easy/">Making GDELT Downloads Easy</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
       </li>
     
@@ -1460,10 +1614,6 @@ suggestions, please feel free to contact me.</p>
     
       <li class="post">
         <a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/02/08/web-scraping-tutorial/">Web Scraping Tutorial</a>
       </li>
     
   </ul>
