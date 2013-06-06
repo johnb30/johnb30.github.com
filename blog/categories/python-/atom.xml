@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Python, | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/python-/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-06-06T13:13:55-05:00</updated>
+  <updated>2013-06-06T13:21:11-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Using SQL]]></title>
+    <title type="html"><![CDATA[Using SQL, pandas, and Python to Work With Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/06/06/using-sql/"/>
     <updated>2013-06-06T13:11:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/06/06/using-sql</id>
@@ -135,64 +135,65 @@ Actor1Code;
 
 <p>```</p>
 
-<pre><code> Actor1Code  sum(GoldsteinScale)
+<pre><code>Actor1Code  sum(GoldsteinScale)
 </code></pre>
 
-<p>  0        SYR                -74.8
-  1     SYRCVL                 16.6
-  2     SYRGOV                -81.1
-  3  SYRGOVMED                -50.0
-  4     SYRMIL                -29.5
-  5  SYROPPUAF                -20.0
-  6     SYRREB                -24.6
-  ```</p>
+<p>0        SYR                -74.8
+1     SYRCVL                 16.6
+2     SYRGOV                -81.1
+3  SYRGOVMED                -50.0
+4     SYRMIL                -29.5
+5  SYROPPUAF                -20.0
+6     SYRREB                -24.6
+```</p>
 
 <p>  Additionally, we might want to see the same information for dyadic interactions between actors
   along with information regarding how many events occur within the dyad,
   which only requires a small modification of the previous query.</p>
 
-<p>  ```python</p>
+<p>```python</p>
 
-<p>  q = """
-  SELECT
-  Actor1Code, Actor2Code, sum(GoldsteinScale), count(Actor1Code)
-  FROM
-  gdelt
-  WHERE
-  Actor1CountryCode == 'SYR'
-  AND
-  Actor2CountryCode == 'SYR'
-  GROUP BY
-  Actor1Code, Actor2Code;
-  """</p>
+<p>q = """
+SELECT
+Actor1Code, Actor2Code, sum(GoldsteinScale), count(Actor1Code)
+FROM
+gdelt
+WHERE
+Actor1CountryCode == 'SYR'
+AND
+Actor2CountryCode == 'SYR'
+GROUP BY
+Actor1Code, Actor2Code;
+"""</p>
 
-<p>  sqldf(q, globals())</p>
+<p>sqldf(q, globals())</p>
 
-<pre><code>     Actor1Code Actor2Code  sum(GoldsteinScale)  count(Actor1Code)
- 0         SYR     SYRCVL                 -3.4                  3
- 1         SYR     SYRGOV                -50.0                 15
- 2         SYR     SYRLEG                  7.0                  3
- 3         SYR     SYRMIL                -24.0                  3
- 4         SYR     SYRREB                 -4.0                  2
- 5         SYR     SYRREF                 -0.4                  1
- 6      SYRCVL        SYR                 16.6                  4
- 7      SYRGOV        SYR                -70.9                 30
- 8      SYRGOV     SYRGOV                -10.2                 14
- 9   SYRGOVMED        SYR                -40.0                  4
- 10  SYRGOVMED     SYRCVL                -10.0                  1
- 11     SYRMIL        SYR                -29.5                  3
- 12  SYROPPUAF     SYRGOV                -20.0                  2
- 13     SYRREB        SYR                -24.6                  6
- ```
-
- It is also possible to perform more complicated groupings and analyses using only SQL but, as
- these examples show, even with a very limited knowledge of SQL one is able to draw subsets of
- the data and perform some simple, but interesting, analyses. Additionally, since the data is stored
- in a `pandas` dataframe, any analytical methods that are contained in `pandas` can be used, which
- provides another set of powerful options for analysis. The final benefit of `pandasql` is that writing
- these queries is *much* faster than writing a subsetting script, and the queries are also 
- remarkably fast; none of the queries used in this post took more than 10 seconds to run. 
+<pre><code>Actor1Code Actor2Code  sum(GoldsteinScale)  count(Actor1Code)
 </code></pre>
+
+<p>0         SYR     SYRCVL                 -3.4                  3
+1         SYR     SYRGOV                -50.0                 15
+2         SYR     SYRLEG                  7.0                  3
+3         SYR     SYRMIL                -24.0                  3
+4         SYR     SYRREB                 -4.0                  2
+5         SYR     SYRREF                 -0.4                  1
+6      SYRCVL        SYR                 16.6                  4
+7      SYRGOV        SYR                -70.9                 30
+8      SYRGOV     SYRGOV                -10.2                 14
+9   SYRGOVMED        SYR                -40.0                  4
+10  SYRGOVMED     SYRCVL                -10.0                  1
+11     SYRMIL        SYR                -29.5                  3
+12  SYROPPUAF     SYRGOV                -20.0                  2
+13     SYRREB        SYR                -24.6                  6
+```</p>
+
+<p>It is also possible to perform more complicated groupings and analyses using only SQL but, as
+these examples show, even with a very limited knowledge of SQL one is able to draw subsets of
+the data and perform some simple, but interesting, analyses. Additionally, since the data is stored
+in a <code>pandas</code> dataframe, any analytical methods that are contained in <code>pandas</code> can be used, which
+provides another set of powerful options for analysis. The final benefit of <code>pandasql</code> is that writing
+these queries is <em>much</em> faster than writing a subsetting script, and the queries are also
+remarkably fast; none of the queries used in this post took more than 10 seconds to run.</p>
 
 <h3>Notes</h3>
 
