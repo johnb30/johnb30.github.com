@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: SQL | John Beieler]]></title>
+  <link href="http://johnb30.github.com/blog/categories/sql/atom.xml" rel="self"/>
+  <link href="http://johnb30.github.com/"/>
+  <updated>2013-06-06T13:13:55-05:00</updated>
+  <id>http://johnb30.github.com/</id>
+  <author>
+    <name><![CDATA[John Beieler]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using SQL]]></title>
+    <link href="http://johnb30.github.com/blog/2013/06/06/using-sql/"/>
+    <updated>2013-06-06T13:11:00-05:00</updated>
+    <id>http://johnb30.github.com/blog/2013/06/06/using-sql</id>
+    <content type="html"><![CDATA[<h3>Easier subsetting of data</h3>
+
+<p>Yes, another post about GDELT. But this one can apply to other datasets, too.</p>
+
+<p>In an earlier <a href="http://johnbeieler.org/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">post</a>,
+I wrote about how to start subsetting the <a href="gdelt.utdallas.edu">GDELT data</a>
+using Python. Others also wrote <a href="http://nbviewer.ipython.org/urls/raw.github.com/dmasad/GDELT_Intro/master/Getting_Started_with_GDELT.ipynb">similar</a>
+<a href="http://quantifyingmemory.blogspot.com/2013/04/mapping-gdelt-data-in-r-and-some.html">pieces</a>. Each of these posts used the
+same basic idea: iterate over each line of the dataset, split the line based on tabs,
+and select the lines that have fields that match some criteria. This was all well and
+good, especially when working with the reduced dataset. The release of the full GDELT
+data, however, complicates matters somewhat. Whereas the reduced dataset only has 11
+fields of data, the full dataset contains 56 or 57 fields, depending on which set
+of the full data is under examination. On top of this, I have noticed that when writing
+more complex subsetting scripts it is often easy to lose track of the rules for
+selection. These rules are also obfuscated in the Python code for splitting and
+selecting. What was field 35 again? Suffice to say that I have become tired of writing
+subsetting scripts. A second development is my growing using of SQL resources, including
+those such as SQLite and Hive for Hadoop. I have found that these resources make parsing data
+<em>much</em> easier, and I will have more to say about these technologies, specifically Hive and
+Hadoop, in a later post as some projects I am working on develop further. But, currently,
+it is possible to make use of SQL queries while still remaining in the Python ecosystem
+and making use of fantastic libraries such as <code>pandas</code>. All while avoiding the actual
+setup of a SQL database.</p>
+
+<h3><code>pandasql</code></h3>
+
+<p><a href="http://pandas.pydata.org/"><code>pandas</code></a> is, in my opinion, one of the best, and most important,
+libraries for data analysis in Python. If you haven't taken a look at it yet, you are really
+doing yourself a disfavor. At its core, <code>pandas</code> is a "library providing high-performance,
+easy-to-use data structures and data analysis tools for the Python programming language."
+One of the key features is <code>R</code>-style dataframes in Python. In addition to <code>pandas</code>, the
+individuals at <a href="http://blog.yhathq.com/posts/pandasql-sql-for-pandas-dataframes.html">y-hat</a>
+built a SQL interface for <code>pandas</code> dataframes in a library called <code>pandasql</code>. Using <code>pandasql</code>
+is rather easy, and for those who have never used SQL before, the syntax is easy to learn
+and comprehend.</p>
+
+<p>Installation of <code>pandasql</code> follows the usual method with Python packages:</p>
+
+<p><code>pip install pandasql</code></p>
+
+<p>The example I'll provide in this post makes use of the GDELT daily update for
+<a href="http://gdelt.utdallas.edu/data/dailyupdates/20130604.export.CSV.zip">June 4th</a>. The first
+step is to take care of the library imports and data loading.</p>
+
+<p>```python</p>
+
+<p>import pandas as pd
+from pandasql import sqldf</p>
+
+<p>names = ['GLOBALEVENTID', 'SQLDATE', 'MonthYear', 'Year', 'FractionDate',
+'Actor1Code', 'Actor1Name', 'Actor1CountryCode', 'Actor1KnownGroupCode',
+'Actor1EthnicCode', 'Actor1Religion1Code', 'Actor1Religion2Code', 'Actor1Type1Code',
+'Actor1Type2Code','Actor1Type3Code','Actor2Code','Actor2Name','Actor2CountryCode',
+'Actor2KnownGroupCode','Actor2EthnicCode','Actor2Religion1Code','Actor2Religion2Code',
+'Actor2Type1Code','Actor2Type2Code','Actor2Type3Code','IsRootEvent','EventCode',
+'EventBaseCode','EventRootCode','QuadClass','GoldsteinScale','NumMentions',
+'NumSources','NumArticles','AvgTone','Actor1Geo_Type','Actor1Geo_FullName',
+'Actor1Geo_CountryCode','Actor1Geo_ADM1Code','Actor1Geo_Lat','Actor1Geo_Long',
+'Actor1Geo_FeatureID','Actor2Geo_Type','Actor2Geo_FullName','Actor2Geo_CountryCode',
+'Actor2Geo_ADM1Code','Actor2Geo_Lat','Actor2Geo_Long','Actor2Geo_FeatureID',
+'ActionGeo_Type','ActionGeo_FullName','ActionGeo_CountryCode','ActionGeo_ADM1Code',
+'ActionGeo_Lat','ActionGeo_Long','ActionGeo_FeatureID','DATEADDED','SOURCEURL']</p>
+
+<p>gdelt = pd.read_csv('20130604.export.CSV', sep='\t', header=None, names=names, encoding="utf-8")
+```</p>
+
+<p>I found that is necessary to indicate the text encoding when importing the data, else an error is
+thrown when trying to use <code>pandasql</code>. The resulting dataframe contains 41,569 events. For this
+example, I'm going to take a look at the ongoing crisis in Syria and gather a subset of the
+data that reflects this. To do this, I choose only events that have both country codes
+as 'SYR'.</p>
+
+<p>```python</p>
+
+<p>q = """
+SELECT
+*
+FROM
+gdelt
+WHERE
+Actor1CountryCode == 'SYR'
+AND
+Actor2CountryCode == 'SYR';
+"""</p>
+
+<p>syr_subset = sqldf(q, globals())
+```</p>
+
+<p>This query results in a dataset with 91 events. The query also took roughly 5 seconds to
+complete on my laptop. Not too bad. While this subset can now be used to perform some analyses,
+it's also possible to perform a simple analysis using SQL queries. For instance, I might wish
+to know who the different source actors are, along with the sum of the <code>GoldsteinScale</code>
+values for each different source actor. SQL queries make this extremely easy and elegant.</p>
+
+<p>```python</p>
+
+<p>q = """
+SELECT
+Actor1Code, sum(GoldsteinScale)
+FROM
+gdelt
+WHERE
+Actor1CountryCode == 'SYR'
+AND
+Actor2CountryCode == 'SYR'
+GROUP BY
+Actor1Code;
+"""</p>
+
+<p>sqldf(q, globals())
+```</p>
+
+<p>This gives the result of:</p>
+
+<p>```</p>
+
+<pre><code> Actor1Code  sum(GoldsteinScale)
+</code></pre>
+
+<p>  0        SYR                -74.8
+  1     SYRCVL                 16.6
+  2     SYRGOV                -81.1
+  3  SYRGOVMED                -50.0
+  4     SYRMIL                -29.5
+  5  SYROPPUAF                -20.0
+  6     SYRREB                -24.6
+  ```</p>
+
+<p>  Additionally, we might want to see the same information for dyadic interactions between actors
+  along with information regarding how many events occur within the dyad,
+  which only requires a small modification of the previous query.</p>
+
+<p>  ```python</p>
+
+<p>  q = """
+  SELECT
+  Actor1Code, Actor2Code, sum(GoldsteinScale), count(Actor1Code)
+  FROM
+  gdelt
+  WHERE
+  Actor1CountryCode == 'SYR'
+  AND
+  Actor2CountryCode == 'SYR'
+  GROUP BY
+  Actor1Code, Actor2Code;
+  """</p>
+
+<p>  sqldf(q, globals())</p>
+
+<pre><code>     Actor1Code Actor2Code  sum(GoldsteinScale)  count(Actor1Code)
+ 0         SYR     SYRCVL                 -3.4                  3
+ 1         SYR     SYRGOV                -50.0                 15
+ 2         SYR     SYRLEG                  7.0                  3
+ 3         SYR     SYRMIL                -24.0                  3
+ 4         SYR     SYRREB                 -4.0                  2
+ 5         SYR     SYRREF                 -0.4                  1
+ 6      SYRCVL        SYR                 16.6                  4
+ 7      SYRGOV        SYR                -70.9                 30
+ 8      SYRGOV     SYRGOV                -10.2                 14
+ 9   SYRGOVMED        SYR                -40.0                  4
+ 10  SYRGOVMED     SYRCVL                -10.0                  1
+ 11     SYRMIL        SYR                -29.5                  3
+ 12  SYROPPUAF     SYRGOV                -20.0                  2
+ 13     SYRREB        SYR                -24.6                  6
+ ```
+
+ It is also possible to perform more complicated groupings and analyses using only SQL but, as
+ these examples show, even with a very limited knowledge of SQL one is able to draw subsets of
+ the data and perform some simple, but interesting, analyses. Additionally, since the data is stored
+ in a `pandas` dataframe, any analytical methods that are contained in `pandas` can be used, which
+ provides another set of powerful options for analysis. The final benefit of `pandasql` is that writing
+ these queries is *much* faster than writing a subsetting script, and the queries are also 
+ remarkably fast; none of the queries used in this post took more than 10 seconds to run. 
+</code></pre>
+
+<h3>Notes</h3>
+
+<p>While <code>pandasql</code>, and SQL in general, is very useful and far more elegant than hacked together
+scripts, there are some limitations. The primary limitation is that this method likely will not
+scale well to iterating over the entire GDELT dataset, i.e., all the data in the historical backfile
+downloads. The default behavior of <code>sqldf</code> is to hold the data in memory. There is an option to
+temporarily write the data to disk, but this still does not address the issue of reading in the
+yearly or monthly data into the initial dataframe. There is likely a workaround using the
+chunk iterator for <code>pd.read_csv</code>, but in my mind this defeats part of the appeal for using
+<code>pandasql</code> in the first place: quickness and ease of use. For working with the entire dataset,
+a technology such as Hive, or a full SQL database, is likely a more viable option. I will have
+more to say on the use of Hive in a future post. With all that said, however, <code>pandasql</code> is
+a very useful tool when analyzing more atomic chunks of the GDELT data; daily, monthly, and perhaps
+even a single year for the earlier years is not outside the realm of possibility. Finally, if you
+need a resource to learn SQL, I recommend Zed Shaw's <a href="http://sql.learncodethehardway.org/">Learn SQL The Hard Way</a>,
+which will provide as much SQL as you need to perform data subsetting tasks.</p>
+]]></content>
+  </entry>
+  
+</feed>

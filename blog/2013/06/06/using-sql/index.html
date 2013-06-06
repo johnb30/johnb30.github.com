@@ -1,0 +1,513 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using SQL - John Beieler</title>
+  <meta name="author" content="John Beieler">
+
+  
+  <meta name="description" content="Easier subsetting of data Yes, another post about GDELT. But this one can apply to other datasets, too. In an earlier post,
+I wrote about how to &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/06/06/using-sql/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="John Beieler" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40125913-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">John Beieler</a></h1>
+  
+    <h2>PhD Student in Political Science</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:johnb30.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/cv">CV</a></li>
+  <li><a href="/papers">Papers</a></li>
+  <li><a href="/code">Code</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using SQL</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-06T13:11:00-05:00" pubdate data-updated="true">Jun 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Easier subsetting of data</h3>
+
+<p>Yes, another post about GDELT. But this one can apply to other datasets, too.</p>
+
+<p>In an earlier <a href="http://johnbeieler.org/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">post</a>,
+I wrote about how to start subsetting the <a href="gdelt.utdallas.edu">GDELT data</a>
+using Python. Others also wrote <a href="http://nbviewer.ipython.org/urls/raw.github.com/dmasad/GDELT_Intro/master/Getting_Started_with_GDELT.ipynb">similar</a>
+<a href="http://quantifyingmemory.blogspot.com/2013/04/mapping-gdelt-data-in-r-and-some.html">pieces</a>. Each of these posts used the
+same basic idea: iterate over each line of the dataset, split the line based on tabs,
+and select the lines that have fields that match some criteria. This was all well and
+good, especially when working with the reduced dataset. The release of the full GDELT
+data, however, complicates matters somewhat. Whereas the reduced dataset only has 11
+fields of data, the full dataset contains 56 or 57 fields, depending on which set
+of the full data is under examination. On top of this, I have noticed that when writing
+more complex subsetting scripts it is often easy to lose track of the rules for
+selection. These rules are also obfuscated in the Python code for splitting and
+selecting. What was field 35 again? Suffice to say that I have become tired of writing
+subsetting scripts. A second development is my growing using of SQL resources, including
+those such as SQLite and Hive for Hadoop. I have found that these resources make parsing data
+<em>much</em> easier, and I will have more to say about these technologies, specifically Hive and
+Hadoop, in a later post as some projects I am working on develop further. But, currently,
+it is possible to make use of SQL queries while still remaining in the Python ecosystem
+and making use of fantastic libraries such as <code>pandas</code>. All while avoiding the actual
+setup of a SQL database.</p>
+
+<h3><code>pandasql</code></h3>
+
+<p><a href="http://pandas.pydata.org/"><code>pandas</code></a> is, in my opinion, one of the best, and most important,
+libraries for data analysis in Python. If you haven&#8217;t taken a look at it yet, you are really
+doing yourself a disfavor. At its core, <code>pandas</code> is a &#8220;library providing high-performance,
+easy-to-use data structures and data analysis tools for the Python programming language.&#8221;
+One of the key features is <code>R</code>-style dataframes in Python. In addition to <code>pandas</code>, the
+individuals at <a href="http://blog.yhathq.com/posts/pandasql-sql-for-pandas-dataframes.html">y-hat</a>
+built a SQL interface for <code>pandas</code> dataframes in a library called <code>pandasql</code>. Using <code>pandasql</code>
+is rather easy, and for those who have never used SQL before, the syntax is easy to learn
+and comprehend.</p>
+
+<p>Installation of <code>pandasql</code> follows the usual method with Python packages:</p>
+
+<p><code>pip install pandasql</code></p>
+
+<p>The example I&#8217;ll provide in this post makes use of the GDELT daily update for
+<a href="http://gdelt.utdallas.edu/data/dailyupdates/20130604.export.CSV.zip">June 4th</a>. The first
+step is to take care of the library imports and data loading.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+</span><span class='line'><span class="kn">from</span> <span class="nn">pandasql</span> <span class="kn">import</span> <span class="n">sqldf</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;GLOBALEVENTID&#39;</span><span class="p">,</span> <span class="s">&#39;SQLDATE&#39;</span><span class="p">,</span> <span class="s">&#39;MonthYear&#39;</span><span class="p">,</span> <span class="s">&#39;Year&#39;</span><span class="p">,</span> <span class="s">&#39;FractionDate&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Name&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1CountryCode&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1KnownGroupCode&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor1EthnicCode&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Religion1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Religion2Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Type1Code&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor1Type2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Type3Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Name&#39;</span><span class="p">,</span><span class="s">&#39;Actor2CountryCode&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor2KnownGroupCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor2EthnicCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Religion1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Religion2Code&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor2Type1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Type2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Type3Code&#39;</span><span class="p">,</span><span class="s">&#39;IsRootEvent&#39;</span><span class="p">,</span><span class="s">&#39;EventCode&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;EventBaseCode&#39;</span><span class="p">,</span><span class="s">&#39;EventRootCode&#39;</span><span class="p">,</span><span class="s">&#39;QuadClass&#39;</span><span class="p">,</span><span class="s">&#39;GoldsteinScale&#39;</span><span class="p">,</span><span class="s">&#39;NumMentions&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;NumSources&#39;</span><span class="p">,</span><span class="s">&#39;NumArticles&#39;</span><span class="p">,</span><span class="s">&#39;AvgTone&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Type&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_FullName&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor1Geo_CountryCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_ADM1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Long&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor1Geo_FeatureID&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Type&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_FullName&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_CountryCode&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;Actor2Geo_ADM1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Long&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_FeatureID&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;ActionGeo_Type&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_FullName&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_CountryCode&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_ADM1Code&#39;</span><span class="p">,</span>
+</span><span class='line'><span class="s">&#39;ActionGeo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_Long&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_FeatureID&#39;</span><span class="p">,</span><span class="s">&#39;DATEADDED&#39;</span><span class="p">,</span><span class="s">&#39;SOURCEURL&#39;</span><span class="p">]</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">gdelt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&#39;20130604.export.CSV&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I found that is necessary to indicate the text encoding when importing the data, else an error is
+thrown when trying to use <code>pandasql</code>. The resulting dataframe contains 41,569 events. For this
+example, I&#8217;m going to take a look at the ongoing crisis in Syria and gather a subset of the
+data that reflects this. To do this, I choose only events that have both country codes
+as &#8216;SYR&#8217;.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">SELECT</span>
+</span><span class='line'><span class="s">*</span>
+</span><span class='line'><span class="s">FROM</span>
+</span><span class='line'><span class="s">gdelt</span>
+</span><span class='line'><span class="s">WHERE</span>
+</span><span class='line'><span class="s">Actor1CountryCode == &#39;SYR&#39;</span>
+</span><span class='line'><span class="s">AND</span>
+</span><span class='line'><span class="s">Actor2CountryCode == &#39;SYR&#39;;</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">syr_subset</span> <span class="o">=</span> <span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This query results in a dataset with 91 events. The query also took roughly 5 seconds to
+complete on my laptop. Not too bad. While this subset can now be used to perform some analyses,
+it&#8217;s also possible to perform a simple analysis using SQL queries. For instance, I might wish
+to know who the different source actors are, along with the sum of the <code>GoldsteinScale</code>
+values for each different source actor. SQL queries make this extremely easy and elegant.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'><span class="s">SELECT</span>
+</span><span class='line'><span class="s">Actor1Code, sum(GoldsteinScale)</span>
+</span><span class='line'><span class="s">FROM</span>
+</span><span class='line'><span class="s">gdelt</span>
+</span><span class='line'><span class="s">WHERE</span>
+</span><span class='line'><span class="s">Actor1CountryCode == &#39;SYR&#39;</span>
+</span><span class='line'><span class="s">AND</span>
+</span><span class='line'><span class="s">Actor2CountryCode == &#39;SYR&#39;</span>
+</span><span class='line'><span class="s">GROUP BY</span>
+</span><span class='line'><span class="s">Actor1Code;</span>
+</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This gives the result of:</p>
+
+<p>&#8220;`</p>
+
+<pre><code> Actor1Code  sum(GoldsteinScale)
+</code></pre>
+
+<p>  0        SYR                -74.8
+  1     SYRCVL                 16.6
+  2     SYRGOV                -81.1
+  3  SYRGOVMED                -50.0
+  4     SYRMIL                -29.5
+  5  SYROPPUAF                -20.0
+  6     SYRREB                -24.6
+  &#8220;`</p>
+
+<p>  Additionally, we might want to see the same information for dyadic interactions between actors
+  along with information regarding how many events occur within the dyad,
+  which only requires a small modification of the previous query.</p>
+
+<p>  &#8220;`python</p>
+
+<p>  q = &#8220;&#8221;&#8221;
+  SELECT
+  Actor1Code, Actor2Code, sum(GoldsteinScale), count(Actor1Code)
+  FROM
+  gdelt
+  WHERE
+  Actor1CountryCode == &#8216;SYR&#8217;
+  AND
+  Actor2CountryCode == &#8216;SYR&#8217;
+  GROUP BY
+  Actor1Code, Actor2Code;
+  &#8220;&#8221;&#8221;</p>
+
+<p>  sqldf(q, globals())</p>
+
+<pre><code>     Actor1Code Actor2Code  sum(GoldsteinScale)  count(Actor1Code)
+ 0         SYR     SYRCVL                 -3.4                  3
+ 1         SYR     SYRGOV                -50.0                 15
+ 2         SYR     SYRLEG                  7.0                  3
+ 3         SYR     SYRMIL                -24.0                  3
+ 4         SYR     SYRREB                 -4.0                  2
+ 5         SYR     SYRREF                 -0.4                  1
+ 6      SYRCVL        SYR                 16.6                  4
+ 7      SYRGOV        SYR                -70.9                 30
+ 8      SYRGOV     SYRGOV                -10.2                 14
+ 9   SYRGOVMED        SYR                -40.0                  4
+ 10  SYRGOVMED     SYRCVL                -10.0                  1
+ 11     SYRMIL        SYR                -29.5                  3
+ 12  SYROPPUAF     SYRGOV                -20.0                  2
+ 13     SYRREB        SYR                -24.6                  6
+ ```
+
+ It is also possible to perform more complicated groupings and analyses using only SQL but, as
+ these examples show, even with a very limited knowledge of SQL one is able to draw subsets of
+ the data and perform some simple, but interesting, analyses. Additionally, since the data is stored
+ in a `pandas` dataframe, any analytical methods that are contained in `pandas` can be used, which
+ provides another set of powerful options for analysis. The final benefit of `pandasql` is that writing
+ these queries is *much* faster than writing a subsetting script, and the queries are also 
+ remarkably fast; none of the queries used in this post took more than 10 seconds to run. 
+</code></pre>
+
+<h3>Notes</h3>
+
+<p>While <code>pandasql</code>, and SQL in general, is very useful and far more elegant than hacked together
+scripts, there are some limitations. The primary limitation is that this method likely will not
+scale well to iterating over the entire GDELT dataset, i.e., all the data in the historical backfile
+downloads. The default behavior of <code>sqldf</code> is to hold the data in memory. There is an option to
+temporarily write the data to disk, but this still does not address the issue of reading in the
+yearly or monthly data into the initial dataframe. There is likely a workaround using the
+chunk iterator for <code>pd.read_csv</code>, but in my mind this defeats part of the appeal for using
+<code>pandasql</code> in the first place: quickness and ease of use. For working with the entire dataset,
+a technology such as Hive, or a full SQL database, is likely a more viable option. I will have
+more to say on the use of Hive in a future post. With all that said, however, <code>pandasql</code> is
+a very useful tool when analyzing more atomic chunks of the GDELT data; daily, monthly, and perhaps
+even a single year for the earlier years is not outside the realm of possibility. Finally, if you
+need a resource to learn SQL, I recommend Zed Shaw&#8217;s <a href="http://sql.learncodethehardway.org/">Learn SQL The Hard Way</a>,
+which will provide as much SQL as you need to perform data subsetting tasks.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-06T13:11:00-05:00" pubdate data-updated="true">Jun 6<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gdelt-/'>GDELT,</a>, <a class='category' href='/blog/categories/python-/'>Python,</a>, <a class='category' href='/blog/categories/sql/'>SQL</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/06/06/using-sql/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2013/06/06/using-sql/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/01/making-gdelt-downloads-easy/" title="Previous Post: Making GDELT Downloads Easy">&laquo; Making GDELT Downloads Easy</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/06/using-sql/">Using SQL</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/making-gdelt-downloads-easy/">Making GDELT Downloads Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/johnb30">@johnb30</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'johnb30',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("johnb30", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/johnb30" class="twitter-follow-button" data-show-count="false">Follow @johnb30</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - John Beieler -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
