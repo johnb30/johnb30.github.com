@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-06-06T13:21:11-05:00</updated>
+  <updated>2013-06-07T12:21:56-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -23,7 +23,7 @@
 <p>Yes, another post about GDELT. But this one can apply to other datasets, too.</p>
 
 <p>In an earlier <a href="http://johnbeieler.org/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">post</a>,
-I wrote about how to start subsetting the <a href="gdelt.utdallas.edu">GDELT data</a>
+I wrote about how to start subsetting the <a href="http://gdelt.utdallas.edu">GDELT data</a>
 using Python. Others also wrote <a href="http://nbviewer.ipython.org/urls/raw.github.com/dmasad/GDELT_Intro/master/Getting_Started_with_GDELT.ipynb">similar</a>
 <a href="http://quantifyingmemory.blogspot.com/2013/04/mapping-gdelt-data-in-r-and-some.html">pieces</a>. Each of these posts used the
 same basic idea: iterate over each line of the dataset, split the line based on tabs,
