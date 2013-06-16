@@ -4,7 +4,7 @@
   <title><![CDATA[Category: event data | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/event-data/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-06-07T12:21:56-05:00</updated>
+  <updated>2013-06-16T11:21:07-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -55,6 +55,9 @@ can see that the date is in the 0 index, with <code>Actor1Code</code> and <code>
 in spots 1 and 2, respectively. Additionally, <code>EventCode</code> is located in spot 3,
 while the <code>QuadCategory</code> variable is, fittingly, in position 4. These indices
 will prove crucial when it comes time to split and subset the data.</p>
+
+<!-- more -->
+
 
 <h3>Code</h3>
 

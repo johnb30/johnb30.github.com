@@ -1,0 +1,639 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Using Hive with Social Science Data - John Beieler</title>
+  <meta name="author" content="John Beieler">
+
+  
+  <meta name="description" content="Processing Data With Hive Working with big data is not a particularly easy task. There is a lot of commentary on the web about what constitutes &# &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="John Beieler" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-40125913-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">John Beieler</a></h1>
+  
+    <h2>PhD Student in Political Science</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:johnb30.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/about">About</a></li>
+  <li><a href="/cv">CV</a></li>
+  <li><a href="/papers">Papers</a></li>
+  <li><a href="/code">Code</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Using Hive With Social Science Data</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-16T16:05:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h3>Processing Data With Hive</h3>
+
+<p>Working with big data is not a particularly easy task. There is a lot of commentary on the web about what constitutes &#8220;big&#8221;
+data. The <a href="http://gdelt.utdallas.edu">GDELT</a> dataset, which is the focus of this post, is over 40 gigabytes uncompressed, so this
+is not a discussion of &#8220;Google-size&#8221; data. It is, however, more than most social scientists are used to dealing with in one
+pass. I&#8217;ve attempted to chronicle my history of working with the GDELT dataset to draw interesting conclusions about the world
+using event data. I&#8217;ve been relatively successful so far, but I felt that it was possible
+to make the data easier to work with. Towards this end, I began to explore SQL and database technologies to use as a subsetting
+method. I finally landed on <a href="https://hive.apache.org/">Hive</a>, which is part of the <a href="https://hadoop.apache.org/">Hadoop</a> ecosystem.
+Hive allows you to run SQL queries (Hive&#8217;s language is actually called HiveQL) on top
+of the map/reduce framework for computation. The data is distributed (mapped) across multiple nodes in a server cluster and queries
+are run atomically on this set of the data. This distributed data is then recombined (reduced) back into a single output form.</p>
+
+<p>Using Hive, it is possible to run fairly complex queries across the entirety of the GDELT dataset in roughly five minutes.
+This speed is possible thanks to Amazon&#8217;s <a href="https://aws.amazon.com/elasticmapreduce/">Elastic MapReduce</a> environment, which makes
+use of Elastic Cloud Compute (EC2) resources as the computational backend. EC2 makes it cheap and easy to rent a large cluster of
+servers for cheap; as an example, I have used 40 servers at ~$0.10/hr per server. Thus, the combination of Hive and Amazon Web Services makes it
+remarkably easy to get up and running with quick queries over this very interesting dataset. The rest of this post shows you how.</p>
+
+<!-- more -->
+
+
+<h3>Preparing The Data</h3>
+
+<p>Before doing any actual analyses with the data it must be loaded into the Amazon Web Services (AWS) environment. The primary
+service for storing data on AWS is the &#8220;Simple Storage Solution&#8221; (S3). To upload data to S3, first sign in to your AWS account
+and head to the AWS Management Console. Once at the console, you should select the S3 services, as seen below.</p>
+
+<p><img src="/blog/downloads/hive_post/1_aws_console.png"></p>
+
+<p>Within the S3 console, you should create a new bucket by clicking the &#8220;Create Bucket&#8221; button at the top left of the screen.
+The bucket name should be globally unique, i.e., it does not appear anywhere else in the S3 system. Your name is likely a good
+choice. Once you have selected a bucket name, select the &#8220;Create&#8221; option rather than &#8220;Set Up Logging >&#8221;. The next step is to
+navigate to the created bucket and create a new folder; I chose &#8220;gdelt&#8221; as the folder name.</p>
+
+<p><img src="/blog/downloads/hive_post/2_s3_setup.png"></p>
+
+<p>You should navigate to this new folder and begin uploading the GDELT data. For the purposes of this tutorial only a couple
+years are necessary. Loading the entire dataset onto S3 is a lengthy process. I have the entire dataset uploaded, along with
+continual, daily updates, and I am planning on making this bucket public, but a lot depends on the potential costs.
+I will have more to say about this as I find out more information.</p>
+
+<h3>Setting Up Hive</h3>
+
+<p>With the data uploaded to Amazon, the next step is setting up and using Hive. First, return to the AWS Management Console and
+select the Elastic MapReduce (EMR) service. Once in the EMR console, select &#8220;Create New Job Flow&#8221;, seen in the
+top left-hand corner of the EMR console. Once the job flow dialog appears, you should give the job a name, I chose <code>gdelt_query</code>,
+and select the job type, which should be &#8220;Hive Program&#8221;.</p>
+
+<p><img src="/blog/downloads/hive_post/3_define_job.png"></p>
+
+<p>On the next screen, you should simply choose the &#8220;Start an Interactive Hive Session&#8221; radio button.</p>
+
+<p><img src="/blog/downloads/hive_post/4_parameters.png"></p>
+
+<p>The next screen involves the selection of EC2 instance types of use as the computational power for the map/reduce tasks. For
+the purposes of this post, I&#8217;ll make use of 10 instances of the small server type for the core instance group and another small
+instance for the master instance. These instances cost $0.06/hr to run, with Amazon rounding up to the nearest hour for any jobs.
+The queries used in this tutorial should take less than an hour, which means that the total cost will come to roughly $0.70.</p>
+
+<p><img src="/blog/downloads/hive_post/5_servers.png"></p>
+
+<p>The only change needed on the next dialog screen is the selection of a key pair that is used to secure shell (SSH) into the master node.
+Creating an EC2 Key Pair is beyond the scope of this tutorial, but Amazon has a <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/generating-a-keypair.html">tutorial</a>
+that should provide all of the necessary information; the &#8220;Have Amazon EC2 generate it for you&#8221; is the
+option I suggest. You should make sure to give the pair a distinctive name and download them to a memorable location on your computer.
+The most common place to store ssh keys is in a <code>~/.ssh</code> directory. The next dialog box does not have any options that need to be changed;
+no bootstrap actions are required for our purposes. The final screen shows a review of the job flow that will be created. Make sure
+everything looks good and then click &#8220;Create Job Flow.&#8221; Following this, the job flow should appear in the EMR console.
+It will likely take a few minutes for everything to warm up.</p>
+
+<p><img src="/blog/downloads/hive_post/6_overview.png"></p>
+
+<h4>Elastic MapReduce Command-line interface</h4>
+
+<p>In order to communicate with the EMR cluster you have created some additional tools are necessary, specifically, the EMR
+command line interface. Amazon has a pretty good <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-cli-install.html">tutorial</a>
+on this as well. The only additional comments I will provide are to set the &#8220;region&#8221; argument in the credentials file to &#8220;us-east-1&#8221;, and that the
+&#8220;log_uri&#8221; should be the bucket we created earlier such and should look like <code>"s3://&lt;YOURNAME&gt;/"</code> if you used your name to create the bucket.</p>
+
+<p>I do know, however, that I had some issues installing the CLI since I have Ruby version 1.9.3 installed on my computer. I do not know if this
+is still an issue, but if you have issues with the CLI and have a version of Ruby different than 1.8, a different implementation of the CLI
+exists at <a href="https://github.com/tc/elastic-mapreduce-ruby">https://github.com/tc/elastic-mapreduce-ruby</a>. You should download this using the
+ZIP download option towards the top of the screen. The installation and usage for this version of the CLI is the same as with the version
+compatible with 1.8. The other option is to revert to Ruby 1.8.7.</p>
+
+<p>With the CLI downloaded and set up, you should <code>cd</code> to the directory and issue the <code>./elastic-mapreduce --list</code> command. This should show
+you the history of any job flows you created, along with the job IDs. The job ID is the first field for each job flow and looks something
+like <code>j-ABC123DEFG45</code>. This ID is used to SSH into the master node for the job, using the <code>./elastic-mapreduce -ssh j-ABC123DEFG45</code> command.
+With this, you should finally have a EMR instance up and running. The next section shows how to use this instance to query the GDELT
+data using Hive.</p>
+
+<h3>Querying The Data</h3>
+
+<p>While at the instance prompt, assuming you have already SSH&#8217;ed into the instance, you should issue the command <code>hive</code>. As a note, I
+will not cover the finer points of SQL in this post. SQL is easy to learn and  numerous tutorials exist that can help you learn. I
+suggest Zed Shaw&#8217;s <a href="sql.learncodethehardway.org">Learn SQL The Hard Way</a>. This section will only cover creating the table that stores
+the GDELT data along with some basic queries, along with saving the output to a CSV file.</p>
+
+<p>In order to create the table for GDELT, the following command should be issued in the Hive interpreter; copy and paste should work
+fine. This command assumes you have created the S3 bucket in the <code>&lt;YOURNAME&gt;/gdelt</code> format.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">EXTERNAL</span> <span class="k">TABLE</span> <span class="n">IF</span> <span class="k">NOT</span> <span class="k">EXISTS</span> <span class="n">gdelt</span> <span class="p">(</span>
+</span><span class='line'> <span class="n">GLOBALEVENTID</span> <span class="nb">BIGINT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">SQLDATE</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">MonthYear</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="k">Year</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">FractionDate</span> <span class="n">DOUBLE</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Name</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1CountryCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1KnownGroupCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1EthnicCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Religion1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Religion2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Type1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Type2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Type3Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Name</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2CountryCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2KnownGroupCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2EthnicCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Religion1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Religion2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Type1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Type2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Type3Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">IsRootEvent</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">EventCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">EventBaseCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">EventRootCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">QuadClass</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">GoldsteinScale</span> <span class="n">DOUBLE</span><span class="p">,</span>
+</span><span class='line'> <span class="n">NumMentions</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">NumSources</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">NumArticles</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">AvgTone</span> <span class="n">DOUBLE</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_Type</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_FullName</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_CountryCode</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_ADM1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_Lat</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_Long</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor1Geo_FeatureID</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_Type</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_FullName</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_CountryCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_ADM1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_Lat</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_Long</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Geo_FeatureID</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_Type</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_FullName</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_CountryCode</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_ADM1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_Lat</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_Long</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">ActionGeo_FeatureID</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">DATEADDED</span> <span class="nb">INT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">SOURCEURL</span> <span class="n">STRING</span> <span class="p">)</span>
+</span><span class='line'><span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span>
+</span><span class='line'><span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">&#39;\t&#39;</span>
+</span><span class='line'><span class="n">STORED</span> <span class="k">AS</span> <span class="n">TEXTFILE</span>
+</span><span class='line'><span class="k">LOCATION</span> <span class="s1">&#39;s3n://&lt;YOURNAME&gt;/gdelt&#39;</span> <span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This creates a table with fields for each of the columns available in the GDELT dataset. It is now possible to run some simple queries against
+the data. Before doing so, however, it is useful to adjust the number of <code>reducers</code> used in the map/reduce jobs since these are automatically
+determined from the size of the input; upping the number of <code>reducers</code> can speed the queries. To do this, enter
+<code>set hive.exec.reducers.max=200; set mapred.reduce.tasks=200;</code> into the Hive prompt.</p>
+
+<p>The first example query used in this post is the same as in my <a href="http://johnbeieler.org/blog/2013/06/06/using-sql/">previous post</a>:
+select all events that occurred within Syria, show the dyadic interactions, and create a sum of the Goldstein values for each dyad.
+The code for the query is the exact same as in the previous post:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">SELECT</span>
+</span><span class='line'><span class="k">Year</span><span class="p">,</span> <span class="n">Actor1Code</span><span class="p">,</span> <span class="n">Actor2Code</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">GoldsteinScale</span><span class="p">),</span> <span class="k">count</span><span class="p">(</span><span class="n">Actor1Code</span><span class="p">)</span>
+</span><span class='line'><span class="k">FROM</span>
+</span><span class='line'><span class="n">gdelt</span>
+</span><span class='line'><span class="k">WHERE</span>
+</span><span class='line'><span class="n">Actor1CountryCode</span> <span class="o">==</span> <span class="s1">&#39;SYR&#39;</span>
+</span><span class='line'><span class="k">AND</span>
+</span><span class='line'><span class="n">Actor2CountryCode</span> <span class="o">==</span> <span class="s1">&#39;SYR&#39;</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span>
+</span><span class='line'><span class="k">Year</span><span class="p">,</span> <span class="n">Actor1Code</span><span class="p">,</span> <span class="n">Actor2Code</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>After roughly 10 minutes you should see the results start to stream across the terminal showing the actors in the dyad, the sum of the Goldstein values,
+and the count of events within the dyad. While this is interesting and useful, the ultimate goal is to save this subset to a file so it can
+serve as the basis for future analysis. To do so, a temporary holding table is necessary as an intermediate step. The following command creates
+such a table.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">temp</span> <span class="p">(</span>
+</span><span class='line'> <span class="n">Actor1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">SumGoldstein</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">EventCount</span> <span class="nb">INT</span>
+</span><span class='line'> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>You can then issue the same command as above, with the slight modification of inserting the results into the new table.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">TABLE</span> <span class="n">temp</span>
+</span><span class='line'><span class="k">SELECT</span>
+</span><span class='line'><span class="n">Actor1Code</span><span class="p">,</span> <span class="n">Actor2Code</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">GoldsteinScale</span><span class="p">),</span> <span class="k">count</span><span class="p">(</span><span class="n">Actor1Code</span><span class="p">)</span>
+</span><span class='line'><span class="k">FROM</span>
+</span><span class='line'><span class="n">gdelt</span>
+</span><span class='line'><span class="k">WHERE</span>
+</span><span class='line'><span class="n">Actor1CountryCode</span> <span class="o">==</span> <span class="s1">&#39;SYR&#39;</span>
+</span><span class='line'><span class="k">AND</span>
+</span><span class='line'><span class="n">Actor2CountryCode</span> <span class="o">==</span> <span class="s1">&#39;SYR&#39;</span>
+</span><span class='line'><span class="k">GROUP</span> <span class="k">BY</span>
+</span><span class='line'><span class="n">Actor1Code</span><span class="p">,</span> <span class="n">Actor2Code</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Now, in order to save the results into a single CSV file, issue the following command.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='sql'><span class='line'><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">csvexport</span> <span class="p">(</span>
+</span><span class='line'> <span class="n">Actor1Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">Actor2Code</span> <span class="n">STRING</span><span class="p">,</span>
+</span><span class='line'> <span class="n">SumGoldstein</span> <span class="nb">FLOAT</span><span class="p">,</span>
+</span><span class='line'> <span class="n">EventCount</span> <span class="nb">FLOAT</span>
+</span><span class='line'> <span class="p">)</span>
+</span><span class='line'><span class="k">ROW</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">&#39;,&#39;</span>
+</span><span class='line'><span class="n">LINES</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">&#39;\n&#39;</span>
+</span><span class='line'><span class="n">STORED</span> <span class="k">AS</span> <span class="n">TEXTFILE</span>
+</span><span class='line'><span class="k">LOCATION</span> <span class="s1">&#39;s3n://&lt;YOURNAME&gt;/output&#39;</span><span class="p">;</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">INSERT</span> <span class="n">OVERWRITE</span> <span class="k">TABLE</span> <span class="n">csvexport</span>
+</span><span class='line'><span class="k">SELECT</span>
+</span><span class='line'><span class="o">*</span>
+</span><span class='line'><span class="k">FROM</span>
+</span><span class='line'><span class="n">temp</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>There should now be a file in your S3 bucket, within the folder <code>output</code> with a strange name. This file contains the output of the query and can be
+downloaded to your local computer. This multi-step process is necessary due to the nature of the map/reduce paradigm. Since the table <code>temp</code> is
+created by using multiple reducers, the output would be written to a number of files that reflects the number of reducers used in a query. In the case
+of this query, that would be 200 separate files. The creation of the <code>csvexport</code> table allows for the creation of a single text file since no reduce
+jobs are needed for the <code>SELECT *</code> operation.</p>
+
+<h3>Wrapping up</h3>
+
+<p>This tutorial has only scratched the surface of the power of Hive and SQL. It is important to remember that SQL, and by extension
+HiveQL, is typically used in business-analytical environments. This means that it is very powerful for the type of quick, informative
+queries that are also useful for social science data such as GDELT. Running a few queries to see what type of data you are working with
+is very important when working with data on this scale; it is a waste of time to create a subset of the data and run some complicated
+analysis, only to realize that you have the wrong subset. Thus, Hive should not be treated just as a tool to quickly subset the data,
+but instead it should become another piece of the analytical workflow to aid in determining what the subset of the data should be in
+the first place.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-16T16:05:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/gdelt-/'>GDELT,</a>, <a class='category' href='/blog/categories/hadoop/'>Hadoop</a>, <a class='category' href='/blog/categories/hive-/'>Hive,</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/06/06/using-sql/" title="Previous Post: Using SQL, pandas, and Python to Work With Data">&laquo; Using SQL, pandas, and Python to Work With Data</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive with Social Science Data</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/06/using-sql/">Using SQL, pandas, and Python to Work With Data</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/01/making-gdelt-downloads-easy/">Making GDELT Downloads Easy</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/johnb30">@johnb30</a> on GitHub
+  
+  <script type="text/javascript">
+    $.domReady(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'johnb30',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("johnb30", 4, false);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/johnb30" class="twitter-follow-button" data-show-count="false">Follow @johnb30</a>
+  
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - John Beieler -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

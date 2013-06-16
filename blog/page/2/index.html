@@ -9,8 +9,9 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Overview What is this? In short, setting up Python (and other things) for scientific computing and
-research can be entirely more complicated than &hellip;">
+  <meta name="description" content="The below code is to perform a nonparametric two-sample t-test using
+bootstrapping. First I present the code, and will then follow up with a
+line-by- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +88,105 @@ research can be entirely more complicated than &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2012/11/28/bootstrapping-t-test/">Bootstrapped T-test</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-28T19:47:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>The below code is to perform a nonparametric two-sample t-test using
+bootstrapping. First I present the code, and will then follow up with a
+line-by-line description of what&#8217;s going on.</p>
+
+<div><script src='https://gist.github.com/4166016.js?file='></script>
+<noscript><pre><code>from __future__ import division
+import numpy as np
+import pandas as pd
+import random
+
+def sample(data):
+    sample = [random.choice(data) for _ in xrange(len(data))]
+    return sample
+
+def bootstrap_t_test(treatment, control, nboot = 1000, direction = &quot;less&quot;):
+    ones = np.vstack((np.ones(len(treatment)),treatment))
+    treatment = ones.conj().transpose()
+    zeros = np.vstack((np.zeros(len(control)), control))
+    control = zeros.conj().transpose()
+    Z = np.vstack((treatment, control))
+    tstat = np.mean(treatment[:,1])-np.mean(control[:,1])
+    tboot = np.zeros(nboot)
+    for i in xrange(nboot):
+        sboot = sample(Z)
+        sboot = pd.DataFrame(np.array(sboot), columns=['treat', 'vals'])
+        tboot[i] = np.mean(sboot['vals'][sboot['treat'] == 1]) - np.mean(sboot['vals'][sboot['treat'] == 0]) - tstat
+    if direction == &quot;greater&quot;:
+        pvalue = np.sum(tboot&gt;=tstat-0)/nboot
+    elif direction == &quot;less&quot;:
+        pvalue = np.sum(tboot&lt;=tstat-0)/nboot
+    else:
+        print 'Enter a valid arg for direction'
+
+    print 'The p-value is %f' % (pvalue)
+</code></pre></noscript></div>
+
+
+<ul>
+<li><p>1-4: Just some imports. We need the floating point division from the
+future module, numpy, pandas, and the random module.</p></li>
+<li><p>6-8: Defining a function <code>sample</code> that samples with replacement from the
+dataset, creating a new dataset of the same length as the original data.
+This makes use of the <code>random.choice</code> function, which samples one item
+randomly from the data. This function is called the same number of times as
+there are observations in the data.</p></li>
+<li><p>10-17: Defining a function to perform the t-test, with two data inputs,
+the number of repititions to be performed, and the direction of the
+alternative hypothesis. First a 2 x <em>n</em> matrix is defined, with row 1 being
+all ones and row 2 being the data. This is then flipped to create an <em>n</em> x 2
+matrix. The same procedure is then repeated for the control data, except with
+0s instead of 1s. These two matrices are then stacked on top of each other.
+<code>tstat</code> is the difference between the two groups, and tboot is a vector of
+zeros with length equal to the number of repititions for the bootstrap.</p></li>
+<li><p>18-21: This for-loop actually performs the bootstrap for the number of times
+indicated by <code>nboot</code>. First, a sample of the data (<code>Z</code>) is taken using the
+<code>sample</code> function defined above. This is then transformed into a pandas
+DataFrame, and given appropriate column names. Finally, the difference in
+means of the two groups is taken for each iteration of the loop and stored in
+the appropriate location in <code>tboot</code>.</p></li>
+<li><p>22-28: This is simply calculating a proportion of samples that were greater or
+less than the test statistic, based on the direction of the alternative
+hypothesis. The final line (29) then prints the p-value as a float.</p></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2012/11/24/starting-with-python/">Starting With Python</a></h1>
     
     
@@ -135,265 +235,12 @@ helped me. I know this post is long, but there is a large amount of information
 to share, and I think it is easier to get a lot of it in one place, rather than
 spread out.</p>
 
-<h3>Basics</h3>
-
-<p>I&#8217;m going to start from the assumption that if you&#8217;re reading this you&#8217;ve never
-dealt with a command-line interface, or if you have that you&#8217;ve only been
-briefly exposed (maybe through things like R or Stata). So, before working with
-these sorts of things it&#8217;s helpful to get acquainted with the Terminal
-(Command Prompt in Windows). You should be able to find this in your
-Applications folder in the Utilities folder. Go ahead and drag the app to your
-dock. It will make life easier for you to have it here.</p>
-
-<p>If you open it up you will see something like</p>
-
-<pre><code>John-B-MacBook-Pro:~ john$ 
-</code></pre>
-
-<p>The word (john here) right before the $ is your username. There are some basic
-commands for working with the Terminal:</p>
-
-<ul>
-<li><code>ls</code> shows you all of the files and folders in your current working directory</li>
-<li><code>ls -a</code> shows all files and folders including those that are hidden</li>
-<li><code>cd</code> allows you to move from one location to another</li>
-<li><code>mv</code> lets you move files</li>
-<li><code>cp</code> is copying</li>
-</ul>
-
-
-<p>and many, many more. A basic workflow is as below:</p>
-
-<pre><code>$ ls
-Applications    Desktop     Documents
-
-$ cd Documents
-$ ls -a
-test.txt    .hidden.txt
-
-$ mv test.txt /Users/johnbeieler/Desktop
-</code></pre>
-
-<p>When in doubt Google what you want to do followed by &#8220;Terminal.&#8221; So, something
-like &#8220;remove file terminal&#8221; or &#8220;copy file terminal.&#8221; A word of warning, you&#8217;re
-&#8220;closer to the metal&#8221; when using a command-line interface. This means that you
-have a lot of power and flexibility when working with things, but it also means
-you have the ability to completely wipe your hard drive if you type the wrong
-command. Be careful.</p>
-
-<p>You should probably go ahead and install XCode. This is included on the install
-CD that came with your Mac, or it can be downloaded from the Mac App Store.
-Make sure that you&#8217;re using the correct version for your version of OS X.
-This will install some things that will be necessary to work with later.
-Linux has an awesome concept called package managers, which allow you to easily
-install different applications and, well, packages by typing something like
-&#8220;sudo apt-get package&#8221; into the Terminal and things are automagically downloaded
-and installed. Macs lack this functionality. But! Some enterprising individuals
-have come up with a way to help. By heading to
-<a href="http://mxcl.github.com/homebrew/">http://mxcl.github.com/homebrew/</a> you can
-download a package manager that makes
-life much easier. Feel free to look around for utilities that can be installed
-using homebrew that might be of use to you. As a word of advice, if you are on
-the verge of installing something, first check and see if it is available using
-homebrew since brew keeps things nice and organized in your usr/local folder
-instead of spread all over your computer.</p>
-
-<h2>Python</h2>
-
-<p>OS X comes with Python preloaded and is required by the operating system for
-many functions. This is good and bad. Good since you can type</p>
-
-<pre><code>$ python 
-</code></pre>
-
-<p>and get up and running in an interactive session. It&#8217;s also bad because the
-structure of the Python installation on OS X can create some difficulties with
-certain libraries. This leaves two options:
-First, you can go with the default Python implementation.
-This will necessitate (sort of) the use of the Scipy Superpack
-<a href="http://fonnesbeck.github.com/ScipySuperpack/">http://fonnesbeck.github.com/ScipySuperpack/</a>.
-The Superpack installs nearly every awesome Python library that your scientific
-researcher heart could desire. As a brief rundown of what each package does:</p>
-
-<h4>Numpy and Scipy</h4>
-
-<p>The heart of numerical computing in Python. These two libraries give array and
-matrix functions along with many other cool things. Numpy is short for Numeric
-Python and Scipy is short for Scientific Python. Many other libraries in Python
-are dependent on these. Much (digital) ink has been spilled on using these two
-so feel free to search around for more on how an array is different than a
-matrix in Numpy (hint: You should probably use an array).</p>
-
-<h4>Matplotlib</h4>
-
-<p>Plotting functions in Python. Allows you to make pretty graphs.</p>
-
-<h4>IPython</h4>
-
-<p>Stands for Interactive Python. When running python from the Terminal you should
-type <code>ipython</code> instead of <code>python</code>.  IPython gives many different
-magic functions and has all kinds of need goodies in it that generally make life
-easier.</p>
-
-<h4>Pandas</h4>
-
-<p>The best thing since sliced bread and pockets on jeans. Allows the R dataframe
-functionality in Python. Supports complex indexing for panel data, creation of
-various statistics such as moving averages, includes various read and write
-functionalities. It has some awesome documentation so go check it out.</p>
-
-<h4>Statsmodels</h4>
-
-<p>Statistical models in Python. This one is pretty self explanatory but is
-tremendously useful and is more intuitive than R in many ways.</p>
-
-<h4>Scikit-learn</h4>
-
-<p>Machine learning in Python. Has some of the most comprehensive documentation
-around, including a series of tutorials on how to get started with machine
-learning in general.</p>
-
-<h4>PyMC</h4>
-
-<p>Bayesian inference in Python. MCMC and more.</p>
-
-<h4>Other Utilities</h4>
-
-<p>nose, readline and DateUtils. Things that are useful for other packages.
-You can read up on these more if you would like. Of importance, however, is
-nose. Nose is a testing suite for Python that allows you to see if anything is
-wonky in your installation. You can (maybe) get away with skipping these, but
-it never hurts. Look up the different tests for each of the utilities if you
-want to run them.</p>
-
-<p>In all honesty it is probably easiest to use the Superpack. The other option is
-to download another Python distrubution that has all of these things included
-plus a &#8220;vanilla&#8221; (non-Apple) build of Python. Some examples of these are:</p>
-
-<ul>
-<li>Enthought Python <a href="https://enthought.com/products/edudownload.php">https://enthought.com/products/edudownload.php</a></li>
-<li>Python(x,y) <a href="https://code.google.com/p/pythonxy/">https://code.google.com/p/pythonxy/</a></li>
-</ul>
-
-
-<p>But really, just use the Superpack.</p>
-
-<h2>Other things</h2>
-
-<p>There are some other things that are useful (read: necessary) to use Python in
-any meaningful way. One of the most important is setuptools.</p>
-
-<p>To install setuptools:</p>
-
-<p>1) Go to <a href="http://pypi.python.org/pypi/setuptools">http://pypi.python.org/pypi/setuptools</a>.
-Download the .egg file located towards the bottom of the page. Since your
-version is 2.7 you would download (as of 08/29/2012) setuptools-0.6c11-py2.7.egg.</p>
-
-<p>2) Place it on your desktop. Do NOT change the name.</p>
-
-<p>3) Cd to your desktop in the Terminal:</p>
-
-<pre><code>$ cd Desktop
-$ sh setuptools-0.6c11-py2.7.egg 
-</code></pre>
-
-<p>4) That should be it.</p>
-
-<p>What setuptools allows you to do is type <code>easy_install package</code> and it will
-install that package for your use in Python. Some people suggest that a program
-called pip is better because it has additional features such as the ability to
-easily uninstall programs. To install pip you just type:</p>
-
-<pre><code>$ easy_install pip 
-</code></pre>
-
-<p>That&#8217;s right. Pip is installed using easy_install.</p>
-
-<p>Let&#8217;s try it out for a library called Scrapy. Scrapy is described as</p>
-
-<blockquote><p>Scrapy is a fast high-level screen scraping and web crawling framework, used to
-crawl websites and extract structured data from their pages. It can be used for
-a wide range of purposes, from data mining to monitoring and automated testing.</p></blockquote>
-
-<p>Sounds pretty cool. All you do is open up Terminal and type:</p>
-
-<pre><code>$ easy_install Scrapy 
-</code></pre>
-
-<p>Alternatively if you&#8217;re using pip:</p>
-
-<pre><code>$ pip install Scrapy 
-</code></pre>
-
-<h2>Miscellany</h2>
-
-<p>There are some other things that are useful to have when doing this kind of
-programming/coding/scripting type work that aren&#8217;t related directly to working
-with Python.</p>
-
-<h4>Version Control</h4>
-
-<p>First is git and github. Git is what&#8217;s called a &#8220;version control system.&#8221; Have
-you ever been working on a paper and saved your work only to realize that you
-wrote over some changes that you didn&#8217;t mean to? Me too. Git keeps a detailed
-list of the versions of a file, including any changes or additions made to a
-specific version, and allows you to roll back to a previous version. So, if you
-wrote over a file and want to revert back you just have to find the version you
-want.</p>
-
-<p>Github is a &#8220;social coding platform.&#8221; It&#8217;s basically git on the internet. You&#8217;re
-reading this on github right now. Normally git and github involve some (semi)
-complicated Terminal commands. Github has, however, provided a nice, functional
-program to use git and github. The Mac version is here <a href="http://mac.github.com/">http://mac.github.com/</a>.</p>
-
-<h4>Text Editors</h4>
-
-<p>Text editors can cause a surprising amount of consternation on the internet. A
-decent editor can make your life easier with features such as syntax
-highlighting, autoindentation, tab completion, and other features. I won&#8217;t say
-which editor to use, but will give you a list of some of the big ones.
-(This was written using vim, MacVim to be specific).</p>
-
-<p><strong>Gedit:</strong> Standard on Linux distros. Simple. Includes some syntax highlighting.</p>
-
-<p><strong>Emacs:</strong> One of the big two editors. Built on LISP. Can basically be whatever
-you want it to be. Uses extensive, and sometimes complicated, key combinations
-to get things done.</p>
-
-<p><strong>Vim:</strong> The second of the big two. Has different modes such as insert and
-normal. Takes some getting used to. Has a ton of different add-ons.</p>
-
-<p><strong>Sublime Text 2:</strong> Probably more straightforward than Emacs or Vim, but more
-powerful than gedit. More modern than either Emacs or Vim. Free to try for a
-bit.</p>
-
-<h4>Other</h4>
-
-<p>I&#8217;ll add a shameless plug here for some code that I wrote, py_apsrtable. This
-is designed to provide easy functions to take output from Python statistical
-packages and turn it into pretty LaTeX tables. To install</p>
-
-<pre><code>$ pip install py_apsrtable
-</code></pre>
-
-<p>Documentation is on <a href="http://johnb30.github.com/py_apsrtable">github</a>.</p>
-
-<p>I will also add as a final point that it is probably nice to take a look at
-&#8220;The Zen of Python&#8221; by opening up a python shell, <code>ipython</code>, and typing</p>
-
-<pre><code>import this
-</code></pre>
-
-<p>Next, take a look at the Python style guide contained in <a href="http://www.python.org/dev/peps/pep-0008/#code-lay-out">PEP8</a>
-(PythonEnhancement Proposal 8). Following these guidelines will allow your code
-to be consistent with the prevailing style for Python code.</p>
-
-<p>I know this was slightly rambling, and there are <em>numerous</em> points that I have
-missed, but I hope this provides some information that will be useful to those
-trying to get setup with Python for research. If you have any questions or
-suggestions, please feel free to contact me.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/24/starting-with-python/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -414,6 +261,10 @@ suggestions, please feel free to contact me.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive with Social Science Data</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/06/using-sql/">Using SQL, pandas, and Python to Work With Data</a>
       </li>
     
@@ -427,10 +278,6 @@ suggestions, please feel free to contact me.</p>
     
       <li class="post">
         <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
       </li>
     
   </ul>

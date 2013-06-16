@@ -9,8 +9,7 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Easier subsetting of data Yes, another post about GDELT. But this one can apply to other datasets, too. In an earlier post,
-I wrote about how to &hellip;">
+  <meta name="description" content="Processing Data With Hive Working with big data is not a particularly easy task. There is a lot of commentary on the web about what constitutes &# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -87,6 +86,64 @@ I wrote about how to &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive With Social Science Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-16T16:05:00-05:00" pubdate data-updated="true">Jun 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Processing Data With Hive</h3>
+
+<p>Working with big data is not a particularly easy task. There is a lot of commentary on the web about what constitutes &#8220;big&#8221;
+data. The <a href="http://gdelt.utdallas.edu">GDELT</a> dataset, which is the focus of this post, is over 40 gigabytes uncompressed, so this
+is not a discussion of &#8220;Google-size&#8221; data. It is, however, more than most social scientists are used to dealing with in one
+pass. I&#8217;ve attempted to chronicle my history of working with the GDELT dataset to draw interesting conclusions about the world
+using event data. I&#8217;ve been relatively successful so far, but I felt that it was possible
+to make the data easier to work with. Towards this end, I began to explore SQL and database technologies to use as a subsetting
+method. I finally landed on <a href="https://hive.apache.org/">Hive</a>, which is part of the <a href="https://hadoop.apache.org/">Hadoop</a> ecosystem.
+Hive allows you to run SQL queries (Hive&#8217;s language is actually called HiveQL) on top
+of the map/reduce framework for computation. The data is distributed (mapped) across multiple nodes in a server cluster and queries
+are run atomically on this set of the data. This distributed data is then recombined (reduced) back into a single output form.</p>
+
+<p>Using Hive, it is possible to run fairly complex queries across the entirety of the GDELT dataset in roughly five minutes.
+This speed is possible thanks to Amazon&#8217;s <a href="https://aws.amazon.com/elasticmapreduce/">Elastic MapReduce</a> environment, which makes
+use of Elastic Cloud Compute (EC2) resources as the computational backend. EC2 makes it cheap and easy to rent a large cluster of
+servers for cheap; as an example, I have used 40 servers at ~$0.10/hr per server. Thus, the combination of Hive and Amazon Web Services makes it
+remarkably easy to get up and running with quick queries over this very interesting dataset. The rest of this post shows you how.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/16/using-hive-with-social-science-data/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/06/06/using-sql/">Using SQL, Pandas, and Python to Work With Data</a></h1>
     
     
@@ -135,251 +192,12 @@ it is possible to make use of SQL queries while still remaining in the Python ec
 and making use of fantastic libraries such as <code>pandas</code>. All while avoiding the actual
 setup of a SQL database.</p>
 
-<h3><code>pandasql</code></h3>
-
-<p><a href="http://pandas.pydata.org/"><code>pandas</code></a> is, in my opinion, one of the best, and most important,
-libraries for data analysis in Python. If you haven&#8217;t taken a look at it yet, you are really
-doing yourself a disfavor. At its core, <code>pandas</code> is a &#8220;library providing high-performance,
-easy-to-use data structures and data analysis tools for the Python programming language.&#8221;
-One of the key features is <code>R</code>-style dataframes in Python. In addition to <code>pandas</code>, the
-individuals at <a href="http://blog.yhathq.com/posts/pandasql-sql-for-pandas-dataframes.html">y-hat</a>
-built a SQL interface for <code>pandas</code> dataframes in a library called <code>pandasql</code>. Using <code>pandasql</code>
-is rather easy, and for those who have never used SQL before, the syntax is easy to learn
-and comprehend.</p>
-
-<p>Installation of <code>pandasql</code> follows the usual method with Python packages:</p>
-
-<p><code>pip install pandasql</code></p>
-
-<p>The example I&#8217;ll provide in this post makes use of the GDELT daily update for
-<a href="http://gdelt.utdallas.edu/data/dailyupdates/20130604.export.CSV.zip">June 4th</a>. The first
-step is to take care of the library imports and data loading.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">pandasql</span> <span class="kn">import</span> <span class="n">sqldf</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;GLOBALEVENTID&#39;</span><span class="p">,</span> <span class="s">&#39;SQLDATE&#39;</span><span class="p">,</span> <span class="s">&#39;MonthYear&#39;</span><span class="p">,</span> <span class="s">&#39;Year&#39;</span><span class="p">,</span> <span class="s">&#39;FractionDate&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Name&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1CountryCode&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1KnownGroupCode&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor1EthnicCode&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Religion1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Religion2Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Type1Code&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor1Type2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Type3Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Name&#39;</span><span class="p">,</span><span class="s">&#39;Actor2CountryCode&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor2KnownGroupCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor2EthnicCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Religion1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Religion2Code&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor2Type1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Type2Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Type3Code&#39;</span><span class="p">,</span><span class="s">&#39;IsRootEvent&#39;</span><span class="p">,</span><span class="s">&#39;EventCode&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;EventBaseCode&#39;</span><span class="p">,</span><span class="s">&#39;EventRootCode&#39;</span><span class="p">,</span><span class="s">&#39;QuadClass&#39;</span><span class="p">,</span><span class="s">&#39;GoldsteinScale&#39;</span><span class="p">,</span><span class="s">&#39;NumMentions&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;NumSources&#39;</span><span class="p">,</span><span class="s">&#39;NumArticles&#39;</span><span class="p">,</span><span class="s">&#39;AvgTone&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Type&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_FullName&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor1Geo_CountryCode&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_ADM1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;Actor1Geo_Long&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor1Geo_FeatureID&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Type&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_FullName&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_CountryCode&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor2Geo_ADM1Code&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_Long&#39;</span><span class="p">,</span><span class="s">&#39;Actor2Geo_FeatureID&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;ActionGeo_Type&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_FullName&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_CountryCode&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_ADM1Code&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;ActionGeo_Lat&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_Long&#39;</span><span class="p">,</span><span class="s">&#39;ActionGeo_FeatureID&#39;</span><span class="p">,</span><span class="s">&#39;DATEADDED&#39;</span><span class="p">,</span><span class="s">&#39;SOURCEURL&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'>
-</span><span class='line'><span class="n">gdelt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">&#39;20130604.export.CSV&#39;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I found that is necessary to indicate the text encoding when importing the data, else an error is
-thrown when trying to use <code>pandasql</code>. The resulting dataframe contains 41,569 events. For this
-example, I&#8217;m going to take a look at the ongoing crisis in Syria and gather a subset of the
-data that reflects this. To do this, I choose only events that have both country codes
-as &#8216;SYR&#8217;.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="s">SELECT</span>
-</span><span class='line'><span class="s">*</span>
-</span><span class='line'><span class="s">FROM</span>
-</span><span class='line'><span class="s">gdelt</span>
-</span><span class='line'><span class="s">WHERE</span>
-</span><span class='line'><span class="s">Actor1CountryCode == &#39;SYR&#39;</span>
-</span><span class='line'><span class="s">AND</span>
-</span><span class='line'><span class="s">Actor2CountryCode == &#39;SYR&#39;;</span>
-</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">syr_subset</span> <span class="o">=</span> <span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This query results in a dataset with 91 events. The query also took roughly 5 seconds to
-complete on my laptop. Not too bad. While this subset can now be used to perform some analyses,
-it&#8217;s also possible to perform a simple analysis using SQL queries. For instance, I might wish
-to know who the different source actors are, along with the sum of the <code>GoldsteinScale</code>
-values for each different source actor. SQL queries make this extremely easy and elegant.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="s">SELECT</span>
-</span><span class='line'><span class="s">Actor1Code, sum(GoldsteinScale)</span>
-</span><span class='line'><span class="s">FROM</span>
-</span><span class='line'><span class="s">gdelt</span>
-</span><span class='line'><span class="s">WHERE</span>
-</span><span class='line'><span class="s">Actor1CountryCode == &#39;SYR&#39;</span>
-</span><span class='line'><span class="s">AND</span>
-</span><span class='line'><span class="s">Actor2CountryCode == &#39;SYR&#39;</span>
-</span><span class='line'><span class="s">GROUP BY</span>
-</span><span class='line'><span class="s">Actor1Code;</span>
-</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This gives the result of:</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">Actor1Code</span>  <span class="nb">sum</span><span class="p">(</span><span class="n">GoldsteinScale</span><span class="p">)</span>
-</span><span class='line'><span class="mi">0</span>        <span class="n">SYR</span>                <span class="o">-</span><span class="mf">74.8</span>
-</span><span class='line'><span class="mi">1</span>     <span class="n">SYRCVL</span>                 <span class="mf">16.6</span>
-</span><span class='line'><span class="mi">2</span>     <span class="n">SYRGOV</span>                <span class="o">-</span><span class="mf">81.1</span>
-</span><span class='line'><span class="mi">3</span>  <span class="n">SYRGOVMED</span>                <span class="o">-</span><span class="mf">50.0</span>
-</span><span class='line'><span class="mi">4</span>     <span class="n">SYRMIL</span>                <span class="o">-</span><span class="mf">29.5</span>
-</span><span class='line'><span class="mi">5</span>  <span class="n">SYROPPUAF</span>                <span class="o">-</span><span class="mf">20.0</span>
-</span><span class='line'><span class="mi">6</span>     <span class="n">SYRREB</span>                <span class="o">-</span><span class="mf">24.6</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>  Additionally, we might want to see the same information for dyadic interactions between actors
-  along with information regarding how many events occur within the dyad,
-  which only requires a small modification of the previous query.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">q</span> <span class="o">=</span> <span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'><span class="s">SELECT</span>
-</span><span class='line'><span class="s">Actor1Code, Actor2Code, sum(GoldsteinScale), count(Actor1Code)</span>
-</span><span class='line'><span class="s">FROM</span>
-</span><span class='line'><span class="s">gdelt</span>
-</span><span class='line'><span class="s">WHERE</span>
-</span><span class='line'><span class="s">Actor1CountryCode == &#39;SYR&#39;</span>
-</span><span class='line'><span class="s">AND</span>
-</span><span class='line'><span class="s">Actor2CountryCode == &#39;SYR&#39;</span>
-</span><span class='line'><span class="s">GROUP BY</span>
-</span><span class='line'><span class="s">Actor1Code, Actor2Code;</span>
-</span><span class='line'><span class="s">&quot;&quot;&quot;</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">sqldf</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="nb">globals</span><span class="p">())</span>
-</span><span class='line'>
-</span><span class='line'>    <span class="n">Actor1Code</span> <span class="n">Actor2Code</span>  <span class="nb">sum</span><span class="p">(</span><span class="n">GoldsteinScale</span><span class="p">)</span>  <span class="n">count</span><span class="p">(</span><span class="n">Actor1Code</span><span class="p">)</span>
-</span><span class='line'><span class="mi">0</span>         <span class="n">SYR</span>     <span class="n">SYRCVL</span>                 <span class="o">-</span><span class="mf">3.4</span>                  <span class="mi">3</span>
-</span><span class='line'><span class="mi">1</span>         <span class="n">SYR</span>     <span class="n">SYRGOV</span>                <span class="o">-</span><span class="mf">50.0</span>                 <span class="mi">15</span>
-</span><span class='line'><span class="mi">2</span>         <span class="n">SYR</span>     <span class="n">SYRLEG</span>                  <span class="mf">7.0</span>                  <span class="mi">3</span>
-</span><span class='line'><span class="mi">3</span>         <span class="n">SYR</span>     <span class="n">SYRMIL</span>                <span class="o">-</span><span class="mf">24.0</span>                  <span class="mi">3</span>
-</span><span class='line'><span class="mi">4</span>         <span class="n">SYR</span>     <span class="n">SYRREB</span>                 <span class="o">-</span><span class="mf">4.0</span>                  <span class="mi">2</span>
-</span><span class='line'><span class="mi">5</span>         <span class="n">SYR</span>     <span class="n">SYRREF</span>                 <span class="o">-</span><span class="mf">0.4</span>                  <span class="mi">1</span>
-</span><span class='line'><span class="mi">6</span>      <span class="n">SYRCVL</span>        <span class="n">SYR</span>                 <span class="mf">16.6</span>                  <span class="mi">4</span>
-</span><span class='line'><span class="mi">7</span>      <span class="n">SYRGOV</span>        <span class="n">SYR</span>                <span class="o">-</span><span class="mf">70.9</span>                 <span class="mi">30</span>
-</span><span class='line'><span class="mi">8</span>      <span class="n">SYRGOV</span>     <span class="n">SYRGOV</span>                <span class="o">-</span><span class="mf">10.2</span>                 <span class="mi">14</span>
-</span><span class='line'><span class="mi">9</span>   <span class="n">SYRGOVMED</span>        <span class="n">SYR</span>                <span class="o">-</span><span class="mf">40.0</span>                  <span class="mi">4</span>
-</span><span class='line'><span class="mi">10</span>  <span class="n">SYRGOVMED</span>     <span class="n">SYRCVL</span>                <span class="o">-</span><span class="mf">10.0</span>                  <span class="mi">1</span>
-</span><span class='line'><span class="mi">11</span>     <span class="n">SYRMIL</span>        <span class="n">SYR</span>                <span class="o">-</span><span class="mf">29.5</span>                  <span class="mi">3</span>
-</span><span class='line'><span class="mi">12</span>  <span class="n">SYROPPUAF</span>     <span class="n">SYRGOV</span>                <span class="o">-</span><span class="mf">20.0</span>                  <span class="mi">2</span>
-</span><span class='line'><span class="mi">13</span>     <span class="n">SYRREB</span>        <span class="n">SYR</span>                <span class="o">-</span><span class="mf">24.6</span>                  <span class="mi">6</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>It is also possible to perform more complicated groupings and analyses using only SQL but, as
-these examples show, even with a very limited knowledge of SQL one is able to draw subsets of
-the data and perform some simple, but interesting, analyses. Additionally, since the data is stored
-in a <code>pandas</code> dataframe, any analytical methods that are contained in <code>pandas</code> can be used, which
-provides another set of powerful options for analysis. The final benefit of <code>pandasql</code> is that writing
-these queries is <em>much</em> faster than writing a subsetting script, and the queries are also
-remarkably fast; none of the queries used in this post took more than 10 seconds to run.</p>
-
-<h3>Notes</h3>
-
-<p>While <code>pandasql</code>, and SQL in general, is very useful and far more elegant than hacked together
-scripts, there are some limitations. The primary limitation is that this method likely will not
-scale well to iterating over the entire GDELT dataset, i.e., all the data in the historical backfile
-downloads. The default behavior of <code>sqldf</code> is to hold the data in memory. There is an option to
-temporarily write the data to disk, but this still does not address the issue of reading in the
-yearly or monthly data into the initial dataframe. There is likely a workaround using the
-chunk iterator for <code>pd.read_csv</code>, but in my mind this defeats part of the appeal for using
-<code>pandasql</code> in the first place: quickness and ease of use. For working with the entire dataset,
-a technology such as Hive, or a full SQL database, is likely a more viable option. I will have
-more to say on the use of Hive in a future post. With all that said, however, <code>pandasql</code> is
-a very useful tool when analyzing more atomic chunks of the GDELT data; daily, monthly, and perhaps
-even a single year for the earlier years is not outside the realm of possibility. Finally, if you
-need a resource to learn SQL, I recommend Zed Shaw&#8217;s <a href="http://sql.learncodethehardway.org/">Learn SQL The Hard Way</a>,
-which will provide as much SQL as you need to perform data subsetting tasks.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/06/using-sql/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -430,106 +248,12 @@ daily files. The code is on <a href="https://github.com/johnb30/gdelt_download">
 I&#8217;ve copied the contents of the README file below so you can determine
 if the scripts would be useful for you.</p>
 
-<h3>README</h3>
-
-<h2>GDELT Download</h2>
-
-<p>The GDELT data is spread across multiple files, with a new file added each day.
-Downloading each and every file is not a fun endeavor. These scripts were
-written in order to aid in the download of the GDELT data. The first script
-<code>download_historical.py</code> is aimed at downloading the historical data, and the
-previous daily updated. The second script, <code>download_daily.py</code>, is aimed
-at downloading the new files that are uploaded to the GDELT website each day.
-This script enables the user to either call the script each day to fetch the
-newest upload, or to run the process in the background to download the new
-updates each day at 10:00am.</p>
-
-<p>Each script implements a 30 second delay where appropriate in order to
-avoid swamping the server.</p>
-
-<h2><code>download_historical</code> Usage</h2>
-
-<p>The script has three modes: <code>daily</code>, <code>single</code>, and <code>range</code>.</p>
-
-<p><em>Note</em>: If you wish to use the <code>daily</code> mode, the <code>requests</code> and <code>lxml</code> libaries
-are necessary. You can install both using <code>pip install library_name</code>. The script
-also makes use of <code>argparse</code>, which is included in the standard libary from
-Python 2.7+. If you are using an older version, it is necessary to install
-<code>argparse</code> using <code>pip</code> or <code>easy_install</code>.</p>
-
-<h3>Daily:</h3>
-
-<p>The daily mode downloads the daily updates that are currently uploaded to the
-GDELT website.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py daily -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
-
-<h3>Single:</h3>
-
-<p>The single mode downloads the updates for a single year.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py single -y 1979 -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-y</code> is the flag that indicates which year should be downloaded, <code>-d</code>
-is the flag for the directory to which the files should be written, and <code>-U</code>
-is the optional flag indicating whether each downloaded file should be unzipped.</p>
-
-<h3>Range:</h3>
-
-<p>The range mode downloads the updates for a range of years.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py range -y 1979-2012 -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-y</code> is the flag that indicates which years should be downloaded, <code>-d</code>
-is the flag for the directory to which the files should be written, and <code>-U</code>
-is the optional flag indicating whether each downloaded file should be unzipped.</p>
-
-<h2><code>download_daily</code> Usage</h2>
-
-<p>The script has two modes: <code>fetch</code>, and <code>schedule</code>.</p>
-
-<p><em>Note</em>: If you wish to use the <code>schedule</code> mode, the <code>schedule</code> library
-is necessary. You can install using <code>pip install schedule</code>.</p>
-
-<h3>Fetch:</h3>
-
-<p>The fetch mode downloads only the current date&#8217;s update.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_daily.py fetch -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
-
-<h3>Schedule:</h3>
-
-<p>The fetch schedule mode sets the script to run in the background and request
-each day at 10:00am that date&#8217;s upload from the server. In order to work, the
-script must be left running in a terminal tab. The use of a utility such as
-<code>screen</code> or <code>tmux</code> is recommended in order to allow the program to run
-unmonitored in the background.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_daily.py schedule -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/01/making-gdelt-downloads-easy/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -578,212 +302,12 @@ drag out repeatedly throughout the semester. Finally, I decided to put my own
 assertions to the test and see how some models performed on out-of-sample
 predictive tests.</p>
 
-<h3>The Paper</h3>
-
-<p>The week I chose to perform this analysis we discussed papers that focused on
-counterterrorism policies. One paper was <a href="http://jcr.sagepub.com/content/54/2/237">&#8220;Foreign Aid Versus Military Intervention in the War on Terror&#8221;</a>
-(behind a paywall) by Jean-Paul Azam and Veronique Thelen. A full discussion
-of their theory is beyond the scope of this post, but the authors&#8217; basic
-argument is that foreign investment can reduce the number of transnational
-terrorist events for a number of reasons. They test this general assertion
-using a variety of models. Luckily, they provide replication data for their
-paper on the Journal of Conflict Resolution website linked above. I set off
-to exactly replicate the model presented in Table 2, Model 4 for those
-following along in the paper.</p>
-
-<h3>The Replication</h3>
-
-<p>The first step to replicating the paper was to run their Stata <code>do-file</code> on
-the data they provided. This is done to ensure that I have exactly the same
-variables in my models that they do in theirs, specifically the residualized
-variables they present. As a note, I will avoid commenting on the general
-modeling choices made in the paper; this post is only about the predictive
-accuracy of models on out-of-sample data. I work with what the authors worked
-with. After running the <code>do-file</code>, I check to make sure that the results
-generated by Stata are the same as those presented in the paper, which is
-roughly true in the case of the coefficient estimates. I then take the data,
-including the newly generated variables, and read it into Python using
-<code>statsmodels</code>. After the data is read in, I replicate the formula used in
-the paper, generate a train-test split of 75% and 25%, and then fit the
-negative binomial model. The random 75%-25% split is appropriate here since
-the data is cross sectional and not time series in nature.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">cross_validation</span>
-</span><span class='line'><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestRegressor</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="kn">as</span> <span class="nn">sm</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">patsy</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">data</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">iolib</span><span class="o">.</span><span class="n">genfromdta</span><span class="p">(</span><span class="s">&#39;rep_data.dta&#39;</span><span class="p">,</span> <span class="n">pandas</span> <span class="o">=</span> <span class="bp">True</span><span class="p">)</span>
-</span><span class='line'><span class="c">#Make an R-style formula</span>
-</span><span class='line'><span class="n">form</span> <span class="o">=</span> <span class="s">&#39;arqade ~ gdppc + logpop + odapc + secenroll + oecd + cad + ssh + ethnic + law + rodapc + rsecenroll&#39;</span>
-</span><span class='line'><span class="n">y</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">patsy</span><span class="o">.</span><span class="n">dmatrices</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">return_type</span> <span class="o">=</span> <span class="s">&#39;dataframe&#39;</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#Generate 75%-25% train-test split</span>
-</span><span class='line'><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">cross_validation</span><span class="o">.</span><span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#Fit the model</span>
-</span><span class='line'><span class="n">mod</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">GLM</span><span class="p">(</span><span class="n">y_train</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">family</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">families</span><span class="o">.</span><span class="n">NegativeBinomial</span><span class="p">())</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">print</span> <span class="n">mod</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">Generalized</span> <span class="n">Linear</span> <span class="n">Model</span> <span class="n">Regression</span> <span class="n">Results</span>
-</span><span class='line'><span class="o">==============================================================================</span>
-</span><span class='line'><span class="n">Dep</span><span class="o">.</span> <span class="n">Variable</span><span class="p">:</span>                      <span class="n">y</span>   <span class="n">No</span><span class="o">.</span> <span class="n">Observations</span><span class="p">:</span>                   <span class="mi">99</span>
-</span><span class='line'><span class="n">Model</span><span class="p">:</span>                            <span class="n">GLM</span>   <span class="n">Df</span> <span class="n">Residuals</span><span class="p">:</span>                       <span class="mi">87</span>
-</span><span class='line'><span class="n">Model</span> <span class="n">Family</span><span class="p">:</span>        <span class="n">NegativeBinomial</span>   <span class="n">Df</span> <span class="n">Model</span><span class="p">:</span>                           <span class="mi">11</span>
-</span><span class='line'><span class="n">Link</span> <span class="n">Function</span><span class="p">:</span>                    <span class="n">log</span>   <span class="n">Scale</span><span class="p">:</span>                   <span class="mf">1.54679011354</span>
-</span><span class='line'><span class="n">Method</span><span class="p">:</span>                          <span class="n">IRLS</span>   <span class="n">Log</span><span class="o">-</span><span class="n">Likelihood</span><span class="p">:</span>                <span class="o">-</span><span class="mf">190.88</span>
-</span><span class='line'><span class="n">Date</span><span class="p">:</span>                <span class="n">Sun</span><span class="p">,</span> <span class="mi">21</span> <span class="n">Apr</span> <span class="mi">2013</span>   <span class="n">Deviance</span><span class="p">:</span>                       <span class="mf">132.43</span>
-</span><span class='line'><span class="n">Time</span><span class="p">:</span>                        <span class="mi">16</span><span class="p">:</span><span class="mi">32</span><span class="p">:</span><span class="mi">56</span>   <span class="n">Pearson</span> <span class="n">chi2</span><span class="p">:</span>                     <span class="mf">135.</span>
-</span><span class='line'><span class="n">No</span><span class="o">.</span> <span class="n">Iterations</span><span class="p">:</span>                    <span class="mi">17</span>
-</span><span class='line'><span class="o">==============================================================================</span>
-</span><span class='line'><span class="n">coef</span>    <span class="n">std</span> <span class="n">err</span>          <span class="n">t</span>      <span class="n">P</span><span class="o">&gt;|</span><span class="n">t</span><span class="o">|</span>      <span class="p">[</span><span class="mf">95.0</span><span class="o">%</span> <span class="n">Conf</span><span class="o">.</span> <span class="n">Int</span><span class="o">.</span><span class="p">]</span>
-</span><span class='line'><span class="o">------------------------------------------------------------------------------</span>
-</span><span class='line'><span class="n">const</span>          <span class="mf">7.5576</span>      <span class="mf">4.717</span>      <span class="mf">1.602</span>      <span class="mf">0.113</span>        <span class="o">-</span><span class="mf">1.687</span>    <span class="mf">16.802</span>
-</span><span class='line'><span class="n">x1</span>          <span class="mf">5.861e-05</span>    <span class="mf">4.2e-05</span>      <span class="mf">1.397</span>      <span class="mf">0.166</span>     <span class="o">-</span><span class="mf">2.36e-05</span>     <span class="mf">0.000</span>
-</span><span class='line'><span class="n">x2</span>             <span class="mf">0.1561</span>      <span class="mf">0.203</span>      <span class="mf">0.768</span>      <span class="mf">0.444</span>        <span class="o">-</span><span class="mf">0.242</span>     <span class="mf">0.554</span>
-</span><span class='line'><span class="n">x3</span>            <span class="o">-</span><span class="mf">0.0339</span>      <span class="mf">0.014</span>     <span class="o">-</span><span class="mf">2.380</span>      <span class="mf">0.019</span>        <span class="o">-</span><span class="mf">0.062</span>    <span class="o">-</span><span class="mf">0.006</span>
-</span><span class='line'><span class="n">x4</span>            <span class="o">-</span><span class="mf">0.0633</span>      <span class="mf">0.019</span>     <span class="o">-</span><span class="mf">3.315</span>      <span class="mf">0.001</span>        <span class="o">-</span><span class="mf">0.101</span>    <span class="o">-</span><span class="mf">0.026</span>
-</span><span class='line'><span class="n">x5</span>             <span class="mf">0.9221</span>      <span class="mf">0.878</span>      <span class="mf">1.050</span>      <span class="mf">0.297</span>        <span class="o">-</span><span class="mf">0.800</span>     <span class="mf">2.644</span>
-</span><span class='line'><span class="n">x6</span>             <span class="mf">5.5344</span>      <span class="mf">2.225</span>      <span class="mf">2.487</span>      <span class="mf">0.015</span>         <span class="mf">1.173</span>     <span class="mf">9.896</span>
-</span><span class='line'><span class="n">x7</span>            <span class="o">-</span><span class="mf">3.3479</span>      <span class="mf">0.888</span>     <span class="o">-</span><span class="mf">3.771</span>      <span class="mf">0.000</span>        <span class="o">-</span><span class="mf">5.088</span>    <span class="o">-</span><span class="mf">1.608</span>
-</span><span class='line'><span class="n">x8</span>             <span class="mf">0.7016</span>      <span class="mf">0.200</span>      <span class="mf">3.510</span>      <span class="mf">0.001</span>         <span class="mf">0.310</span>     <span class="mf">1.093</span>
-</span><span class='line'><span class="n">x9</span>            <span class="o">-</span><span class="mf">0.2140</span>      <span class="mf">0.261</span>     <span class="o">-</span><span class="mf">0.820</span>      <span class="mf">0.415</span>        <span class="o">-</span><span class="mf">0.726</span>     <span class="mf">0.298</span>
-</span><span class='line'><span class="n">x10</span>            <span class="mf">0.0441</span>      <span class="mf">0.018</span>      <span class="mf">2.477</span>      <span class="mf">0.015</span>         <span class="mf">0.009</span>     <span class="mf">0.079</span>
-</span><span class='line'><span class="n">x11</span>            <span class="mf">0.0724</span>      <span class="mf">0.022</span>      <span class="mf">3.304</span>      <span class="mf">0.001</span>         <span class="mf">0.029</span>     <span class="mf">0.115</span>
-</span><span class='line'><span class="o">==============================================================================</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The results of this analysis roughly match the results presented in the paper.
-Some differences are to be expected, of course, due to the reduced number of
-observations. Since these results seem to match those in the paper, the
-out-of-sample forecasts can be run. This is done using the <code>predict</code> method
-of the <code>mod</code> object. The true and predicted results are then compared using
-the root mean squared error. I&#8217;m not completely confident in the use of the
-RMSE, but it is a quick and easy way to perform a comparison in this case.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">y_pred</span> <span class="o">=</span> <span class="n">mod</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#Calculate RMSE</span>
-</span><span class='line'><span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">print</span> <span class="s">&#39;The RMSE is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
-</span><span class='line'><span class="n">The</span> <span class="n">RMSE</span> <span class="ow">is</span> <span class="mf">22.7156218086</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The value of the RMSE error shows that the predicted values tend to be off by
-about 23 events. This indicates that the model does not predict the impact
-of foreign aid on terrorist events well. Admittedly, this analysis may not be
-the most favorable to Azam and Thelen. In order to give them the benefit of
-the doubt, I also used another modeling technique to see if this inaccuracy persists.
-I used a random forest to fit the same model used in the negative binomial
-and then examined the RMSE.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="c">#Create the RF regressor object</span>
-</span><span class='line'><span class="n">reg</span> <span class="o">=</span> <span class="n">RandomForestRegressor</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
-</span><span class='line'><span class="c">#Fit the model</span>
-</span><span class='line'><span class="n">reg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#Predict using the X_test data</span>
-</span><span class='line'><span class="n">rf_pred</span> <span class="o">=</span> <span class="n">reg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="c">#Calculate RMSE</span>
-</span><span class='line'><span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">y_test</span> <span class="o">-</span> <span class="n">rf_pred</span><span class="p">)))</span>
-</span><span class='line'>
-</span><span class='line'><span class="k">print</span> <span class="s">&#39;The RMSE is {}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rmse</span><span class="p">)</span>
-</span><span class='line'><span class="n">The</span> <span class="n">RMSE</span> <span class="ow">is</span> <span class="mf">21.7068829972</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Even using a method that is possibly more robust, the prediction still doesn&#8217;t
-seem very satisfactory.</p>
-
-<h3>Models in the Social Sciences</h3>
-
-<p>In case it was not explicitly clear in the beginning of this post, I want to
-make it clear now: this analysis is not a direct critique of Azam and Thelen.
-I think their theory is sound and it makes sense that foreign investment and
-the other variables they analyze can make a difference in terrorism. I also
-do not think that the type of inferential statistics used by Azam and Thelen,
-and commonly used elsewhere in political science, are wrong in all cases.
-I do believe we can gain knowledge from models like those
-presented by Azam and Thelen. What I do take issue with, however, is the call
-to arms that is frequently sounded in the conclusions of papers, which are
-often directed towards policy makers, that the results of the paper predict
-phenomenon <em>X</em> and thus policy <em>Y</em> should be enacted. Especially when policy
-<em>Y</em> is something like military intervention. In order to make these types of
-claims, some type of out-of-sample test should be performed in order to
-determine the effect of the variables under examination.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/29/terrorism-studies-and-prediction/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1012,226 +536,12 @@ in spots 1 and 2, respectively. Additionally, <code>EventCode</code> is located 
 while the <code>QuadCategory</code> variable is, fittingly, in position 4. These indices
 will prove crucial when it comes time to split and subset the data.</p>
 
-<h3>Code</h3>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="kn">from</span> <span class="nn">path</span> <span class="kn">import</span> <span class="n">path</span>
-</span><span class='line'><span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">allActors</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;AFG&#39;</span><span class="p">,</span> <span class="s">&#39;ALA&#39;</span><span class="p">,</span> <span class="s">&#39;ALB&#39;</span><span class="p">,</span> <span class="s">&#39;DZA&#39;</span><span class="p">,</span> <span class="s">&#39;ASM&#39;</span><span class="p">,</span> <span class="s">&#39;AND&#39;</span><span class="p">,</span> <span class="s">&#39;AGO&#39;</span><span class="p">,</span> <span class="s">&#39;AIA&#39;</span><span class="p">,</span> <span class="s">&#39;ATG&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;ARG&#39;</span><span class="p">,</span> <span class="s">&#39;ARM&#39;</span><span class="p">,</span> <span class="s">&#39;ABW&#39;</span><span class="p">,</span> <span class="s">&#39;AUS&#39;</span><span class="p">,</span> <span class="s">&#39;AUT&#39;</span><span class="p">,</span> <span class="s">&#39;AZE&#39;</span><span class="p">,</span> <span class="s">&#39;BHS&#39;</span><span class="p">,</span> <span class="s">&#39;BHR&#39;</span><span class="p">,</span> <span class="s">&#39;BGD&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;BRB&#39;</span><span class="p">,</span> <span class="s">&#39;BLR&#39;</span><span class="p">,</span> <span class="s">&#39;BEL&#39;</span><span class="p">,</span> <span class="s">&#39;BLZ&#39;</span><span class="p">,</span> <span class="s">&#39;BEN&#39;</span><span class="p">,</span> <span class="s">&#39;BMU&#39;</span><span class="p">,</span> <span class="s">&#39;BTN&#39;</span><span class="p">,</span> <span class="s">&#39;BOL&#39;</span><span class="p">,</span> <span class="s">&#39;BIH&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;BWA&#39;</span><span class="p">,</span> <span class="s">&#39;BRA&#39;</span><span class="p">,</span> <span class="s">&#39;VGB&#39;</span><span class="p">,</span> <span class="s">&#39;BRN&#39;</span><span class="p">,</span> <span class="s">&#39;BGR&#39;</span><span class="p">,</span> <span class="s">&#39;BFA&#39;</span><span class="p">,</span> <span class="s">&#39;BDI&#39;</span><span class="p">,</span> <span class="s">&#39;KHM&#39;</span><span class="p">,</span> <span class="s">&#39;CMR&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;CAN&#39;</span><span class="p">,</span> <span class="s">&#39;CPV&#39;</span><span class="p">,</span> <span class="s">&#39;CYM&#39;</span><span class="p">,</span> <span class="s">&#39;CAF&#39;</span><span class="p">,</span> <span class="s">&#39;TCD&#39;</span><span class="p">,</span> <span class="s">&#39;CHL&#39;</span><span class="p">,</span> <span class="s">&#39;CHN&#39;</span><span class="p">,</span> <span class="s">&#39;COL&#39;</span><span class="p">,</span> <span class="s">&#39;COM&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;COD&#39;</span><span class="p">,</span> <span class="s">&#39;COG&#39;</span><span class="p">,</span> <span class="s">&#39;COK&#39;</span><span class="p">,</span> <span class="s">&#39;CRI&#39;</span><span class="p">,</span> <span class="s">&#39;CIV&#39;</span><span class="p">,</span> <span class="s">&#39;HRV&#39;</span><span class="p">,</span> <span class="s">&#39;CUB&#39;</span><span class="p">,</span> <span class="s">&#39;CYP&#39;</span><span class="p">,</span> <span class="s">&#39;CZE&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;DNK&#39;</span><span class="p">,</span> <span class="s">&#39;DJI&#39;</span><span class="p">,</span> <span class="s">&#39;DMA&#39;</span><span class="p">,</span> <span class="s">&#39;DOM&#39;</span><span class="p">,</span> <span class="s">&#39;TMP&#39;</span><span class="p">,</span> <span class="s">&#39;ECU&#39;</span><span class="p">,</span> <span class="s">&#39;EGY&#39;</span><span class="p">,</span> <span class="s">&#39;SLV&#39;</span><span class="p">,</span> <span class="s">&#39;GNQ&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;ERI&#39;</span><span class="p">,</span> <span class="s">&#39;EST&#39;</span><span class="p">,</span> <span class="s">&#39;ETH&#39;</span><span class="p">,</span> <span class="s">&#39;FRO&#39;</span><span class="p">,</span> <span class="s">&#39;FLK&#39;</span><span class="p">,</span> <span class="s">&#39;FJI&#39;</span><span class="p">,</span> <span class="s">&#39;FIN&#39;</span><span class="p">,</span> <span class="s">&#39;FRA&#39;</span><span class="p">,</span> <span class="s">&#39;GUF&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;PYF&#39;</span><span class="p">,</span> <span class="s">&#39;GAB&#39;</span><span class="p">,</span> <span class="s">&#39;GMB&#39;</span><span class="p">,</span> <span class="s">&#39;GEO&#39;</span><span class="p">,</span> <span class="s">&#39;DEU&#39;</span><span class="p">,</span> <span class="s">&#39;GHA&#39;</span><span class="p">,</span> <span class="s">&#39;GIB&#39;</span><span class="p">,</span> <span class="s">&#39;GRC&#39;</span><span class="p">,</span> <span class="s">&#39;GRL&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;GRD&#39;</span><span class="p">,</span> <span class="s">&#39;GLP&#39;</span><span class="p">,</span> <span class="s">&#39;GUM&#39;</span><span class="p">,</span> <span class="s">&#39;GTM&#39;</span><span class="p">,</span> <span class="s">&#39;GIN&#39;</span><span class="p">,</span> <span class="s">&#39;GNB&#39;</span><span class="p">,</span> <span class="s">&#39;GUY&#39;</span><span class="p">,</span> <span class="s">&#39;HTI&#39;</span><span class="p">,</span> <span class="s">&#39;VAT&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;HND&#39;</span><span class="p">,</span> <span class="s">&#39;HKG&#39;</span><span class="p">,</span> <span class="s">&#39;HUN&#39;</span><span class="p">,</span> <span class="s">&#39;ISL&#39;</span><span class="p">,</span> <span class="s">&#39;IND&#39;</span><span class="p">,</span> <span class="s">&#39;IDN&#39;</span><span class="p">,</span> <span class="s">&#39;IRN&#39;</span><span class="p">,</span> <span class="s">&#39;IRQ&#39;</span><span class="p">,</span> <span class="s">&#39;IRL&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;IMY&#39;</span><span class="p">,</span> <span class="s">&#39;ISR&#39;</span><span class="p">,</span> <span class="s">&#39;ITA&#39;</span><span class="p">,</span> <span class="s">&#39;JAM&#39;</span><span class="p">,</span> <span class="s">&#39;JPN&#39;</span><span class="p">,</span> <span class="s">&#39;JOR&#39;</span><span class="p">,</span> <span class="s">&#39;KAZ&#39;</span><span class="p">,</span> <span class="s">&#39;KEN&#39;</span><span class="p">,</span> <span class="s">&#39;KIR&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;PRK&#39;</span><span class="p">,</span> <span class="s">&#39;KOR&#39;</span><span class="p">,</span> <span class="s">&#39;KWT&#39;</span><span class="p">,</span> <span class="s">&#39;KGZ&#39;</span><span class="p">,</span> <span class="s">&#39;LAO&#39;</span><span class="p">,</span> <span class="s">&#39;LVA&#39;</span><span class="p">,</span> <span class="s">&#39;LBN&#39;</span><span class="p">,</span> <span class="s">&#39;LSO&#39;</span><span class="p">,</span> <span class="s">&#39;LBR&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;LBY&#39;</span><span class="p">,</span> <span class="s">&#39;LIE&#39;</span><span class="p">,</span> <span class="s">&#39;LTU&#39;</span><span class="p">,</span> <span class="s">&#39;LUX&#39;</span><span class="p">,</span> <span class="s">&#39;MAC&#39;</span><span class="p">,</span> <span class="s">&#39;MKD&#39;</span><span class="p">,</span> <span class="s">&#39;MDG&#39;</span><span class="p">,</span> <span class="s">&#39;MWI&#39;</span><span class="p">,</span> <span class="s">&#39;MYS&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;MDV&#39;</span><span class="p">,</span> <span class="s">&#39;MLI&#39;</span><span class="p">,</span> <span class="s">&#39;MLT&#39;</span><span class="p">,</span> <span class="s">&#39;MHL&#39;</span><span class="p">,</span> <span class="s">&#39;MTQ&#39;</span><span class="p">,</span> <span class="s">&#39;MRT&#39;</span><span class="p">,</span> <span class="s">&#39;MUS&#39;</span><span class="p">,</span> <span class="s">&#39;MYT&#39;</span><span class="p">,</span> <span class="s">&#39;MEX&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;FSM&#39;</span><span class="p">,</span> <span class="s">&#39;MDA&#39;</span><span class="p">,</span> <span class="s">&#39;MCO&#39;</span><span class="p">,</span> <span class="s">&#39;MNG&#39;</span><span class="p">,</span> <span class="s">&#39;MTN&#39;</span><span class="p">,</span> <span class="s">&#39;MSR&#39;</span><span class="p">,</span> <span class="s">&#39;MAR&#39;</span><span class="p">,</span> <span class="s">&#39;MOZ&#39;</span><span class="p">,</span> <span class="s">&#39;MMR&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;NAM&#39;</span><span class="p">,</span> <span class="s">&#39;NRU&#39;</span><span class="p">,</span> <span class="s">&#39;NPL&#39;</span><span class="p">,</span> <span class="s">&#39;NLD&#39;</span><span class="p">,</span> <span class="s">&#39;ANT&#39;</span><span class="p">,</span> <span class="s">&#39;NCL&#39;</span><span class="p">,</span> <span class="s">&#39;NZL&#39;</span><span class="p">,</span> <span class="s">&#39;NIC&#39;</span><span class="p">,</span> <span class="s">&#39;NER&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;NGA&#39;</span><span class="p">,</span> <span class="s">&#39;NIU&#39;</span><span class="p">,</span> <span class="s">&#39;NFK&#39;</span><span class="p">,</span> <span class="s">&#39;MNP&#39;</span><span class="p">,</span> <span class="s">&#39;NOR&#39;</span><span class="p">,</span> <span class="s">&#39;PSE&#39;</span><span class="p">,</span> <span class="s">&#39;OMN&#39;</span><span class="p">,</span> <span class="s">&#39;PAK&#39;</span><span class="p">,</span> <span class="s">&#39;PLW&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;PAN&#39;</span><span class="p">,</span> <span class="s">&#39;PNG&#39;</span><span class="p">,</span> <span class="s">&#39;PRY&#39;</span><span class="p">,</span> <span class="s">&#39;PER&#39;</span><span class="p">,</span> <span class="s">&#39;PHL&#39;</span><span class="p">,</span> <span class="s">&#39;PCN&#39;</span><span class="p">,</span> <span class="s">&#39;POL&#39;</span><span class="p">,</span> <span class="s">&#39;PRT&#39;</span><span class="p">,</span> <span class="s">&#39;PRI&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;QAT&#39;</span><span class="p">,</span> <span class="s">&#39;REU&#39;</span><span class="p">,</span> <span class="s">&#39;ROM&#39;</span><span class="p">,</span> <span class="s">&#39;RUS&#39;</span><span class="p">,</span> <span class="s">&#39;RWA&#39;</span><span class="p">,</span> <span class="s">&#39;SHN&#39;</span><span class="p">,</span> <span class="s">&#39;KNA&#39;</span><span class="p">,</span> <span class="s">&#39;LCA&#39;</span><span class="p">,</span> <span class="s">&#39;SPM&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;VCT&#39;</span><span class="p">,</span> <span class="s">&#39;WSM&#39;</span><span class="p">,</span> <span class="s">&#39;SMR&#39;</span><span class="p">,</span> <span class="s">&#39;STP&#39;</span><span class="p">,</span> <span class="s">&#39;SAU&#39;</span><span class="p">,</span> <span class="s">&#39;SEN&#39;</span><span class="p">,</span> <span class="s">&#39;SRB&#39;</span><span class="p">,</span> <span class="s">&#39;SYC&#39;</span><span class="p">,</span> <span class="s">&#39;SLE&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;SGP&#39;</span><span class="p">,</span> <span class="s">&#39;SVK&#39;</span><span class="p">,</span> <span class="s">&#39;SVN&#39;</span><span class="p">,</span> <span class="s">&#39;SLB&#39;</span><span class="p">,</span> <span class="s">&#39;SOM&#39;</span><span class="p">,</span> <span class="s">&#39;ZAF&#39;</span><span class="p">,</span> <span class="s">&#39;ESP&#39;</span><span class="p">,</span> <span class="s">&#39;LKA&#39;</span><span class="p">,</span> <span class="s">&#39;SDN&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;SUR&#39;</span><span class="p">,</span> <span class="s">&#39;SJM&#39;</span><span class="p">,</span> <span class="s">&#39;SWZ&#39;</span><span class="p">,</span> <span class="s">&#39;SWE&#39;</span><span class="p">,</span> <span class="s">&#39;CHE&#39;</span><span class="p">,</span> <span class="s">&#39;SYR&#39;</span><span class="p">,</span> <span class="s">&#39;TJK&#39;</span><span class="p">,</span> <span class="s">&#39;TZA&#39;</span><span class="p">,</span> <span class="s">&#39;THA&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;TGO&#39;</span><span class="p">,</span> <span class="s">&#39;TKL&#39;</span><span class="p">,</span> <span class="s">&#39;TON&#39;</span><span class="p">,</span> <span class="s">&#39;TTO&#39;</span><span class="p">,</span> <span class="s">&#39;TUN&#39;</span><span class="p">,</span> <span class="s">&#39;TUR&#39;</span><span class="p">,</span> <span class="s">&#39;TKM&#39;</span><span class="p">,</span> <span class="s">&#39;TCA&#39;</span><span class="p">,</span> <span class="s">&#39;TUV&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;UGA&#39;</span><span class="p">,</span> <span class="s">&#39;UKR&#39;</span><span class="p">,</span> <span class="s">&#39;ARE&#39;</span><span class="p">,</span> <span class="s">&#39;GBR&#39;</span><span class="p">,</span> <span class="s">&#39;USA&#39;</span><span class="p">,</span> <span class="s">&#39;VIR&#39;</span><span class="p">,</span> <span class="s">&#39;URY&#39;</span><span class="p">,</span> <span class="s">&#39;UZB&#39;</span><span class="p">,</span> <span class="s">&#39;VUT&#39;</span><span class="p">,</span>
-</span><span class='line'>            <span class="s">&#39;VEN&#39;</span><span class="p">,</span> <span class="s">&#39;VNM&#39;</span><span class="p">,</span> <span class="s">&#39;WLF&#39;</span><span class="p">,</span> <span class="s">&#39;ESH&#39;</span><span class="p">,</span> <span class="s">&#39;YEM&#39;</span><span class="p">,</span> <span class="s">&#39;ZMB&#39;</span><span class="p">,</span> <span class="s">&#39;ZWE&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">quad_codes</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;2&#39;</span><span class="p">,</span> <span class="s">&#39;3&#39;</span><span class="p">]</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">filepaths</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="s">&#39;*.reduced.txt&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="n">output</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>This first portion is simply importing the necessary modules, defining the list
-of state actors, obtaining the relevant filepaths, and defining an empty list,
-which will serve as the container for the subset of the data.
-As a brief note, the <code>path</code> module is really fantastic and makes working with
-filepaths and directories extremely simple.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">filepaths</span><span class="p">:</span>
-</span><span class='line'>    <span class="n">data</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s">&#39;r&#39;</span><span class="p">)</span>
-</span><span class='line'>    <span class="k">print</span> <span class="s">&#39;Just read in the </span><span class="si">%s</span><span class="s"> data...&#39;</span> <span class="o">%</span> <span class="n">path</span>
-</span><span class='line'>    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-</span><span class='line'>        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\n</span><span class="s">&#39;</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">split_line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-</span><span class='line'>        <span class="n">condition1</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;USA&#39;</span>
-</span><span class='line'>        <span class="n">condition2</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">!=</span> <span class="s">&#39;USA&#39;</span>
-</span><span class='line'>        <span class="n">condition3</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="ow">in</span> <span class="n">allActors</span>
-</span><span class='line'>        <span class="n">condition4</span> <span class="o">=</span> <span class="n">split_line</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="n">quad_codes</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The next portion of code iterates over the filepaths obtained using <code>path</code>.
-Each file is then opened and iterated over line by line. Each line
-has any new-line characters replaced, which makes the data easier to work with,
-and is then split on the basis of tab characters (&#8216;\t&#8217;). The following four lines
-define the logical conditions for subsetting the data. The first condition
-indicates that the first three characters of <code>Actor1Code</code> should be
-&#8216;USA&#8217;, while <code>condition2</code> states that the first three characters of
-<code>Actor2Code</code> should <em>not</em> equal &#8216;USA&#8217;. <code>condition3</code> checks if the first three
-characters of <code>Actor2Code</code> are in the <code>allActors</code> list defined earlier, while
-<code>condition4</code> checks if the <code>QuadCategory</code> is one of the desired values.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="k">try</span><span class="p">:</span>
-</span><span class='line'>    <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">condition1</span><span class="p">,</span> <span class="n">condition2</span><span class="p">,</span> <span class="n">condition3</span><span class="p">,</span> <span class="n">condition4</span><span class="p">]):</span>
-</span><span class='line'>        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">split_line</span><span class="p">)</span>
-</span><span class='line'><span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
-</span><span class='line'>    <span class="k">pass</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>The above code simply checks if all of the various conditions were met, and
-if so appends the <code>split_line</code> to <code>output</code>. This code is wrapped in a try-except
-statement since there can be some malformed lines floating in the data, but this
-should not affect the actual event data. The try-except statements allow for
-an attempt at a certain block of code, and if an error is raised, in this case
-an <code>IndexError</code>, for some other actions to occur.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">header</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepaths</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s">&#39;r&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">&#39;</span><span class="se">\t</span><span class="s">&#39;</span><span class="p">)</span>
-</span><span class='line'><span class="n">subset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">header</span><span class="p">)</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="s">&#39;Day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]))</span>
-</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;month&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="s">&#39;Day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">4</span><span class="p">:</span><span class="mi">6</span><span class="p">]))</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">keep_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;year&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span> <span class="s">&#39;Actor2Code&#39;</span><span class="p">,</span> <span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span>
-</span><span class='line'><span class="n">subset</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="n">keep_columns</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Once the code from the previous sections is finished, the subset of the data is
-contained in <code>output</code>, which is a list-of-lists with the internal lists representing
-the individual events. It is possible, using the <code>pandas</code> library, to convert this
-list-of-lists to a pandas DataFrame object, with the header drawn from the first line
-of the first file in <code>filepaths</code>. In order to aggregate the data to a specific time period,
-it is useful to break out the <code>Day</code> variable into months and years using the <code>.map</code>
-functionality of a Series object in <code>pandas</code>. The <code>.map</code> functionality is combined
-with a lambda function to select eaach observation in the series and slice it
-in order to obtain the year and month. Finally, the last two lines of the above
-code reduce the data down to only the columns relevant for this subset.</p>
-
-<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_coop&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_conf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_coop&#39;</span><span class="p">][</span><span class="n">subset</span><span class="p">[</span><span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'><span class="n">subset</span><span class="p">[</span><span class="s">&#39;verbal_conf&#39;</span><span class="p">][</span><span class="n">subset</span><span class="p">[</span><span class="s">&#39;QuadCategory&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s">&#39;3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">subset_grouped</span> <span class="o">=</span> <span class="n">subset</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s">&#39;year&#39;</span><span class="p">,</span> <span class="s">&#39;month&#39;</span><span class="p">,</span> <span class="s">&#39;Actor1Code&#39;</span><span class="p">,</span>
-</span><span class='line'><span class="s">&#39;Actor2Code&#39;</span><span class="p">],</span> <span class="n">as_index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
-</span><span class='line'><span class="n">subset_aggregated</span> <span class="o">=</span> <span class="n">subset_grouped</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</span><span class='line'>
-</span><span class='line'><span class="n">subset_aggregated</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s">&#39;gdelt_subset.csv&#39;</span><span class="p">,</span> <span class="n">index</span> <span class="o">=</span> <span class="bp">False</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>Now that the data is in a properly formatted DataFrame, the next step is to create
-variables from which to draw counts of the various event types. Two variables,
-<code>verbal_coop</code> and <code>verbal_conf</code> are created and assigned values of zero. Then,
-these variables are assigned values of one if the <code>QuadCategory</code> matches the
-value for that event type. This functionality in <code>pandas</code> is similar that of
-<code>R</code>, and I plan on doing a more in-depth tutorial on <code>pandas</code> at a later date.
-With the event variables created, the data can be grouped and aggregated. <code>pandas</code>
-has the <code>.groupby</code> functionality for DataFrames, which allows you to group the data
-by specific variables. For the purposes of this dataset, a multi-level grouping is
-desired, with groups created by the year, the month, and the dyad. Once this grouping
-is created, the values are summed within each grouping leading to the final, aggregated
-dataset. This final data can be saved using the <code>.to_csv</code> method.</p>
-
-<p>And there you have it, you now have a subset of the GDELT dataset.
-This is a relatively simple task thanks to Python&#8217;s built in tools. It is
-possible to make this task run more quickly using parallel processing, as
-outlined in my previous <a href="http://johnbeieler.org/blog/2012/12/07/parallel-data-subsetting/">post</a>
-on parallel subsetting. As a brief recap, it is simply
-a matter of using the <code>jobilb</code> module, wrapping the above subsetting code in
-a function, and adding something along the lines of</p>
-
-<pre><code>data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in list_of_paths)
-</code></pre>
-
-<p>to the script. I hope this brief intro will prove helpful to those who wish
-to use GDELT in their own research. This tutorial only scratched the surface
-of working with event data, and there is much more to consider beyond just
-what subset you will select. A good resource on working with event data
-was written by <a href="http://jayyonamine.com/wp-content/uploads/2012/06/Working-with-Event-Data-A-Guide-to-Aggregation-Choices.pdf">Jay Yonamine</a>
-and will likely prove useful to those engaging in event-data research.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -1471,105 +781,6 @@ and .03).</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/28/bootstrapping-t-test/">Bootstrapped T-test</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-28T19:47:00-06:00" pubdate data-updated="true">Nov 28<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>The below code is to perform a nonparametric two-sample t-test using
-bootstrapping. First I present the code, and will then follow up with a
-line-by-line description of what&#8217;s going on.</p>
-
-<div><script src='https://gist.github.com/4166016.js?file='></script>
-<noscript><pre><code>from __future__ import division
-import numpy as np
-import pandas as pd
-import random
-
-def sample(data):
-    sample = [random.choice(data) for _ in xrange(len(data))]
-    return sample
-
-def bootstrap_t_test(treatment, control, nboot = 1000, direction = &quot;less&quot;):
-    ones = np.vstack((np.ones(len(treatment)),treatment))
-    treatment = ones.conj().transpose()
-    zeros = np.vstack((np.zeros(len(control)), control))
-    control = zeros.conj().transpose()
-    Z = np.vstack((treatment, control))
-    tstat = np.mean(treatment[:,1])-np.mean(control[:,1])
-    tboot = np.zeros(nboot)
-    for i in xrange(nboot):
-        sboot = sample(Z)
-        sboot = pd.DataFrame(np.array(sboot), columns=['treat', 'vals'])
-        tboot[i] = np.mean(sboot['vals'][sboot['treat'] == 1]) - np.mean(sboot['vals'][sboot['treat'] == 0]) - tstat
-    if direction == &quot;greater&quot;:
-        pvalue = np.sum(tboot&gt;=tstat-0)/nboot
-    elif direction == &quot;less&quot;:
-        pvalue = np.sum(tboot&lt;=tstat-0)/nboot
-    else:
-        print 'Enter a valid arg for direction'
-
-    print 'The p-value is %f' % (pvalue)
-</code></pre></noscript></div>
-
-
-<ul>
-<li><p>1-4: Just some imports. We need the floating point division from the
-future module, numpy, pandas, and the random module.</p></li>
-<li><p>6-8: Defining a function <code>sample</code> that samples with replacement from the
-dataset, creating a new dataset of the same length as the original data.
-This makes use of the <code>random.choice</code> function, which samples one item
-randomly from the data. This function is called the same number of times as
-there are observations in the data.</p></li>
-<li><p>10-17: Defining a function to perform the t-test, with two data inputs,
-the number of repititions to be performed, and the direction of the
-alternative hypothesis. First a 2 x <em>n</em> matrix is defined, with row 1 being
-all ones and row 2 being the data. This is then flipped to create an <em>n</em> x 2
-matrix. The same procedure is then repeated for the control data, except with
-0s instead of 1s. These two matrices are then stacked on top of each other.
-<code>tstat</code> is the difference between the two groups, and tboot is a vector of
-zeros with length equal to the number of repititions for the bootstrap.</p></li>
-<li><p>18-21: This for-loop actually performs the bootstrap for the number of times
-indicated by <code>nboot</code>. First, a sample of the data (<code>Z</code>) is taken using the
-<code>sample</code> function defined above. This is then transformed into a pandas
-DataFrame, and given appropriate column names. Finally, the difference in
-means of the two groups is taken for each iteration of the loop and stored in
-the appropriate location in <code>tboot</code>.</p></li>
-<li><p>22-28: This is simply calculating a proportion of samples that were greater or
-less than the test statistic, based on the direction of the alternative
-hypothesis. The final line (29) then prints the p-value as a float.</p></li>
-</ul>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -1585,6 +796,10 @@ hypothesis. The final line (29) then prints the p-value as a float.</p></li>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive with Social Science Data</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/06/using-sql/">Using SQL, pandas, and Python to Work With Data</a>
       </li>
     
@@ -1598,10 +813,6 @@ hypothesis. The final line (29) then prints the p-value as a float.</p></li>
     
       <li class="post">
         <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/12/gdelt/">GDELT, Big Data, and Theory</a>
       </li>
     
   </ul>

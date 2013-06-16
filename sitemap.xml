@@ -2,7 +2,7 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://johnb30.github.com/blog/2012/11/24/starting-with-python/</loc>
-        <lastmod>2012-11-24T18:31:10-06:00</lastmod>
+        <lastmod>2013-06-14T16:15:49-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/2012/11/28/bootstrapping-t-test/</loc>
@@ -24,7 +24,7 @@
         <loc>
             http://johnb30.github.com/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/
         </loc>
-        <lastmod>2013-04-15T10:28:45-05:00</lastmod>
+        <lastmod>2013-06-14T16:15:09-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/2013/04/12/gdelt/</loc>
@@ -36,23 +36,27 @@
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/2013/04/29/terrorism-studies-and-prediction/</loc>
-        <lastmod>2013-04-29T12:51:34-05:00</lastmod>
+        <lastmod>2013-06-14T16:14:07-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/2013/06/01/making-gdelt-downloads-easy/</loc>
-        <lastmod>2013-06-01T15:34:01-05:00</lastmod>
+        <lastmod>2013-06-14T16:12:48-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/2013/06/06/using-sql/</loc>
-        <lastmod>2013-06-07T12:21:48-05:00</lastmod>
+        <lastmod>2013-06-14T16:23:51-05:00</lastmod>
+    </url>
+    <url>
+        <loc>http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/</loc>
+        <lastmod>2013-06-16T11:19:53-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/about/</loc>
-        <lastmod>2012-11-24T00:01:01-06:00</lastmod>
+        <lastmod>2013-06-14T16:22:51-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/blog/archives/</loc>
-        <lastmod>2013-06-07T12:21:48-05:00</lastmod>
+        <lastmod>2013-06-16T11:19:53-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/code/</loc>
@@ -64,7 +68,7 @@
     </url>
     <url>
         <loc>http://johnb30.github.com/</loc>
-        <lastmod>2013-06-07T12:21:48-05:00</lastmod>
+        <lastmod>2013-06-16T11:19:53-05:00</lastmod>
     </url>
     <url>
         <loc>http://johnb30.github.com/papers/</loc>
