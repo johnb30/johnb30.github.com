@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-06-16T11:21:07-05:00</updated>
+  <updated>2013-06-17T10:38:43-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -56,7 +56,12 @@ navigate to the created bucket and create a new folder; I chose &#8220;gdelt&#82
 <p><img src="http://johnb30.github.com/blog/downloads/hive_post/2_s3_setup.png"></p>
 
 <p>You should navigate to this new folder and begin uploading the GDELT data. For the purposes of this tutorial only a couple
-years are necessary. Loading the entire dataset onto S3 is a lengthy process. I have the entire dataset uploaded, along with
+years are necessary. I recommend downloading the 1979 and 1980 data and uploading only these years to the <code>&lt;YOURNAME&gt;/gdelt</code>
+folder on S3 as a start. As a recap, you should download the desired <a href="http://gdelt.utdallas.edu/data.html">GDELT data</a> and
+upload these files to the S3 bucket and folder that you created. The Hive queries used later in this post will load all of
+the data within a folder into the table, so make sure that only the GDELT data is contained in the bucket/folder path.</p>
+
+<p>Loading the entire dataset onto S3 is a lengthy process. I have the entire dataset uploaded, along with
 continual, daily updates, and I am planning on making this bucket public, but a lot depends on the potential costs.
 I will have more to say about this as I find out more information.</p>
 
@@ -91,7 +96,7 @@ It will likely take a few minutes for everything to warm up.</p>
 
 <p><img src="http://johnb30.github.com/blog/downloads/hive_post/6_overview.png"></p>
 
-<h4>Elastic MapReduce Command-line interface</h4>
+<h4>Elastic MapReduce Command-Line Interface</h4>
 
 <p>In order to communicate with the EMR cluster you have created some additional tools are necessary, specifically, the EMR
 command line interface. Amazon has a pretty good <a href="http://docs.aws.amazon.com/ElasticMapReduce/latest/DeveloperGuide/emr-cli-install.html">tutorial</a>
@@ -117,8 +122,9 @@ will not cover the finer points of SQL in this post. SQL is easy to learn and  n
 suggest Zed Shaw&#8217;s <a href="sql.learncodethehardway.org">Learn SQL The Hard Way</a>. This section will only cover creating the table that stores
 the GDELT data along with some basic queries, along with saving the output to a CSV file.</p>
 
-<p>In order to create the table for GDELT, the following command should be issued in the Hive interpreter; copy and paste should work
-fine. This command assumes you have created the S3 bucket in the <code>&lt;YOURNAME&gt;/gdelt</code> format.</p>
+<p>In order to create the table for GDELT, the following command should be issued in the Hive interpreter. Copy and paste should work fine,
+excepting the final line; the last line should be modified to match the path to the S3 bucket to which the data was uploaded, e.g.,
+the <code>&lt;YOURNAME&gt;/gdelt</code> format.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -249,13 +255,14 @@ fine. This command assumes you have created the S3 bucket in the <code>&lt;YOURN
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>This creates a table with fields for each of the columns available in the GDELT dataset. It is now possible to run some simple queries against
+<p>This creates a table, named <code>gdelt</code>, with fields for each of the columns available in the GDELT dataset. It is now possible to run some simple queries against
 the data. Before doing so, however, it is useful to adjust the number of <code>reducers</code> used in the map/reduce jobs since these are automatically
 determined from the size of the input; upping the number of <code>reducers</code> can speed the queries. To do this, enter
 <code>set hive.exec.reducers.max=200; set mapred.reduce.tasks=200;</code> into the Hive prompt.</p>
 
 <p>The first example query used in this post is the same as in my <a href="http://johnbeieler.org/blog/2013/06/06/using-sql/">previous post</a>:
 select all events that occurred within Syria, show the dyadic interactions, and create a sum of the Goldstein values for each dyad.
+The data is drawn from the <code>gdelt</code> table created using the previous command.
 The code for the query is the exact same as in the previous post:</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -284,7 +291,7 @@ The code for the query is the exact same as in the previous post:</p>
 <p>After roughly 10 minutes you should see the results start to stream across the terminal showing the actors in the dyad, the sum of the Goldstein values,
 and the count of events within the dyad. While this is interesting and useful, the ultimate goal is to save this subset to a file so it can
 serve as the basis for future analysis. To do so, a temporary holding table is necessary as an intermediate step. The following command creates
-such a table.</p>
+such a table, named <code>temp</code>.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -301,7 +308,7 @@ such a table.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>You can then issue the same command as above, with the slight modification of inserting the results into the new table.</p>
+<p>You can then issue the same command as above, with the slight modification of inserting the results into the new, <code>temp</code> table.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -328,7 +335,10 @@ such a table.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>Now, in order to save the results into a single CSV file, issue the following command.</p>
+<p>Now, in order to save the results into a single CSV file, issue the following command. This command creates a
+table, <code>csvexport</code>, that is stored in your S3 bucket, with fields separated by commas and lines ended by <code>\n</code>
+characters. Again, make sure to modify the <code>LOCATION</code> statement to match a path to your S3 bucket. The second
+command writes all of the data from <code>temp</code> into the <code>csvexport</code> table.</p>
 
 <figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -365,13 +375,13 @@ such a table.</p>
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>There should now be a file in your S3 bucket, within the folder <code>output</code> with a strange name. This file contains the output of the query and can be
+<p>There should now be a file in your S3 bucket, within the folder <code>output</code>, with a strange name. This file contains the output of the query and can be
 downloaded to your local computer. This multi-step process is necessary due to the nature of the map/reduce paradigm. Since the table <code>temp</code> is
 created by using multiple reducers, the output would be written to a number of files that reflects the number of reducers used in a query. In the case
 of this query, that would be 200 separate files. The creation of the <code>csvexport</code> table allows for the creation of a single text file since no reduce
 jobs are needed for the <code>SELECT *</code> operation.</p>
 
-<h3>Wrapping up</h3>
+<h3>Wrapping Up</h3>
 
 <p>This tutorial has only scratched the surface of the power of Hive and SQL. It is important to remember that SQL, and by extension
 HiveQL, is typically used in business-analytical environments. This means that it is very powerful for the type of quick, informative
