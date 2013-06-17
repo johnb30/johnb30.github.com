@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT, | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt-/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-06-17T10:38:43-05:00</updated>
+  <updated>2013-06-17T10:46:32-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -111,7 +111,9 @@ compatible with 1.8. The other option is to revert to Ruby 1.8.7.</p>
 
 <p>With the CLI downloaded and set up, you should <code>cd</code> to the directory and issue the <code>./elastic-mapreduce --list</code> command. This should show
 you the history of any job flows you created, along with the job IDs. The job ID is the first field for each job flow and looks something
-like <code>j-ABC123DEFG45</code>. This ID is used to SSH into the master node for the job, using the <code>./elastic-mapreduce -ssh j-ABC123DEFG45</code> command.
+like <code>j-ABC123DEFG45</code>. This ID is used to SSH into the master node for the job, using the
+either the <code>./elastic-mapreduce -j j-ABC123DEFG45 --ssh</code> or the  <code>./elastic-mapreduce -ssh j-ABC123DEFG45</code> command, with the latter being
+the command to use if you are using the CLI for Ruby 1.8 available from the Github link above.
 With this, you should finally have a EMR instance up and running. The next section shows how to use this instance to query the GDELT
 data using Hive.</p>
 
