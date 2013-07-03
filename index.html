@@ -9,7 +9,10 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Processing Data With Hive Working with big data is not a particularly easy task. There is a lot of commentary on the web about what constitutes &# &hellip;">
+  <meta name="description" content="GDELT and Protests Given the recent spate of protests around the world, there was some discussion
+between Jay Ulfelder,
+Patrick Brandt,
+Kalev Leetaru &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,6 +83,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/03/mapping-protest-data/">Mapping Protest Data</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-03T16:03:00-05:00" pubdate data-updated="true">Jul 3<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>GDELT and Protests</h3>
+
+<p>Given the recent spate of protests around the world, there was some discussion
+between <a href="http://dartthrowingchimp.wordpress.com/">Jay Ulfelder</a>,
+<a href="https://www.utdallas.edu/~pxb054000/pbrandt/Home.html">Patrick Brandt</a>,
+<a href="http://www.kalevleetaru.com/">Kalev Leetaru</a>,
+<a href="http://eventdata.psu.edu/">Phil Schrodt</a>, and myself about the possibility of using
+<a href="http://gdelt.utdallas.edu/">GDELT</a> to examine some of
+the protest activity. Much of this still remains in the discussion stage, but
+some data was pulled from GDELT, and I decided to venture into the world of
+map making. As a caveat, I&#8217;ve never really worked with geographic visualization
+of data, and this is my first cut at this type of work. So, without further
+ado, the map is located at <a href="http://cdb.io/14RHla0">http://cdb.io/14RHla0</a>.</p>
+
+<h3>Data</h3>
+
+<p>The data used to create the map contains all CAMEO codes that begin with <code>14</code>,
+which is the general category for &#8220;protest&#8221; events. A potential issue is that this
+also picks up governments protesting other governments, politicians protesting
+policies, etc. Thus why the U.S. is blank; it was a shining beacon of protest
+activity that distracted from the other parts of the map. If anyone is
+interested I can put the U.S. data back in and regenerate the map. The data
+was grouped by the latitude and longitude coordinates, and a count of protest
+events at each location is included. If you zoom in, you are able to see the
+individuals points, which when clicked provide information about the location
+and number of events.</p>
+
+<p>The main takeaway from this map seems to be that GDELT does a pretty good job
+of capturing the broad trends of protest activity; the areas that are &#8220;bright&#8221;
+are those that would generally be expected to be so.</p>
+
+<h3>Note on Tools</h3>
+
+<p>The map was created using the fantastic <a href="http://cartodb.com/">CartoDB</a> along with CSS provided
+by <a href="http://www.joshuastevens.net/">Josh Stevens</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -702,85 +775,6 @@ instananeous, which is a drastic improvement.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">R Magic and Bootstrapped T-test</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-29T21:53:00-06:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Following up on my last post, I wanted a way to test my bootstrapped t-test
-function against the regular t-test function in R. While I was able to do this
-by copy-pasting between R and a Python shell, this was less than ideal. I then
-saw, however, a <a href="http://nbviewer.ipython.org/4166681/">post</a> by Christopher
-Fonnesbeck that discussed the use of the rmagic function in ipython, which can
-be loaded using the %load_ext magic function. So, with this in mind, I decided
-to test it out using a comparison between my bootstrap function and the
-<code>t.test</code> function in R. As a note, the rmagic extension requires
-<a href="http://rpy.sourceforge.net/rpy2.html">rpy2</a>, so just <code>pip install rpy2</code> and
-you should be good to go.</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import bootFunction
-</span><span class='line'>
-</span><span class='line'>%load_ext rmagic
-</span><span class='line'>%R treatment = c(24,25,28,28,28,29,29,31,31,35,35,35)
-</span><span class='line'>%R control = c(21,22,24,27,27,28,29,32,32)
-</span><span class='line'>%Rpull treatment control
-</span><span class='line'>
-</span><span class='line'>bootFunction.bootstrap_t_test(treatment, control, direction = "greater")
-</span><span class='line'>
-</span><span class='line'>%R print(t.test(treatment, control, alternative = "greater"))</span></code></pre></td></tr></table></div></figure>
-
-
-<p>I first import the set of functions from the bootFunction. I then load the
-rmagic extension using the <code>%load_ext</code> magic function. Using the <code>%R</code> magic
-function I then defined two vectors of data, treatment and control, in the R
-space. I then used <code>%Rpull</code> to pull the two vectors from the R space into the
-Python shell. The two variables become structured numpy arrays.
-I then perform the bootstrapped t-test as described in the earlier post.
-Finally, using the <code>%R</code> magic function again, I print out the results of the
-<code>t.test</code> function in R using the same data. The p-values aren&#8217;t exactly the
-same, as is to be expected, but are at least within the same ballpark (the R
-t-test gives .05, while the boostrap function has returned a range between .05
-and .03).</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -796,6 +790,10 @@ and .03).</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/03/mapping-protest-data/">Mapping Protest Data</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive with Social Science Data</a>
       </li>
     
@@ -809,10 +807,6 @@ and .03).</p>
     
       <li class="post">
         <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a>
       </li>
     
   </ul>
