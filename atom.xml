@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-07-03T16:34:33-05:00</updated>
+  <updated>2013-07-03T16:45:28-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -35,8 +35,9 @@ ado, the map is located at <a href="http://cdb.io/14RHla0">http://cdb.io/14RHla0
 <h3>Data</h3>
 
 <p>The data used to create the map contains all CAMEO codes that begin with <code>14</code>,
-which is the general category for &#8220;protest&#8221; events. A potential issue is that this
-also picks up governments protesting other governments, politicians protesting
+which is the general category for &#8220;protest&#8221; events for the year 2013. Including
+data from earlier than 2013 made the map much too cluttered.
+A potential issue with the use of this CAMEO category is that it picks up governments protesting other governments, politicians protesting
 policies, etc. Thus why the U.S. is blank; it was a shining beacon of protest
 activity that distracted from the other parts of the map. If anyone is
 interested I can put the U.S. data back in and regenerate the map. The data
