@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT, | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt-/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-07-03T16:47:19-05:00</updated>
+  <updated>2013-07-06T17:00:14-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -211,7 +211,7 @@ CREATE EXTERNAL TABLE IF NOT EXISTS gdelt (
  AvgTone DOUBLE,
  Actor1Geo_Type INT,
  Actor1Geo_FullName STRING,
- Actor1Geo_CountryCode INT,
+ Actor1Geo_CountryCode STRING,
  Actor1Geo_ADM1Code STRING,
  Actor1Geo_Lat FLOAT,
  Actor1Geo_Long FLOAT,
