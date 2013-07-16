@@ -9,10 +9,9 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="GDELT and Protests Given the recent spate of protests around the world, there was some discussion
-between Jay Ulfelder,
-Patrick Brandt,
-Kalev Leetaru &hellip;">
+  <meta name="description" content="Plotting Protests There&#8217;s been a fair amount of discussion in the news
+media
+recently about whether the start of Ramadan will lead to a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +82,89 @@ Kalev Leetaru &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/16/protest-behavior-and-ramadan/">Protest Behavior and Ramadan</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-16T18:54:00-05:00" pubdate data-updated="true">Jul 16<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>Plotting Protests</h3>
+
+<p>There&#8217;s been a fair amount of <a href="http://worldnews.nbcnews.com/_news/2013/07/13/19439120-fasting-makes-us-stronger-cairo-protesters-carry-on-despite-ramadan?lite">discussion</a>
+ in the <a href="http://www.dw.de/protests-in-turkey-continue-despite-ramadan/a-16943978">news</a>
+<a href="http://world.time.com/2013/07/12/egypts-crisis-ramadan-heat-cools-tensions-in-cairo-for-now/">media</a>
+recently about whether the start of Ramadan will lead to a decrease in protest
+behavior in locations such as Egypt and Turkey. While I don&#8217;t
+have a forecast to offer, I do have data from <a href="http://gdelt.utdallas.edu">GDELT</a>
+that tracks protest activity dating back to 1979. With the help of <a href="https://en.wikipedia.org/wiki/File:Ramadan100years1938-2037.png">Wikipedia</a>
+I was able to identify the beginning of Ramadan going back to 1979. Using
+these dates, it is then possible to plot the time series of protest behavior
+with the Ramadan time period layered on top. It is important to note that
+this is a rather quick and dirty analysis. For example, in 1981 Ramadan began
+on July 3 so I marked July and August as Ramadan months. It shouldn&#8217;t affect
+the visualization all that much, but I thought it is important to note. Taken
+together, this data produces the following plot (larger version available
+<a href="/blog/downloads/protest_plot.png">here</a>):</p>
+
+<p><img src="/blog/downloads/protest_plot.png"></p>
+
+<p>A quick eyeball test seems to indicate that Ramadan often coincides with a
+slightly lower level of protest activity over time. In order to shore
+this up, a quick correlation of &#8220;Ramadan&#8221; with the protest data shows a
+coefficient of about <code>-0.025</code>, which indicates a very weak, negative
+relationship between Ramadan and protest behavior.</p>
+
+<h3>Caveats, notes, etc.</h3>
+
+<p>With this said, it is important to note a few things about the data. First,
+this includes <strong>all</strong> protest activity over time. Events such
+as the US protesting the behavior of another state are included along with
+civilian protests. This data also includes protest data
+from the entire globe; it is quite possible that the effects of Ramadan are
+more pronounced in countries with a higher Muslim population.
+A final issue is the possible presence of seasonality in the data. Ramadan
+just might happen to coincide with time periods that
+experience lower protest activity, e.g., the summer months.</p>
+
+<h3>Data</h3>
+
+<p>Since I complained on Twitter that the creators of time-series plots often fail
+to upload the data used to create the time series, the
+protest data is available <a href="/blog/downloads/protest_data.csv">here</a>, while the
+dates for Ramadan I used are <a href="/blog/downloads/ramadan_dates.csv">here</a>.
+As a final note on the data, the values for the protests are percentages of
+total events that occurred in a given month. This controls for
+fact that later years, particularly those after 2005 or so, have more events
+due to changes in reporting, etc.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -663,119 +745,6 @@ is <a href="http://nbviewer.ipython.org/4743272">http://nbviewer.ipython.org/474
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/07/parallel-data-subsetting/">Parallel Data Subsetting</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-12-07T18:26:00-06:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3>The Challenge</h3>
-
-<p>I&#8217;ve been working with some data that is spread over multiple
-tab-delimited files, and is rather large (on the order of 20-30gb). The task has
-been to comb through the data, and extract observations (rows) if they match
-certain characteristics. Specifically, each file is iterated over and if a field
-within a line matches a given value then the line should be extracted and
-appended to the final output. This task is relatively straightforward in Python,
-but to iterate over all of the files takes around 45 minutes. While this isn&#8217;t
-an exorbiant amount of time, fast is always better. This problem is also
-embarassingly parallel; the different files do not need to communicate their
-results to each other, the results simply need to be stacked into a final array
-in order to be saved to a file. Thus began my saga to implement a parallel
-version of a script I wrote to iterate over the files and select the lines.</p>
-
-<h3>The Code</h3>
-
-<div><script src='https://gist.github.com/4237347.js?file='></script>
-<noscript><pre><code>import numpy as np
-from joblib import Parallel, delayed
-
-def subset(file):
-    dataOut = []
-    data = open(file, 'r')
-    data.readline()
-    for line in data:
-        splitLine = line.split('\t')
-        if splitLine[3] == '57':
-            dataOut.append(splitLine)
-    return dataOut
-
-def stack(list_of_data, hold_data):
-    for i in xrange(len(list_of_data)):
-        current = np.array(data[i])
-        hold = np.vstack((hold_data, current))
-    return hold
-
-if __name__ == &quot;__main__&quot;:
-    filepath = ['testData1.txt', 'testData2.txt']
-
-    hold  = []
-    temp = open(filepath[0], 'r')
-    hold.append(temp.readline().split('\t'))
-    data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in filepath)
-    finalData = stack(data, hold)
-</code></pre></noscript></div>
-
-
-<p>As with my other posts I&#8217;ll walk through the code line by line.</p>
-
-<ul>
-<li><p>1-2 Just imports. I&#8217;ll be using the <code>Parallel</code> and
-<code>delayed</code> functions from the joblib module.</p></li>
-<li><p>4-13 Defining the function to subset out the data. The code is fairly easy to
-understand here. The file is opened, the first line is read since this
-contains the column names and should not be appended to the result. Then each
-line is iterated over, split on the basis of the tabs, and appended if it
-meets a certain criteria.</p></li>
-<li><p>15-19 Function to stack the data. The joblib <code>Parallel</code> function will return a
-list of lists, with each list within the list being the results from the
-individual files. The <code>stack</code> function iterates over the list, converts the
-inner lists to numpy arrays, and stacks the current data with the previous
-data.</p></li>
-<li><p>22-28 Running the script. The main focus here is on line 27. The first
-argument that <code>Parallel</code> takes is the number of jobs to be used. Setting
-<code>n_jobs</code> to -1 says to use all possible cores. The second argument is the
-function to be run in parallel. The joblib docs indicate that &#8220;The delayed
-function is a simple trick to be able to create a tuple
-(function, args, kwargs) with a function-call syntax.&#8221; So delayed is passed
-the <code>subset</code> function with the arg <code>x</code>, which represents the file to be opened
-as held in <code>filepath</code>. This data is then stored as a list of lists, and
-stacked using the <code>stack</code> function.</p></li>
-</ul>
-
-
-<p>Some quick prelimenary examinations shows that this parallel implementation is
-much, much faster than running in serial. Running on two files is almost
-instananeous, which is a drastic improvement.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -791,6 +760,10 @@ instananeous, which is a drastic improvement.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/07/16/protest-behavior-and-ramadan/">Protest Behavior and Ramadan</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/03/mapping-protest-data/">Mapping Protest Data</a>
       </li>
     
@@ -804,10 +777,6 @@ instananeous, which is a drastic improvement.</p>
     
       <li class="post">
         <a href="/blog/2013/06/01/making-gdelt-downloads-easy/">Making GDELT Downloads Easy</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/04/29/terrorism-studies-and-prediction/">Terrorism Studies and Prediction</a>
       </li>
     
   </ul>
