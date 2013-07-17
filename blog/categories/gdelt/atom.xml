@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-07-17T09:35:52-05:00</updated>
+  <updated>2013-07-17T09:51:36-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -74,10 +74,12 @@ due to changes in reporting, etc.</p>
     <link href="http://johnb30.github.com/blog/2013/07/03/mapping-protest-data/"/>
     <updated>2013-07-03T16:03:00-05:00</updated>
     <id>http://johnb30.github.com/blog/2013/07/03/mapping-protest-data</id>
-    <content type="html"><![CDATA[<p><strong>Edit July 17, 2013:</strong></p>
+    <content type="html"><![CDATA[<p><em>Edit July 17, 2013:</em></p>
 
 <p>Since this map got picked up by the <a href="http://www.guardian.co.uk/news/datablog/interactive/2013/jul/17/global-map-protests-2013">Guardian</a>,
-I thought I would clarify some points further for those who aren't familiar with the data. First, the GDELT data is based on news reports
+I thought I would clarify some points further for those who aren't familiar with the data.</p>
+
+<p>First, the GDELT data is based on news reports
 from a variety of sources (a list of sources used can be found <a href="http://gdelt.utdallas.edu/about.html">here</a> under "Data Sources"). For
 better or for worse, journalistic accounts of events is about the best we can do for large-scale, global projects such as this. Second,
 if an event occurs but does not have a specific location within a country, e.g., "Protestors in Syria…", the event is geolocated to the
@@ -86,7 +88,7 @@ centroid of the country. This means that there may be some odd events at some lo
 means that if the "Event Count" variable shows 60, then there were 60 unique protest events at that location. This is not a measure of
 scale or intensity of a given protest, or even how many times a certain protest was mentioned in the news media, though GDELT does record
 this, it is simply a measure of unique events. Next, geolocation is hard, especially on the scale GDELT works on (300+ million events spanning
-over 30 years) so yes, some of the points may not be perfect but even if 10 million events are located in the wrong place, that's still an error
+over 30 years), so some of the points may not be perfect. Even if 10 million events are located in the wrong place, however, that's still an error
 rate of about 3%. Finally, and this is mentioned in the post further below, GDELT uses the <a href="http://gdelt.utdallas.edu/data/documentation/CAMEO.Manual.1.1b3.pdf">CAMEO</a>
 coding scheme to classify events. This means that many different types of protest behavior are recorded, not just the protests or riots that come
 to mind when one thinks of Egypt or Turkey. Russia verbally protesting actions of the United States is a protest event. This means that there
