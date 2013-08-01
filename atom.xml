@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-07-17T09:58:21-05:00</updated>
+  <updated>2013-08-01T09:58:02-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Animated Protest Mapping]]></title>
+    <link href="http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping/"/>
+    <updated>2013-07-31T21:20:00-05:00</updated>
+    <id>http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping</id>
+    <content type="html"><![CDATA[<p>One of the primary shortcomings of the original
+<a href="http://johnb30.cartodb.com/viz/ffd5eeb6-ee20-11e2-8fd0-3085a9a956e8/embed_map?title=false&amp;description=true&amp;search=false&amp;shareable=false&amp;cartodb_logo=true&amp;layer_selector=false&amp;scrollwheel=true&amp;sublayer_options=1&amp;sql=&amp;zoom=2&amp;center_lat=-0.004273915238222043&amp;center_lon=-8.0859375">protest map</a>
+I posted was that it only captured a static picture of protest activity over
+a 6 month span. While this was interesting in its own right, many people,
+including myself, were interested in how protest behavior changes over time.
+Given this, I decided to explore creating an animated version of the original
+protest map.</p>
+
+<h3>Data</h3>
+
+<p>As I&#8217;ve mentioned before, the <a href="http://gdelt.utdallas.edu">GDELT data</a> covers
+from 1979 until present day, with continuous daily updates. I&#8217;m making use of
+a subset that runs through June of 2013. The same caveats of the data
+that I noted in the
+<a href="http://johnbeieler.org/blog/2013/07/03/mapping-protest-data/">previous post</a>
+about the protest map still apply. When dealing with the time-series of data,
+however, one additional, and very important, point also applies. The number
+of events recorded in GDELT grows exponentially over time, as noted in the
+<a href="http://gdelt.utdallas.edu/data/documentation/ISA.2013.GDELT.pdf">paper</a>
+introducing the dataset. This means that over time there appears to be a
+steady increase in events, but this should not be mistaken as a rise in the
+actual amount of behavior <code>X</code> (protest behavior in this case). Instead, due
+to changes in reporting and the digital recording of news stories, it is
+simply the case that there are more events of every type over time. In some
+preliminary work that is not yet publicly released, protest behavior seems to
+remain relatively constant over time as a <strong>percentage</strong> of the total number
+of events. This means that while there was an explosion of protest activity
+in the Middle East, and elsewhere, during the past few years, identifying
+visible patterns is a tricky endeavor due to the nature of the underlying data.</p>
+
+<p>Finally, the data used to create the map can be viewed
+<a href="https://johnb30.cartodb.com/tables/protest_data/">here</a>. In order to reduce
+the data to a manageable size, only locations where 10 or more events occurred
+within a specific month are included. 10 events is an admittedly arbitrary cutoff,
+but given that the highest number of events for one location in a
+given month is 3,746 (Cairo in February of 2011) I feel that it is reasonable.</p>
+
+<h3>The Map</h3>
+
+<p>With these notes out of the way, the map can be viewed at
+<a href="http://johnbeieler.org/protest_mapping">johnbeieler.org/protest_mapping</a>.
+The color of each point is scaled by the number of events, with darker circles
+indicating more events.</p>
+
+<h3>Tools, etc.</h3>
+
+<p>Once again this map was made using the wonderful tools provided by
+<a href="http://cartodb.com">CartoDB</a>. For the animation specifically, I made use of
+the <a href="https://github.com/CartoDB/torque">Torque</a> library provided by CartoDB.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protest Behavior and Ramadan]]></title>

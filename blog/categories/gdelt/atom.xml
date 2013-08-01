@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-07-17T09:58:21-05:00</updated>
+  <updated>2013-08-01T09:58:02-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -12,6 +12,63 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Animated Protest Mapping]]></title>
+    <link href="http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping/"/>
+    <updated>2013-07-31T21:20:00-05:00</updated>
+    <id>http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping</id>
+    <content type="html"><![CDATA[<p>One of the primary shortcomings of the original
+<a href="http://johnb30.cartodb.com/viz/ffd5eeb6-ee20-11e2-8fd0-3085a9a956e8/embed_map?title=false&amp;description=true&amp;search=false&amp;shareable=false&amp;cartodb_logo=true&amp;layer_selector=false&amp;scrollwheel=true&amp;sublayer_options=1&amp;sql=&amp;zoom=2&amp;center_lat=-0.004273915238222043&amp;center_lon=-8.0859375">protest map</a>
+I posted was that it only captured a static picture of protest activity over
+a 6 month span. While this was interesting in its own right, many people,
+including myself, were interested in how protest behavior changes over time.
+Given this, I decided to explore creating an animated version of the original
+protest map.</p>
+
+<h3>Data</h3>
+
+<p>As I've mentioned before, the <a href="http://gdelt.utdallas.edu">GDELT data</a> covers
+from 1979 until present day, with continuous daily updates. I'm making use of
+a subset that runs through June of 2013. The same caveats of the data
+that I noted in the
+<a href="http://johnbeieler.org/blog/2013/07/03/mapping-protest-data/">previous post</a>
+about the protest map still apply. When dealing with the time-series of data,
+however, one additional, and very important, point also applies. The number
+of events recorded in GDELT grows exponentially over time, as noted in the
+<a href="http://gdelt.utdallas.edu/data/documentation/ISA.2013.GDELT.pdf">paper</a>
+introducing the dataset. This means that over time there appears to be a
+steady increase in events, but this should not be mistaken as a rise in the
+actual amount of behavior <code>X</code> (protest behavior in this case). Instead, due
+to changes in reporting and the digital recording of news stories, it is
+simply the case that there are more events of every type over time. In some
+preliminary work that is not yet publicly released, protest behavior seems to
+remain relatively constant over time as a <strong>percentage</strong> of the total number
+of events. This means that while there was an explosion of protest activity
+in the Middle East, and elsewhere, during the past few years, identifying
+visible patterns is a tricky endeavor due to the nature of the underlying data.</p>
+
+<p>Finally, the data used to create the map can be viewed
+<a href="https://johnb30.cartodb.com/tables/protest_data/">here</a>. In order to reduce
+the data to a manageable size, only locations where 10 or more events occurred
+within a specific month are included. 10 events is an admittedly arbitrary cutoff,
+but given that the highest number of events for one location in a
+given month is 3,746 (Cairo in February of 2011) I feel that it is reasonable.</p>
+
+<h3>The Map</h3>
+
+<p>With these notes out of the way, the map can be viewed at
+<a href="http://johnbeieler.org/protest_mapping">johnbeieler.org/protest_mapping</a>.
+The color of each point is scaled by the number of events, with darker circles
+indicating more events.</p>
+
+<h3>Tools, etc.</h3>
+
+<p>Once again this map was made using the wonderful tools provided by
+<a href="http://cartodb.com">CartoDB</a>. For the animation specifically, I made use of
+the <a href="https://github.com/CartoDB/torque">Torque</a> library provided by CartoDB.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Protest Behavior and Ramadan]]></title>
@@ -610,132 +667,6 @@ a very useful tool when analyzing more atomic chunks of the GDELT data; daily, m
 even a single year for the earlier years is not outside the realm of possibility. Finally, if you
 need a resource to learn SQL, I recommend Zed Shaw's <a href="http://sql.learncodethehardway.org/">Learn SQL The Hard Way</a>,
 which will provide as much SQL as you need to perform data subsetting tasks.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Making GDELT Downloads Easy]]></title>
-    <link href="http://johnb30.github.com/blog/2013/06/01/making-gdelt-downloads-easy/"/>
-    <updated>2013-06-01T00:06:00-05:00</updated>
-    <id>http://johnb30.github.com/blog/2013/06/01/making-gdelt-downloads-easy</id>
-    <content type="html"><![CDATA[<h2>Downloading GDELT</h2>
-
-<p>Yesterday, I started downloading the GDELT data from the <a href="gdelt.utdallas.edu">website</a>,
-having previously pulled the data from the servers at Penn State.
-Having to navigate the website and download each file individually
-caused me far more frustration that it should have, not due to the
-design of the website but due to my own impatience. I'll have more
-to say about the general state of data distribution in the social
-sciences in another post, but for now it's enough to say that I'm
-not a fan of downloading data by hand. Because of this, I wrote some
-scripts in Python to help with downloading the data. There are two
-scripts, <code>download_historical.py</code> and <code>download_daily.py</code> to
-download either the historical files or the continuously-updated
-daily files. The code is on <a href="https://github.com/johnb30/gdelt_download">github</a>.
-I've copied the contents of the README file below so you can determine
-if the scripts would be useful for you.</p>
-
-<!-- more -->
-
-
-<h3>README</h3>
-
-<h2>GDELT Download</h2>
-
-<p>The GDELT data is spread across multiple files, with a new file added each day.
-Downloading each and every file is not a fun endeavor. These scripts were
-written in order to aid in the download of the GDELT data. The first script
-<code>download_historical.py</code> is aimed at downloading the historical data, and the
-previous daily updated. The second script, <code>download_daily.py</code>, is aimed
-at downloading the new files that are uploaded to the GDELT website each day.
-This script enables the user to either call the script each day to fetch the
-newest upload, or to run the process in the background to download the new
-updates each day at 10:00am.</p>
-
-<p>Each script implements a 30 second delay where appropriate in order to
-avoid swamping the server.</p>
-
-<h2><code>download_historical</code> Usage</h2>
-
-<p>The script has three modes: <code>daily</code>, <code>single</code>, and <code>range</code>.</p>
-
-<p><em>Note</em>: If you wish to use the <code>daily</code> mode, the <code>requests</code> and <code>lxml</code> libaries
-are necessary. You can install both using <code>pip install library_name</code>. The script
-also makes use of <code>argparse</code>, which is included in the standard libary from
-Python 2.7+. If you are using an older version, it is necessary to install
-<code>argparse</code> using <code>pip</code> or <code>easy_install</code>.</p>
-
-<h3>Daily:</h3>
-
-<p>The daily mode downloads the daily updates that are currently uploaded to the
-GDELT website.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py daily -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
-
-<h3>Single:</h3>
-
-<p>The single mode downloads the updates for a single year.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py single -y 1979 -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-y</code> is the flag that indicates which year should be downloaded, <code>-d</code>
-is the flag for the directory to which the files should be written, and <code>-U</code>
-is the optional flag indicating whether each downloaded file should be unzipped.</p>
-
-<h3>Range:</h3>
-
-<p>The range mode downloads the updates for a range of years.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_historical.py range -y 1979-2012 -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-y</code> is the flag that indicates which years should be downloaded, <code>-d</code>
-is the flag for the directory to which the files should be written, and <code>-U</code>
-is the optional flag indicating whether each downloaded file should be unzipped.</p>
-
-<h2><code>download_daily</code> Usage</h2>
-
-<p>The script has two modes: <code>fetch</code>, and <code>schedule</code>.</p>
-
-<p><em>Note</em>: If you wish to use the <code>schedule</code> mode, the <code>schedule</code> library
-is necessary. You can install using <code>pip install schedule</code>.</p>
-
-<h3>Fetch:</h3>
-
-<p>The fetch mode downloads only the current date's update.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_daily.py fetch -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
-
-<h3>Schedule:</h3>
-
-<p>The fetch schedule mode sets the script to run in the background and request
-each day at 10:00am that date's upload from the server. In order to work, the
-script must be left running in a terminal tab. The use of a utility such as
-<code>screen</code> or <code>tmux</code> is recommended in order to allow the program to run
-unmonitored in the background.</p>
-
-<h4>Usage:</h4>
-
-<p><code>python download_daily.py schedule -d ~/gdelt/ -U</code></p>
-
-<p>Where <code>-d</code> is the flag for the directory to which the files should be written,
-and <code>-U</code> is the optional flag indicating whether each downloaded file should
-be unzipped.</p>
 ]]></content>
   </entry>
   
