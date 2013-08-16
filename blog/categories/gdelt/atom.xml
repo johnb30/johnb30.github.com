@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-08-01T09:58:02-05:00</updated>
+  <updated>2013-08-16T10:04:34-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Animated Protest Mapping]]></title>
     <link href="http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping/"/>
-    <updated>2013-07-31T21:20:00-05:00</updated>
+    <updated>2013-07-31T21:20:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/07/31/animated-protest-mapping</id>
     <content type="html"><![CDATA[<p>One of the primary shortcomings of the original
 <a href="http://johnb30.cartodb.com/viz/ffd5eeb6-ee20-11e2-8fd0-3085a9a956e8/embed_map?title=false&amp;description=true&amp;search=false&amp;shareable=false&amp;cartodb_logo=true&amp;layer_selector=false&amp;scrollwheel=true&amp;sublayer_options=1&amp;sql=&amp;zoom=2&amp;center_lat=-0.004273915238222043&amp;center_lon=-8.0859375">protest map</a>
@@ -73,7 +73,7 @@ the <a href="https://github.com/CartoDB/torque">Torque</a> library provided by C
   <entry>
     <title type="html"><![CDATA[Protest Behavior and Ramadan]]></title>
     <link href="http://johnb30.github.com/blog/2013/07/16/protest-behavior-and-ramadan/"/>
-    <updated>2013-07-16T18:54:00-05:00</updated>
+    <updated>2013-07-16T18:54:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/07/16/protest-behavior-and-ramadan</id>
     <content type="html"><![CDATA[<h3>Plotting Protests</h3>
 
@@ -129,7 +129,7 @@ due to changes in reporting, etc.</p>
   <entry>
     <title type="html"><![CDATA[Mapping Protest Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/07/03/mapping-protest-data/"/>
-    <updated>2013-07-03T16:03:00-05:00</updated>
+    <updated>2013-07-03T16:03:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/07/03/mapping-protest-data</id>
     <content type="html"><![CDATA[<p><em>Edit July 17, 2013:</em></p>
 
@@ -193,7 +193,7 @@ by <a href="http://www.joshuastevens.net/">Josh Stevens</a></p>
   <entry>
     <title type="html"><![CDATA[Using Hive with Social Science Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/"/>
-    <updated>2013-06-16T16:05:00-05:00</updated>
+    <updated>2013-06-16T16:05:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data</id>
     <content type="html"><![CDATA[<h3>Processing Data With Hive</h3>
 
@@ -469,7 +469,7 @@ the first place.</p>
   <entry>
     <title type="html"><![CDATA[Using SQL, pandas, and Python to Work With Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/06/06/using-sql/"/>
-    <updated>2013-06-06T13:11:00-05:00</updated>
+    <updated>2013-06-06T13:11:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/06/06/using-sql</id>
     <content type="html"><![CDATA[<h3>Easier subsetting of data</h3>
 

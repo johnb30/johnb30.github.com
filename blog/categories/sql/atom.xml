@@ -4,7 +4,7 @@
   <title><![CDATA[Category: SQL | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/sql/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-08-01T09:58:02-05:00</updated>
+  <updated>2013-08-16T10:04:34-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using SQL, pandas, and Python to Work With Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/06/06/using-sql/"/>
-    <updated>2013-06-06T13:11:00-05:00</updated>
+    <updated>2013-06-06T13:11:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/06/06/using-sql</id>
     <content type="html"><![CDATA[<h3>Easier subsetting of data</h3>
 
