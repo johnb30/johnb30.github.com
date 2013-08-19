@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-08-19T09:11:35-04:00</updated>
+  <updated>2013-08-19T09:14:07-04:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -41,7 +41,10 @@ you can see information for the additional violence or posture levels. Each
 point includes a record of number of events, location name, and the source
 URLs used to generate the events. As a note, CartoDB doesn&#8217;t play nicely with
 the long string of source URLs, so each URL is only separated by a space and
-must be copied and pasted into a browser.</p>
+must be copied and pasted into a browser. Finally, it is important to note
+that zooming in on the map is highly suggested; the GDELT dataset provides
+a fair amount of city-level detail in the geolocation of events and it is
+very interesting to see the spread of protests and government responses.</p>
 
 <p>The first map displays protest behavior, subsetted from GDELT using root CAMEO
 codes of <code>14</code>, with an overlay of violent events as red circles. The violent
