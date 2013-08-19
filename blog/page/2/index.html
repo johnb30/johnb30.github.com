@@ -9,8 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="I had the opportunity to give a short tutorial on web scraping for the Event
-Data class here at Penn State. I used an IPython notebook to give the &hellip;">
+  <meta name="description" content="GDELT Over the past week, the Global Data on Events, Location and Tone (GDELT)
+dataset was finally released to the general public. The data is &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,83 @@ Data class here at Penn State. I used an IPython notebook to give the &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">How Do I GDELT?: Subsetting and Aggregating the GDELT Dataset</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-04T19:15:00-04:00" pubdate data-updated="true">Apr 4<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3>GDELT</h3>
+
+<p>Over the past week, the Global Data on Events, Location and Tone (GDELT)
+dataset was finally released to the general public. The data is available
+at the Penn State event data <a href="http://eventdata.psu.edu/data.dir/GDELT.html">website</a>.
+We at Penn State had the
+good fortune to have access to this dataset for many months before its public
+release. This allowed us to gain some experience working with this massive
+collection of data. As a brief background, GDELT is comprised of event
+data records spanning 1979 - mid 2012. The events are coded according to the
+<a href="http://eventdata.psu.edu/data.dir/cameo.html">CAMEO</a> coding scheme, with the
+addition of a &#8220;QuadCategory,&#8221; which separates the events into the material conflict,
+material cooperation, verbal conflict, and verbal conflict categories. The data is
+spread across 33 different files, each of which is substantially large on its own.
+This makes it fairly difficult to work with, and almost guarantees that some
+subset of the data is necessary in order to perform analysis. Phil Schrodt has
+included some programs with the data to aid in this subsetting, but I thought there
+might be some who would prefer to get their hands dirty and write some of their
+own code. Given this, I thought I would share some of the knowledge I gained
+while working with the GDELT dataset.</p>
+
+<p>For the purposes of this brief introduction, I will work under the assumption
+that the desired events are those that originate from the United States, are
+directed at some type of state actor, and are either verbal cooperation or
+conflict. The following code, written in Python, demonstrates how this subset
+might be selected from the GDELT data. The code also assumes the reader
+has the <code>pandas</code> and <code>path</code> Python modules installed. Both can be installed using
+the normal <code>pip install</code> method. Finally, the complete code is available as
+a gist on <a href="https://gist.github.com/johnb30/5316196">github</a>.</p>
+
+<p>Before starting, it is always useful to take a peek at the data. This is as
+simple as opening up the terminal and using <code>head 1979.reduced.txt</code>. Doing this
+shows the various columns in the reduced data and how they are arranged. We
+can see that the date is in the 0 index, with <code>Actor1Code</code> and <code>Actor2Code</code>
+in spots 1 and 2, respectively. Additionally, <code>EventCode</code> is located in spot 3,
+while the <code>QuadCategory</code> variable is, fittingly, in position 4. These indices
+will prove crucial when it comes time to split and subset the data.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/04/how-do-i-gdelt-subsetting-and-aggregating-the-gdelt-dataset/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -494,6 +571,10 @@ spread out.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/08/19/week-of-egyptian-protests/">Week of Egyptian Protests</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/07/31/animated-protest-mapping/">Animated Protest Mapping</a>
       </li>
     
@@ -507,10 +588,6 @@ spread out.</p>
     
       <li class="post">
         <a href="/blog/2013/06/16/using-hive-with-social-science-data/">Using Hive with Social Science Data</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/06/06/using-sql/">Using SQL, pandas, and Python to Work With Data</a>
       </li>
     
   </ul>

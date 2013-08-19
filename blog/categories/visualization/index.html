@@ -5,12 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>R Magic and Bootstrapped t-test - John Beieler</title>
+  <title>Category: Visualization - John Beieler</title>
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="Following up on my last post, I wanted a way to test my bootstrapped t-test
-function against the regular t-test function in R. While I was able to do &hellip;">
+  <meta name="description" content="Category: Visualization">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +18,7 @@ function against the regular t-test function in R. While I was able to do &helli
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/">
+  <link rel="canonical" href="http://johnb30.github.comblog/categories/visualization/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -80,129 +79,35 @@ function against the regular t-test function in R. While I was able to do &helli
   <div id="main">
     <div id="content">
       <div>
-<article class="hentry" role="article">
+<article role="article">
   
   <header>
-    
-      <h1 class="entry-title">R Magic and Bootstrapped T-test</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-29T21:53:00-05:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
-        
-      </p>
+    <h1 class="entry-title">Category: Visualization</h1>
     
   </header>
+  
+  <div id="blog-archives" class="category">
 
 
-<div class="entry-content"><p>Following up on my last post, I wanted a way to test my bootstrapped t-test
-function against the regular t-test function in R. While I was able to do this
-by copy-pasting between R and a Python shell, this was less than ideal. I then
-saw, however, a <a href="http://nbviewer.ipython.org/4166681/">post</a> by Christopher
-Fonnesbeck that discussed the use of the rmagic function in ipython, which can
-be loaded using the %load_ext magic function. So, with this in mind, I decided
-to test it out using a comparison between my bootstrap function and the
-<code>t.test</code> function in R. As a note, the rmagic extension requires
-<a href="http://rpy.sourceforge.net/rpy2.html">rpy2</a>, so just <code>pip install rpy2</code> and
-you should be good to go.</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>import bootFunction
-</span><span class='line'>
-</span><span class='line'>%load_ext rmagic
-</span><span class='line'>%R treatment = c(24,25,28,28,28,29,29,31,31,35,35,35)
-</span><span class='line'>%R control = c(21,22,24,27,27,28,29,32,32)
-</span><span class='line'>%Rpull treatment control
-</span><span class='line'>
-</span><span class='line'>bootFunction.bootstrap_t_test(treatment, control, direction = "greater")
-</span><span class='line'>
-</span><span class='line'>%R print(t.test(treatment, control, alternative = "greater"))</span></code></pre></td></tr></table></div></figure>
+  
+  <h2>2013</h2>
+
+<article>
+  
+<h1><a href="/blog/2013/08/19/week-of-egyptian-protests/">Week of Egyptian Protests</a></h1>
+<time datetime="2013-08-19T11:00:00-04:00" pubdate><span class='month'>Aug</span> <span class='day'>19</span> <span class='year'>2013</span></time>
+
+<footer>
+  <span class="categories">posted in <a class='category' href='/blog/categories/gdelt/'>GDELT</a>, <a class='category' href='/blog/categories/visualization/'>Visualization</a></span>
+</footer>
 
 
-<p>I first import the set of functions from the bootFunction. I then load the
-rmagic extension using the <code>%load_ext</code> magic function. Using the <code>%R</code> magic
-function I then defined two vectors of data, treatment and control, in the R
-space. I then used <code>%Rpull</code> to pull the two vectors from the R space into the
-Python shell. The two variables become structured numpy arrays.
-I then perform the bootstrapped t-test as described in the earlier post.
-Finally, using the <code>%R</code> magic function again, I print out the results of the
-<code>t.test</code> function in R using the same data. The p-values aren&#8217;t exactly the
-same, as is to be expected, but are at least within the same ballpark (the R
-t-test gives .05, while the boostrap function has returned a range between .05
-and .03).</p>
+</article>
+
 </div>
 
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">John Beieler</span></span>
-
-      
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-29T21:53:00-05:00" pubdate data-updated="true">Nov 29<span>th</span>, 2012</time>
-      
-
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/python/'>Python</a>, <a class='category' href='/blog/categories/ipython/'>ipython</a>, <a class='category' href='/blog/categories/statistics/'>statistics</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2012/11/29/r-magic-and-bootstrapped-t-test/" >Tweet</a>
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2012/11/28/bootstrapping-t-test/" title="Previous Post: Bootstrapped t-test">&laquo; Bootstrapped t-test</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2012/12/07/parallel-data-subsetting/" title="Next Post: Parallel Data Subsetting">Parallel Data Subsetting &raquo;</a>
-      
-    </p>
-  </footer>
 </article>
 
 </div>
