@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Parallel Data Subsetting - John Beieler</title>
+  <title>Prediction and Data Availability - John Beieler</title>
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="The Challenge I&#8217;ve been working with some data that is spread over multiple
-tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
+  <meta name="description" content="Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@ tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/">
+  <link rel="canonical" href="http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -83,7 +83,7 @@ tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
   
   <header>
     
-      <h1 class="entry-title">Parallel Data Subsetting</h1>
+      <h1 class="entry-title">Prediction and Data Availability</h1>
     
     
       <p class="meta">
@@ -99,91 +99,82 @@ tab-delimited files, and is rather large (on the order of 20-30gb &hellip;">
   
 
 
-<time datetime="2012-12-07T18:26:00-06:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+<time datetime="2013-12-28T12:23:00-06:00" pubdate data-updated="true">Dec 28<span>th</span>, 2013</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><h3>The Challenge</h3>
+<div class="entry-content"><p>Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay Ulfelder has
+<a href="http://dartthrowingchimp.wordpress.com/2013/12/26/a-banner-year-of-the-wrong-kind/">written</a>
+fairly extensively about the mass killings that are ongoing in these states.
+Like Jay, I’m interested, generally, in the prediction of various
+“events-of-interest,” which is a heading that mass atrocities fall under. I’m
+also rather involved in using and evaluating the
+<a href="http://gdelt.utdallas.edu">GDELT</a> dataset for various purposes. So, when it
+became obvious that the conflicts in the Central African Republic and
+South Sudan had taken a turn for the worse, I wondered if it would have been
+possible to predict these events in advance. This also begins to fit nicely
+with conversations I’ve had on
+<a href="https://twitter.com/gutelius/status/408780327687954432">Twitter</a> and elsewhere
+about the goals, evaluation, and implications of the various forecasts of
+politically-relevant events. I’ll have more to say in a later post about
+these issues, but I hope to start shedding a bit of light with
+an examination of prediction and data availability in GDELT.</p>
 
-<p>I&#8217;ve been working with some data that is spread over multiple
-tab-delimited files, and is rather large (on the order of 20-30gb). The task has
-been to comb through the data, and extract observations (rows) if they match
-certain characteristics. Specifically, each file is iterated over and if a field
-within a line matches a given value then the line should be extracted and
-appended to the final output. This task is relatively straightforward in Python,
-but to iterate over all of the files takes around 45 minutes. While this isn&#8217;t
-an exorbiant amount of time, fast is always better. This problem is also
-embarassingly parallel; the different files do not need to communicate their
-results to each other, the results simply need to be stacked into a final array
-in order to be saved to a file. Thus began my saga to implement a parallel
-version of a script I wrote to iterate over the files and select the lines.</p>
-
-<h3>The Code</h3>
-
-<div><script src='https://gist.github.com/4237347.js?file='></script>
-<noscript><pre><code>import numpy as np
-from joblib import Parallel, delayed
-
-def subset(file):
-    dataOut = []
-    data = open(file, 'r')
-    data.readline()
-    for line in data:
-        splitLine = line.split('\t')
-        if splitLine[3] == '57':
-            dataOut.append(splitLine)
-    return dataOut
-
-def stack(list_of_data, hold_data):
-    for i in xrange(len(list_of_data)):
-        current = np.array(data[i])
-        hold = np.vstack((hold_data, current))
-    return hold
-
-if __name__ == &quot;__main__&quot;:
-    filepath = ['testData1.txt', 'testData2.txt']
-
-    hold  = []
-    temp = open(filepath[0], 'r')
-    hold.append(temp.readline().split('\t'))
-    data = Parallel(n_jobs=-1)(delayed(subset)(x) for x in filepath)
-    finalData = stack(data, hold)
-</code></pre></noscript></div>
+<!-- more -->
 
 
-<p>As with my other posts I&#8217;ll walk through the code line by line.</p>
+<h3>Event Prediction and GDELT</h3>
 
-<ul>
-<li><p>1-2 Just imports. I&#8217;ll be using the <code>Parallel</code> and
-<code>delayed</code> functions from the joblib module.</p></li>
-<li><p>4-13 Defining the function to subset out the data. The code is fairly easy to
-understand here. The file is opened, the first line is read since this
-contains the column names and should not be appended to the result. Then each
-line is iterated over, split on the basis of the tabs, and appended if it
-meets a certain criteria.</p></li>
-<li><p>15-19 Function to stack the data. The joblib <code>Parallel</code> function will return a
-list of lists, with each list within the list being the results from the
-individual files. The <code>stack</code> function iterates over the list, converts the
-inner lists to numpy arrays, and stacks the current data with the previous
-data.</p></li>
-<li><p>22-28 Running the script. The main focus here is on line 27. The first
-argument that <code>Parallel</code> takes is the number of jobs to be used. Setting
-<code>n_jobs</code> to -1 says to use all possible cores. The second argument is the
-function to be run in parallel. The joblib docs indicate that &#8220;The delayed
-function is a simple trick to be able to create a tuple
-(function, args, kwargs) with a function-call syntax.&#8221; So delayed is passed
-the <code>subset</code> function with the arg <code>x</code>, which represents the file to be opened
-as held in <code>filepath</code>. This data is then stored as a list of lists, and
-stacked using the <code>stack</code> function.</p></li>
-</ul>
+<p>While much of the discussion of predictions tends to center around the
+algorithms and methods used to make the predictions, a much more salient issue
+for forecasters of political events is data availability. It’s fairly well known
+that political data is <a href="http://dartthrowingchimp.wordpress.com/2013/11/24/singing-the-missing-data-blues/">hard to get</a>,
+but many are hopeful the GDELT data <a href="http://asecondmouse.wordpress.com/2013/08/26/gdelt-is-not-the-data-fairy/">will change this</a>
+since GDELT is created
+through a fully automated process, is updated daily, and has a broader
+coverage than probably any other political event dataset. GDELT is reliant
+on media coverage, however, which creates a specific set of issues beyond the
+infrequent data updates that human-curated projects experience. Given this,
+my first step when asking if it was possible to predict events in CAR and
+SSD was to examine the data availability for these two countries. The
+results were a bit disappointing. The below plots show the daily counts of
+the four major categories of events that are often used in this type of
+work: verbal cooperation, material cooperation, verbal conflict, and
+material conflict. The first plot shows data for the Central African Republic
+for the entire date range that
+GDELT covers, while the second shows a truncated range that takes into
+account the sparsity of data in the earlier years of GDELT’s coverage.</p>
 
+<p><img src="/blog/downloads/misc/car_full_range.png"></p>
 
-<p>Some quick prelimenary examinations shows that this parallel implementation is
-much, much faster than running in serial. Running on two files is almost
-instananeous, which is a drastic improvement.</p>
+<p><img src="/blog/downloads/misc/car_reduced_range.png"></p>
+
+<p>These plots show the relatively weak coverage that even a comprehensive dataset
+such as GDELT has for more remote countries such as the Central African
+Republic. This isn’t a problem that is easily overcome, either using news media
+or crowd-sourced data, as Jay Ulfelder points out in a great <a href="http://dartthrowingchimp.wordpress.com/2013/12/10/the-fog-of-war-is-patchy/">blog post</a>.
+The story is similar for South Sudan, as the figures below show.</p>
+
+<p><img src="/blog/downloads/misc/ssd_fixed_y.png"></p>
+
+<p>Given this, what causes me to worry about forecasting political events is not
+particularly the accuracy of the algorithms, or the things that we forecast
+(when the appropriate conditions exist, we do <a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2225130">fairly well</a>). My main
+worry focuses on data availability; you can&#8217;t forecast something for which data
+doesn&#8217;t exist. It’s an interesting conundrum since the
+places that are more “interesting” in terms of forecasting are also those that
+will have poor coverage, and thus poor data. I don’t have an answer for this
+issue, and I don’t really think an easy one exists. I do believe, however, that
+this is a major hurdle for predictive analytics in the social sciences.</p>
+
+<h3>Data</h3>
+
+<p>The data used to make the figures in this post is available
+<a href="/blog/downloads/misc/car_ssd_data.zip">here</a>.</p>
 </div>
 
 
@@ -206,12 +197,12 @@ instananeous, which is a drastic improvement.</p>
   
 
 
-<time datetime="2012-12-07T18:26:00-06:00" pubdate data-updated="true">Dec 7<span>th</span>, 2012</time>
+<time datetime="2013-12-28T12:23:00-06:00" pubdate data-updated="true">Dec 28<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/python/'>Python</a>
+    <a class='category' href='/blog/categories/gdelt/'>GDELT</a>, <a class='category' href='/blog/categories/prediction/'>prediction</a>
   
 </span>
 
@@ -220,7 +211,7 @@ instananeous, which is a drastic improvement.</p>
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2012/12/07/parallel-data-subsetting/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability/" data-via="johnb30" data-counturl="http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability/" >Tweet</a>
   
   
   
@@ -229,10 +220,8 @@ instananeous, which is a drastic improvement.</p>
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2012/11/29/r-magic-and-bootstrapped-t-test/" title="Previous Post: R Magic and Bootstrapped t-test">&laquo; R Magic and Bootstrapped t-test</a>
+        <a class="basic-alignment left" href="/blog/2013/10/28/noise-and-gdelt/" title="Previous Post: Noise in GDELT">&laquo; Noise in GDELT</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/02/08/web-scraping-tutorial/" title="Next Post: Web Scraping Tutorial">Web Scraping Tutorial &raquo;</a>
       
     </p>
   </footer>

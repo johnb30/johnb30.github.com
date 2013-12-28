@@ -4,7 +4,7 @@
   <title><![CDATA[Category: GDELT | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/gdelt/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-11-23T19:09:56-06:00</updated>
+  <updated>2013-12-28T12:59:02-06:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Prediction and Data Availability]]></title>
+    <link href="http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability/"/>
+    <updated>2013-12-28T12:23:00-06:00</updated>
+    <id>http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability</id>
+    <content type="html"><![CDATA[<p>Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay Ulfelder has
+<a href="http://dartthrowingchimp.wordpress.com/2013/12/26/a-banner-year-of-the-wrong-kind/">written</a>
+fairly extensively about the mass killings that are ongoing in these states.
+Like Jay, I’m interested, generally, in the prediction of various
+“events-of-interest,” which is a heading that mass atrocities fall under. I’m
+also rather involved in using and evaluating the
+<a href="http://gdelt.utdallas.edu">GDELT</a> dataset for various purposes. So, when it
+became obvious that the conflicts in the Central African Republic and
+South Sudan had taken a turn for the worse, I wondered if it would have been
+possible to predict these events in advance. This also begins to fit nicely
+with conversations I’ve had on
+<a href="https://twitter.com/gutelius/status/408780327687954432">Twitter</a> and elsewhere
+about the goals, evaluation, and implications of the various forecasts of
+politically-relevant events. I’ll have more to say in a later post about
+these issues, but I hope to start shedding a bit of light with
+an examination of prediction and data availability in GDELT.</p>
+
+<!-- more -->
+
+
+<h3>Event Prediction and GDELT</h3>
+
+<p>While much of the discussion of predictions tends to center around the
+algorithms and methods used to make the predictions, a much more salient issue
+for forecasters of political events is data availability. It’s fairly well known
+that political data is <a href="http://dartthrowingchimp.wordpress.com/2013/11/24/singing-the-missing-data-blues/">hard to get</a>,
+but many are hopeful the GDELT data <a href="http://asecondmouse.wordpress.com/2013/08/26/gdelt-is-not-the-data-fairy/">will change this</a>
+since GDELT is created
+through a fully automated process, is updated daily, and has a broader
+coverage than probably any other political event dataset. GDELT is reliant
+on media coverage, however, which creates a specific set of issues beyond the
+infrequent data updates that human-curated projects experience. Given this,
+my first step when asking if it was possible to predict events in CAR and
+SSD was to examine the data availability for these two countries. The
+results were a bit disappointing. The below plots show the daily counts of
+the four major categories of events that are often used in this type of
+work: verbal cooperation, material cooperation, verbal conflict, and
+material conflict. The first plot shows data for the Central African Republic
+for the entire date range that
+GDELT covers, while the second shows a truncated range that takes into
+account the sparsity of data in the earlier years of GDELT’s coverage.</p>
+
+<p><img src="/blog/downloads/misc/car_full_range.png"></p>
+
+<p><img src="/blog/downloads/misc/car_reduced_range.png"></p>
+
+<p>These plots show the relatively weak coverage that even a comprehensive dataset
+such as GDELT has for more remote countries such as the Central African
+Republic. This isn’t a problem that is easily overcome, either using news media
+or crowd-sourced data, as Jay Ulfelder points out in a great <a href="http://dartthrowingchimp.wordpress.com/2013/12/10/the-fog-of-war-is-patchy/">blog post</a>.
+The story is similar for South Sudan, as the figures below show.</p>
+
+<p><img src="/blog/downloads/misc/ssd_fixed_y.png"></p>
+
+<p>Given this, what causes me to worry about forecasting political events is not
+particularly the accuracy of the algorithms, or the things that we forecast
+(when the appropriate conditions exist, we do <a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2225130">fairly well</a>). My main
+worry focuses on data availability; you can't forecast something for which data
+doesn't exist. It’s an interesting conundrum since the
+places that are more “interesting” in terms of forecasting are also those that
+will have poor coverage, and thus poor data. I don’t have an answer for this
+issue, and I don’t really think an easy one exists. I do believe, however, that
+this is a major hurdle for predictive analytics in the social sciences.</p>
+
+<h3>Data</h3>
+
+<p>The data used to make the figures in this post is available
+<a href="/blog/downloads/misc/car_ssd_data.zip">here</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Noise in GDELT]]></title>
@@ -28,6 +105,9 @@ comparing GDELT data against ICEWS data. One conclusion of the
 post is that there are a high number of false positives contained in GDELT. The flip side of this, however, is that
 GDELT likely has a lower number of false negatives than other datasets; GDELT likely captures more events that actually
 happen.</p>
+
+<!-- more -->
+
 
 <h3>Reducing the Noise</h3>
 
@@ -272,70 +352,6 @@ As a final note on the data, the values for the protests are percentages of
 total events that occurred in a given month. This controls for
 fact that later years, particularly those after 2005 or so, have more events
 due to changes in reporting, etc.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Mapping Protest Data]]></title>
-    <link href="http://johnb30.github.com/blog/2013/07/03/mapping-protest-data/"/>
-    <updated>2013-07-03T16:03:00-05:00</updated>
-    <id>http://johnb30.github.com/blog/2013/07/03/mapping-protest-data</id>
-    <content type="html"><![CDATA[<p><em>Edit July 17, 2013:</em></p>
-
-<p>Since this map got picked up by the <a href="http://www.guardian.co.uk/news/datablog/interactive/2013/jul/17/global-map-protests-2013">Guardian</a>,
-I thought I would clarify some points further for those who aren't familiar with the data.</p>
-
-<p>First, the GDELT data is based on news reports
-from a variety of sources (a list of sources used can be found <a href="http://gdelt.utdallas.edu/about.html">here</a> under "Data Sources"). For
-better or for worse, journalistic accounts of events are about the best we can do for large-scale, global projects such as this. Second,
-if an event occurs but does not have a specific location within a country, e.g., "Protestors in Syria…", the event is geolocated to the
-centroid of the country. This means that there may be some odd events at some locations, and with a high number of events. Third, the
-"Event Count" featured on the map is the number of protest events that occurred at that location for the entire first half of 2013. This
-means that if the "Event Count" variable shows 60, then there were 60 unique protest events at that location. This is not a measure of
-scale or intensity of a given protest, or even how many times a certain protest was mentioned in the news media, though GDELT does record
-this, it is simply a measure of unique events. Next, geolocation is hard, especially on the scale GDELT works on (300+ million events spanning
-over 30 years), so some of the points may not be perfect. Even if 10 million events are located in the wrong place, however, that's still an error
-rate of about 3%. Finally, and this is mentioned in the post further below, GDELT uses the <a href="http://gdelt.utdallas.edu/data/documentation/CAMEO.Manual.1.1b3.pdf">CAMEO</a>
-coding scheme to classify events. This means that many different types of protest behavior are recorded, not just the protests or riots that come
-to mind when one thinks of Egypt or Turkey. Russia verbally protesting actions of the United States is a protest event. This means that there
-are both a higher number of events, and events that occur in locations that a person might not tie to a protest or riot.</p>
-
-<h3>GDELT and Protests</h3>
-
-<p>Given the recent spate of protests around the world, there was some discussion
-between <a href="http://dartthrowingchimp.wordpress.com/">Jay Ulfelder</a>,
-<a href="https://www.utdallas.edu/~pxb054000/pbrandt/Home.html">Patrick Brandt</a>,
-<a href="http://www.kalevleetaru.com/">Kalev Leetaru</a>,
-<a href="http://eventdata.psu.edu/">Phil Schrodt</a>, and myself about the possibility of using
-<a href="http://gdelt.utdallas.edu/">GDELT</a> to examine some of
-the protest activity. Much of this still remains in the discussion stage, but
-some data was pulled from GDELT, and I decided to venture into the world of
-map making. As a caveat, I've never really worked with geographic visualization
-of data, and this is my first cut at this type of work. So, without further
-ado, the map is located at <a href="http://cdb.io/14RHla0">http://cdb.io/14RHla0</a>.</p>
-
-<h3>Data</h3>
-
-<p>The data used to create the map contains all CAMEO codes that begin with <code>14</code>,
-which is the general category for "protest" events, for the year 2013. Including
-data from earlier than 2013 made the map much too cluttered.
-A potential issue with the use of this CAMEO category is that it picks up governments protesting other governments, politicians protesting
-policies, etc. Thus why the U.S. is blank; it was a shining beacon of protest
-activity that distracted from the other parts of the map. If anyone is
-interested I can put the U.S. data back in and regenerate the map. The data
-was grouped by the latitude and longitude coordinates, and a count of protest
-events at each location is included. If you zoom in, you are able to see the
-individuals points, which when clicked provide information about the location
-and number of events.</p>
-
-<p>The main takeaway from this map seems to be that GDELT does a pretty good job
-of capturing the broad trends of protest activity; the areas that are "bright"
-are those that would generally be expected to be so.</p>
-
-<h3>Note on Tools</h3>
-
-<p>The map was created using the fantastic <a href="http://cartodb.com/">CartoDB</a> along with CSS provided
-by <a href="http://www.joshuastevens.net/">Josh Stevens</a></p>
 ]]></content>
   </entry>
   

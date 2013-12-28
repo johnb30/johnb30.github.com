@@ -9,10 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="I made the remark on Twitter that it seemed like GDELT week due to a
-Foreign Policy
-piece about the dataset, Phil and Kalev&#8217;s paper
-for the ISA &hellip;">
+  <meta name="description" content="As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
+are a large number of unique actors coded in the data. While &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +80,68 @@ for the ISA &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-23T18:40:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
+are a large number of unique actors coded in the data. While working on a
+project for a colleague, I began to wonder exactly how many unique actor
+codes exist in the dataset, and what the maximum level of actor code complexity
+is within the dataset. For those who don&#8217;t know, the actor codes are created
+by chaining together three character CAMEO actor codes, which results in actor
+codes that look like <code>USAMIL</code>, which indicates the United States military. The complexity
+of the actor code, then, refers to how many of these three character codes are
+chained together.</p>
+
+<h4>Results</h4>
+
+<p>Using the Python code available <a href="https://gist.github.com/johnb30/5448269">here</a>, I iterated over the dataset and
+identified each unique actor code in the data, along with how many times the
+unique code appeared. The resulting data is available
+<a href="/blog/downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
+unique actors in the dataset, with a maximum of <strong>6</strong> three character codes chained
+together. The following two plots show the top twenty actor codes overall,
+along with the top twenty USA actor codes.</p>
+
+<p><img src="/blog/downloads/top20.png"></p>
+
+<p><img src="/blog/downloads/usa_top20.png"></p>
+
+<p>This analysis shows the incredible complexity that is present in the actor codes,
+which I would argue is the most important, fascinating, and challenging part
+of working with event data on this scale.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -667,6 +727,10 @@ spread out.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/28/prediction-and-data-availability/">Prediction and Data Availability</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/28/noise-and-gdelt/">Noise in GDELT</a>
       </li>
     
@@ -680,10 +744,6 @@ spread out.</p>
     
       <li class="post">
         <a href="/blog/2013/07/16/protest-behavior-and-ramadan/">Protest Behavior and Ramadan</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/03/mapping-protest-data/">Mapping Protest Data</a>
       </li>
     
   </ul>

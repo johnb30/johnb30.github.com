@@ -4,7 +4,7 @@
   <title><![CDATA[Category: prediction | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/prediction/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-11-23T19:09:56-06:00</updated>
+  <updated>2013-12-28T12:59:02-06:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Prediction and Data Availability]]></title>
+    <link href="http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability/"/>
+    <updated>2013-12-28T12:23:00-06:00</updated>
+    <id>http://johnb30.github.com/blog/2013/12/28/prediction-and-data-availability</id>
+    <content type="html"><![CDATA[<p>Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay Ulfelder has
+<a href="http://dartthrowingchimp.wordpress.com/2013/12/26/a-banner-year-of-the-wrong-kind/">written</a>
+fairly extensively about the mass killings that are ongoing in these states.
+Like Jay, I’m interested, generally, in the prediction of various
+“events-of-interest,” which is a heading that mass atrocities fall under. I’m
+also rather involved in using and evaluating the
+<a href="http://gdelt.utdallas.edu">GDELT</a> dataset for various purposes. So, when it
+became obvious that the conflicts in the Central African Republic and
+South Sudan had taken a turn for the worse, I wondered if it would have been
+possible to predict these events in advance. This also begins to fit nicely
+with conversations I’ve had on
+<a href="https://twitter.com/gutelius/status/408780327687954432">Twitter</a> and elsewhere
+about the goals, evaluation, and implications of the various forecasts of
+politically-relevant events. I’ll have more to say in a later post about
+these issues, but I hope to start shedding a bit of light with
+an examination of prediction and data availability in GDELT.</p>
+
+<!-- more -->
+
+
+<h3>Event Prediction and GDELT</h3>
+
+<p>While much of the discussion of predictions tends to center around the
+algorithms and methods used to make the predictions, a much more salient issue
+for forecasters of political events is data availability. It’s fairly well known
+that political data is <a href="http://dartthrowingchimp.wordpress.com/2013/11/24/singing-the-missing-data-blues/">hard to get</a>,
+but many are hopeful the GDELT data <a href="http://asecondmouse.wordpress.com/2013/08/26/gdelt-is-not-the-data-fairy/">will change this</a>
+since GDELT is created
+through a fully automated process, is updated daily, and has a broader
+coverage than probably any other political event dataset. GDELT is reliant
+on media coverage, however, which creates a specific set of issues beyond the
+infrequent data updates that human-curated projects experience. Given this,
+my first step when asking if it was possible to predict events in CAR and
+SSD was to examine the data availability for these two countries. The
+results were a bit disappointing. The below plots show the daily counts of
+the four major categories of events that are often used in this type of
+work: verbal cooperation, material cooperation, verbal conflict, and
+material conflict. The first plot shows data for the Central African Republic
+for the entire date range that
+GDELT covers, while the second shows a truncated range that takes into
+account the sparsity of data in the earlier years of GDELT’s coverage.</p>
+
+<p><img src="/blog/downloads/misc/car_full_range.png"></p>
+
+<p><img src="/blog/downloads/misc/car_reduced_range.png"></p>
+
+<p>These plots show the relatively weak coverage that even a comprehensive dataset
+such as GDELT has for more remote countries such as the Central African
+Republic. This isn’t a problem that is easily overcome, either using news media
+or crowd-sourced data, as Jay Ulfelder points out in a great <a href="http://dartthrowingchimp.wordpress.com/2013/12/10/the-fog-of-war-is-patchy/">blog post</a>.
+The story is similar for South Sudan, as the figures below show.</p>
+
+<p><img src="/blog/downloads/misc/ssd_fixed_y.png"></p>
+
+<p>Given this, what causes me to worry about forecasting political events is not
+particularly the accuracy of the algorithms, or the things that we forecast
+(when the appropriate conditions exist, we do <a href="http://papers.ssrn.com/sol3/papers.cfm?abstract_id=2225130">fairly well</a>). My main
+worry focuses on data availability; you can't forecast something for which data
+doesn't exist. It’s an interesting conundrum since the
+places that are more “interesting” in terms of forecasting are also those that
+will have poor coverage, and thus poor data. I don’t have an answer for this
+issue, and I don’t really think an easy one exists. I do believe, however, that
+this is a major hurdle for predictive analytics in the social sciences.</p>
+
+<h3>Data</h3>
+
+<p>The data used to make the figures in this post is available
+<a href="/blog/downloads/misc/car_ssd_data.zip">here</a>.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Terrorism Studies and Prediction]]></title>

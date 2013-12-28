@@ -9,8 +9,8 @@
   <meta name="author" content="John Beieler">
 
   
-  <meta name="description" content="The Signal and The Noise One of the first things that I tell people about GDELT is that it is messy and noisy. This is not meant to be a dig
-at the &hellip;">
+  <meta name="description" content="Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +86,63 @@ at the &hellip;">
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/12/28/prediction-and-data-availability/">Prediction and Data Availability</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-28T12:23:00-06:00" pubdate data-updated="true">Dec 28<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Recently, there has been a large amount of news published regarding the ongoing
+conflicts in the Central African Republic and South Sudan. Jay Ulfelder has
+<a href="http://dartthrowingchimp.wordpress.com/2013/12/26/a-banner-year-of-the-wrong-kind/">written</a>
+fairly extensively about the mass killings that are ongoing in these states.
+Like Jay, I’m interested, generally, in the prediction of various
+“events-of-interest,” which is a heading that mass atrocities fall under. I’m
+also rather involved in using and evaluating the
+<a href="http://gdelt.utdallas.edu">GDELT</a> dataset for various purposes. So, when it
+became obvious that the conflicts in the Central African Republic and
+South Sudan had taken a turn for the worse, I wondered if it would have been
+possible to predict these events in advance. This also begins to fit nicely
+with conversations I’ve had on
+<a href="https://twitter.com/gutelius/status/408780327687954432">Twitter</a> and elsewhere
+about the goals, evaluation, and implications of the various forecasts of
+politically-relevant events. I’ll have more to say in a later post about
+these issues, but I hope to start shedding a bit of light with
+an examination of prediction and data availability in GDELT.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/12/28/prediction-and-data-availability/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/10/28/noise-and-gdelt/">Noise in GDELT</a></h1>
     
     
@@ -120,75 +177,12 @@ post is that there are a high number of false positives contained in GDELT. The 
 GDELT likely has a lower number of false negatives than other datasets; GDELT likely captures more events that actually
 happen.</p>
 
-<h3>Reducing the Noise</h3>
-
-<p>One feature of GDELT that many people don’t know about, or don’t understand, is that full-text coding is utilized, i.e.,
-an entire news article is coded, versus the lead sentence or paragraph (root) coding used by previous projects. There is
-some <a href="http://cmp.sagepub.com/content/30/4/335.abstract">debate</a> about whether full-text coding provides additional, valuable information. For the purposes of this
-post I assume that there <strong>is</strong> additional value added by full-text coding. The important point, however, is that
-full-text coding likely adds more noise into the dataset by picking up things such as background information that is
-often reported in news articles. For those who aren’t familiar, news articles often follow a set format with the
-lead paragraph purposefully designed to provide the majority of the information about a news article. By focusing
-only on the leads, though, it is possible to miss some additional information about related events. In short,
-there is a tradeoff between full-text and root coding. Before discussing which type of coding
-is better for various situations, I’d like to provide a bit of information as to the empirical distribution
-of root and non-root events in GDELT.</p>
-
-<h3>Analysis</h3>
-
-<p>The GDELT dataset helpfully provides a variable, <code>IsRootEvent</code>, that indicates whether or not a coded event
-occurs within the lead paragraph of a news story. For the purposes of this analysis, I replicate the
-data used in the <a href="http://predictiveheuristics.com/2013/10/17/gdelt-and-icews-a-short-comparison/">blog post</a>
- by Mike Ward that was mentioned above (thanks to <a href="http://mattdickenson.com/">Matt Dickenson</a> for
-providing the exact queries used). The data covers 2011-01-01 to 2012-09-03, with protest events pulled
-for Egypt and Turkey and violent events pulled for Syria. There are 364,492 total events within the dataset.
-The figure below gives comparison of the number root and non-root events
-contained in the data.</p>
-
-<p><img src="/blog/downloads/root_events/root_plot.png"></p>
-
-<p>In addition to the above bar plot, the stacked time-series plot below shows the ratio of root to
-non-root events over time.</p>
-
-<p><img src="/blog/downloads/root_events/root_time_series.png"></p>
-
-<p>Again, it is important to remember that journalistic practice almost
-ensures that background information is given in later paragraphs. This means that review sentences such
-as “over 10,000 have been killed over the past few months in Syria” tend to appear in this area. This
-leads me to believe that some of the spikes seen in non-root events over time are a result
-of these background sentences. With that said, there can also be events in the body of a news
-story that might not be captured in other stories. To reiterate, there is a tradeoff between keeping and ignoring
-these stories.</p>
-
-<p>As a final view, the below map shows non-root events (red) vs. root events (blue). The purple dots are
-created from overlaying the two event types on top of each other; purple dots indicate
-areas that have coverage from both the root and non-root events. From even a cursory glance at this
-map it seems that neither event type has a privilege on coverage. The two types of events agree on
-many of the locations, and there is no systematic pattern in the areas where the two event types
-do not agree. Thus, it seems that one can safely utilize only the root events without sacrificing
-a significant amount of geographical coverage.</p>
-
-<iframe width='100%' height='400' frameborder='0' src='http://johnb30.cartodb.com/viz/c3fd9b64-3da8-11e3-b928-3085a9a956e8/embed_map?title=true&description=true&search=false&shareable=true&cartodb_logo=true&layer_selector=true&legends=false&scrollwheel=true&sublayer_options=1%7C1&sql=SELECT%20*%20FROM%20root_map%20where%20root%20%3D%20true&sw_lat=24.06151244228118&sw_lon=13.3428955078125&ne_lat=41.979910896912486&ne_lon=55.5303955078125'></iframe>
-
-
-<h3>Wrapping Up</h3>
-
-<p>To get to the heart of the matter: if you’re worried about false positives, then filter the GDELT
-data based on root events. Filtering in this manner shouldn’t cause that great of an information
-loss. Note, however, that this filtering also <strong>won’t</strong> give you a completely clean, noiseless
-dataset. The data is just more likely to have a reduced level of noise. On the flip side, if you’re more
-worried about attempting to capture <strong>everything</strong> that happened, then make use of the entire dataset.</p>
-
-<h3>Tools, data, etc.</h3>
-
-<p>The map was made using the awesome tools provided by <a href="http://cartodb.com/">CartoDB</a>. The stacked area plot was created
-using <a href="https://github.com/wrobstory/vincent">Vincent</a>, a Python wrapper for the Vega Javascript package. The code is available as an
-<a href="https://gist.github.com/johnb30/7197680">IPython notebook</a>.</p>
-
-<p>The base data is available <a href="/blog/downloads/root_events/root_events_analysis.csv.zip">here</a>,
-while the data used when making the map is available <a href="/blog/downloads/root_events/root_map.csv.zip">here</a>.</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/10/28/noise-and-gdelt/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -774,68 +768,6 @@ predictive tests.</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/04/23/actor-codes-in-gdelt/">Actor Codes in GDELT</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-23T18:40:00-05:00" pubdate data-updated="true">Apr 23<span>rd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>As I&#8217;m sure anyone who has begun exploring the GDELT data has noticed, there
-are a large number of unique actors coded in the data. While working on a
-project for a colleague, I began to wonder exactly how many unique actor
-codes exist in the dataset, and what the maximum level of actor code complexity
-is within the dataset. For those who don&#8217;t know, the actor codes are created
-by chaining together three character CAMEO actor codes, which results in actor
-codes that look like <code>USAMIL</code>, which indicates the United States military. The complexity
-of the actor code, then, refers to how many of these three character codes are
-chained together.</p>
-
-<h4>Results</h4>
-
-<p>Using the Python code available <a href="https://gist.github.com/johnb30/5448269">here</a>, I iterated over the dataset and
-identified each unique actor code in the data, along with how many times the
-unique code appeared. The resulting data is available
-<a href="/blog/downloads/unique_actors.csv">here</a>. The results indicate that there are <strong>22,857</strong>
-unique actors in the dataset, with a maximum of <strong>6</strong> three character codes chained
-together. The following two plots show the top twenty actor codes overall,
-along with the top twenty USA actor codes.</p>
-
-<p><img src="/blog/downloads/top20.png"></p>
-
-<p><img src="/blog/downloads/usa_top20.png"></p>
-
-<p>This analysis shows the incredible complexity that is present in the actor codes,
-which I would argue is the most important, fascinating, and challenging part
-of working with event data on this scale.</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -851,6 +783,10 @@ of working with event data on this scale.</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2013/12/28/prediction-and-data-availability/">Prediction and Data Availability</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2013/10/28/noise-and-gdelt/">Noise in GDELT</a>
       </li>
     
@@ -864,10 +800,6 @@ of working with event data on this scale.</p>
     
       <li class="post">
         <a href="/blog/2013/07/16/protest-behavior-and-ramadan/">Protest Behavior and Ramadan</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/07/03/mapping-protest-data/">Mapping Protest Data</a>
       </li>
     
   </ul>
