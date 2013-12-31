@@ -4,7 +4,7 @@
   <title><![CDATA[John Beieler]]></title>
   <link href="http://johnb30.github.com/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2013-12-30T11:32:02-06:00</updated>
+  <updated>2013-12-31T10:12:18-06:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -82,6 +82,21 @@ places that are more “interesting” in terms of forecasting are also those th
 will have poor coverage, and thus poor data. I don’t have an answer for this
 issue, and I don’t really think an easy one exists. I do believe, however, that
 this is a major hurdle for predictive analytics in the social sciences.</p>
+
+<p><strong>Edit (12/31/13):</strong></p>
+
+<p><a href="https://twitter.com/charlie_simpson">Erin Simpson</a> noted that it might not be
+immedietly obvious how little data actually exists for these two countries if one isn&#8217;t familiar with data from
+<em>other</em> countries. I believe this is perfectly valid, so the two figures below
+show the data for Kenya, which is another country that doesn&#8217;t have particularly
+good coverage, and Egypt, a country that has much better coverage than any of
+the others mentioned in this post. The plots show the data from 2011 onwards,
+and the data used is available
+<a href="http://johnb30.github.com/blog/downloads/misc/egypt_kenya_data.zip">here</a>.</p>
+
+<p><img src="http://johnb30.github.com/blog/downloads/misc/kenya_values.png"></p>
+
+<p><img src="http://johnb30.github.com/blog/downloads/misc/egypt_values.png"></p>
 
 <h3>Data</h3>
 
