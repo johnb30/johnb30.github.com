@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Hadoop | John Beieler]]></title>
   <link href="http://johnb30.github.com/blog/categories/hadoop/atom.xml" rel="self"/>
   <link href="http://johnb30.github.com/"/>
-  <updated>2014-01-02T13:48:59-06:00</updated>
+  <updated>2014-01-10T13:55:47-05:00</updated>
   <id>http://johnb30.github.com/</id>
   <author>
     <name><![CDATA[John Beieler]]></name>
@@ -16,7 +16,7 @@
   <entry>
     <title type="html"><![CDATA[Using Hive with Social Science Data]]></title>
     <link href="http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data/"/>
-    <updated>2013-06-16T16:05:00-05:00</updated>
+    <updated>2013-06-16T16:05:00-04:00</updated>
     <id>http://johnb30.github.com/blog/2013/06/16/using-hive-with-social-science-data</id>
     <content type="html"><![CDATA[<h3>Processing Data With Hive</h3>
 
